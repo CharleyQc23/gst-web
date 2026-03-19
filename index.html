@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guernon Services Techniques — Conception de PCQ RBQ</title>
+<meta name="description" content="Conception de programmes de contrôle qualité (PCQ) conformes aux exigences de la RBQ. Service professionnel pour entrepreneurs en construction au Québec.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f38;
+    --navy-mid: #162a4a;
+    --navy-light: #1e3a60;
+    --steel: #2c4a6e;
+    --gold: #c8a84b;
+    --gold-light: #e2c97e;
+    --white: #f8f7f4;
+    --gray: #e4e2dc;
+    --gray-mid: #9a9890;
+    --gray-dark: #5a5854;
+    --text: #1a1916;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Source Sans 3', system-ui, sans-serif;
+    --radius: 4px;
+    --transition: 0.22s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Utilitaires ── */
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .section { padding: 96px 0; }
+  .section-alt { background: #f0ede6; }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(15, 31, 56, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(200, 168, 75, 0.15);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .nav-logo-main {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .nav-logo-sub {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: rgba(248,247,244,0.7);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: color var(--transition);
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold) !important;
+    padding: 7px 20px;
+    border-radius: var(--radius);
+    transition: all var(--transition) !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold) !important;
+    color: var(--navy) !important;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 64px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      linear-gradient(135deg, rgba(200,168,75,0.04) 0%, transparent 50%),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 80px,
+        rgba(255,255,255,0.015) 80px,
+        rgba(255,255,255,0.015) 81px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 80px,
+        rgba(255,255,255,0.015) 80px,
+        rgba(255,255,255,0.015) 81px
+      );
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-eyebrow-line {
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-eyebrow-text {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 28px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    color: rgba(248,247,244,0.65);
+    max-width: 560px;
+    margin-bottom: 48px;
+    font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 14px 32px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: all var(--transition);
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(248,247,244,0.8);
+    padding: 14px 32px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius);
+    border: 1px solid rgba(248,247,244,0.25);
+    transition: all var(--transition);
+    display: inline-block;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(248,247,244,0.6);
+    color: var(--white);
+  }
+
+  .hero-stats {
+    position: absolute;
+    bottom: 48px;
+    right: 40px;
+    display: flex;
+    gap: 48px;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .hero-stat {
+    text-align: right;
+  }
+
+  .hero-stat-num {
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--gold-light);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .hero-stat-label {
+    font-size: 11px;
+    color: rgba(248,247,244,0.45);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Section offre ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .section-label-line {
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .section-label-text {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 400;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+
+  .section-intro {
+    font-size: 16px;
+    color: var(--gray-dark);
+    max-width: 580px;
+    font-weight: 300;
+    margin-bottom: 56px;
+  }
+
+  /* ── Service card ── */
+  .service-card {
+    background: var(--white);
+    border: 1px solid var(--gray);
+    border-top: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 40px;
+    max-width: 680px;
+  }
+
+  .service-card h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .service-card p {
+    color: var(--gray-dark);
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .deliverables {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .deliverables li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--gray-dark);
+  }
+
+  .deliverables li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── Processus ── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 56px;
+  }
+
+  .process-step {
+    background: var(--navy);
+    padding: 36px 28px;
+    position: relative;
+  }
+
+  .process-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .process-step:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+
+  .process-num {
+    font-family: var(--serif);
+    font-size: 48px;
+    color: rgba(200,168,75,0.15);
+    line-height: 1;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .process-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .process-desc {
+    font-size: 13px;
+    color: rgba(248,247,244,0.5);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ── À propos ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 15px;
+    color: var(--gray-dark);
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .credentials {
+    list-style: none;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .credentials li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--gray-dark);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--gray);
+  }
+
+  .cred-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .about-right {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 40px;
+    color: var(--white);
+  }
+
+  .about-right h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: var(--white);
+  }
+
+  .about-right .title {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(200,168,75,0.2);
+  }
+
+  .about-right p {
+    font-size: 14px;
+    color: rgba(248,247,244,0.6);
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  /* ── FAQ ── */
+  .faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--gray);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .faq-question {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 24px 0;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: color var(--transition);
+  }
+
+  .faq-question:hover { color: var(--steel); }
+
+  .faq-icon {
+    width: 20px; height: 20px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--gold);
+    transition: transform var(--transition);
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+
+  .faq-answer-inner {
+    padding: 0 0 24px;
+    font-size: 15px;
+    color: var(--gray-dark);
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ── Contact ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .contact-info h3 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .contact-info p {
+    font-size: 15px;
+    color: var(--gray-dark);
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+
+  .contact-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 4px;
+    transition: color var(--transition);
+  }
+
+  .contact-email:hover { color: var(--steel); }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-dark);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    background: var(--white);
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color var(--transition);
+    width: 100%;
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus,
+  .form-field select:focus {
+    border-color: var(--navy);
+  }
+
+  .form-field textarea { min-height: 120px; resize: vertical; }
+
+  .btn-submit {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 32px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    align-self: flex-start;
+  }
+
+  .btn-submit:hover {
+    background: var(--steel);
+    transform: translateY(-1px);
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(248,247,244,0.35);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-rbq {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .section { padding: 64px 0; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-stats { display: none; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .deliverables { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <div class="nav-logo">
+    <span class="nav-logo-main">Guernon Services Techniques</span>
+    <span class="nav-logo-sub">GST · Qualité · Conformité</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#offre">Services</a></li>
+    <li><a href="#processus">Processus</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact" class="nav-cta">Demande de devis</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        <span class="hero-eyebrow-text">Programme de contrôle qualité · RBQ</span>
+      </div>
+      <h1>Votre conformité RBQ,<br><em>prise en charge</em> de A à Z.</h1>
+      <p class="hero-desc">Conception de programmes de contrôle qualité (PCQ) conformes aux exigences de la Régie du bâtiment du Québec. Pour les entrepreneurs qui veulent un dossier solide, sans y passer des semaines.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Demander un devis</a>
+        <a href="#offre" class="btn-ghost">Voir le service</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num">14</div>
+      <div class="hero-stat-label">Sections RBQ couvertes</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">100%</div>
+      <div class="hero-stat-label">Manuel personnalisé</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Offre ── -->
+<section class="section" id="offre">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">Service principal</span>
+      </div>
+      <h2 class="section-title">Conception de programme<br>de contrôle qualité (PCQ)</h2>
+      <p class="section-intro">Un PCQ conforme aux exigences de la RBQ, entièrement rédigé et adapté à vos activités spécifiques.</p>
+    </div>
+
+    <div class="service-card reveal">
+      <h3>Manuel PCQ complet — clé en main</h3>
+      <p>À partir des informations de votre entreprise, nous rédigeons un manuel de contrôle qualité structuré selon les 14 sections exigées par la RBQ, personnalisé pour vos activités (tuyauterie, soudage, fabrication, installation, maintenance).</p>
+      <ul class="deliverables">
+        <li>Portée et références normatives</li>
+        <li>Organisation et responsabilités</li>
+        <li>Contrôle des matériaux et traçabilité</li>
+        <li>Procédures de production</li>
+        <li>Inspection et essais</li>
+        <li>Gestion des non-conformités</li>
+        <li>Section soudage (si applicable)</li>
+        <li>Audit interne et enregistrements</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── Processus ── -->
+<section class="section section-alt" id="processus">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">Notre approche</span>
+      </div>
+      <h2 class="section-title">Simple, rapide, rigoureux.</h2>
+    </div>
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-title">Prise d'information</div>
+        <div class="process-desc">Questionnaire détaillé sur vos activités, votre organisation et vos pratiques actuelles.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-title">Analyse</div>
+        <div class="process-desc">Identification des exigences RBQ applicables à votre licence et vos catégories de travaux.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <div class="process-title">Rédaction</div>
+        <div class="process-desc">Production du manuel PCQ personnalisé, structuré selon les 14 sections réglementaires.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-title">Livraison</div>
+        <div class="process-desc">Document Word éditable livré en 5 à 7 jours ouvrables, prêt à soumettre à la RBQ.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── À propos ── -->
+<section class="section" id="apropos">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <div class="section-label">
+          <span class="section-label-line"></span>
+          <span class="section-label-text">À propos</span>
+        </div>
+        <h2 class="section-title">Une expertise terrain<br>au service de votre conformité.</h2>
+        <p>Guernon Services Techniques est fondé par un technicien spécialisé en contrôle qualité tuyauterie industrielle, avec une expérience directe des exigences réglementaires en milieu industriel.</p>
+        <p>Notre approche combine la <strong>rigueur technique du terrain</strong> et une compréhension approfondie des attentes de la RBQ — pour produire des PCQ qui reflètent fidèlement vos opérations réelles, pas des documents génériques.</p>
+        <ul class="credentials">
+          <li><span class="cred-dot"></span>Expérience en contrôle qualité tuyauterie industrielle</li>
+          <li><span class="cred-dot"></span>Baccalauréat en génie mécanique (en cours)</li>
+          <li><span class="cred-dot"></span>Connaissance des normes ASME, CSA et exigences RBQ</li>
+          <li><span class="cred-dot"></span>Candidat ingénieur professionnel (CPI)</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <div class="about-right">
+          <h3>Charley Guernon</h3>
+          <div class="title">Fondateur · Technicien CQ · CPI</div>
+          <p>Actif dans le secteur industriel depuis plusieurs années, spécialisé dans le contrôle qualité des systèmes de tuyauterie sous pression.</p>
+          <p>La création de Guernon Services Techniques répond à un besoin concret : beaucoup d'entrepreneurs en construction ont du mal à naviguer les exigences documentaires de la RBQ, sans avoir accès à un accompagnement technique abordable.</p>
+          <p>Notre mission est simple — vous permettre de vous concentrer sur votre métier pendant qu'on s'occupe de votre conformité.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section section-alt" id="faq">
+  <div class="container">
+    <div class="reveal" style="text-align: center; margin-bottom: 56px;">
+      <div class="section-label" style="justify-content: center;">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">Questions fréquentes</span>
+        <span class="section-label-line"></span>
+      </div>
+      <h2 class="section-title">Tout ce que vous devez savoir<br>sur le PCQ RBQ.</h2>
+    </div>
+
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Qu'est-ce qu'un PCQ et pourquoi la RBQ l'exige-t-elle ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Un Programme de contrôle qualité (PCQ) est un document qui décrit comment votre entreprise s'assure que ses travaux respectent les normes applicables. La RBQ l'exige pour certaines catégories de licences d'entrepreneur, notamment en tuyauterie, soudage, et fabrication d'équipements sous pression. Sans PCQ conforme, l'obtention ou le renouvellement de la licence peut être refusé.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Mon entreprise a-t-elle besoin d'un PCQ ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">La nécessité d'un PCQ dépend de votre catégorie de licence RBQ. Les entrepreneurs en tuyauterie, en fabrication ou en soudage de systèmes sous pression sont généralement assujettis à cette exigence. Contactez-nous pour une évaluation rapide de votre situation.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Combien de temps faut-il pour obtenir mon PCQ ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Une fois le questionnaire complété, le manuel PCQ est livré en 5 à 7 jours ouvrables. Pour les situations urgentes (inspection imminente de la RBQ), contactez-nous directement pour discuter d'un délai accéléré.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Le PCQ est-il un document générique ou personnalisé ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Il est entièrement personnalisé. Chaque manuel est rédigé en fonction de vos activités spécifiques, de votre organisation, de vos procédures actuelles et de votre licence RBQ. Un document générique ne reflète pas vos opérations réelles et peut soulever des questions lors d'une vérification de la RBQ.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Sous quel format est livré le PCQ ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Le manuel vous est remis en format Word (.docx), ce qui vous permet de le modifier vous-même si nécessaire, de l'imprimer, ou de le soumettre électroniquement à la RBQ. Un PDF peut également être fourni sur demande.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Offrez-vous un suivi après la livraison ?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Oui. Des révisions mineures sont incluses dans les 30 jours suivant la livraison si la RBQ demande des ajustements. Pour des mises à jour ultérieures liées à des changements d'activités ou de réglementation, un service de révision est disponible.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="section-label">
+          <span class="section-label-line"></span>
+          <span class="section-label-text">Contact</span>
+        </div>
+        <h3>Parlons de votre projet.</h3>
+        <p>Décrivez-nous votre situation et nous vous répondrons dans les 24 heures pour discuter de vos besoins en conformité RBQ.</p>
+        <a href="mailto:c.guernon@hotmail.ca" class="contact-email">c.guernon@hotmail.ca</a>
+      </div>
+
+      <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Prénom</label>
+            <input type="text" name="prenom" placeholder="Jean" required>
+          </div>
+          <div class="form-field">
+            <label>Nom</label>
+            <input type="text" name="nom" placeholder="Tremblay" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Entreprise</label>
+          <input type="text" name="entreprise" placeholder="ABC Construction inc.">
+        </div>
+        <div class="form-field">
+          <label>Courriel</label>
+          <input type="email" name="courriel" placeholder="jean@abcconstruction.com" required>
+        </div>
+        <div class="form-field">
+          <label>Type d'activité</label>
+          <select name="activite">
+            <option value="">Sélectionnez...</option>
+            <option>Tuyauterie</option>
+            <option>Soudage</option>
+            <option>Fabrication</option>
+            <option>Installation</option>
+            <option>Maintenance</option>
+            <option>Autre / Je ne sais pas</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Message</label>
+          <textarea name="message" placeholder="Décrivez brièvement votre situation (type de licence RBQ, délai souhaité, questions...)"></textarea>
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">Envoyer la demande</button>
+        <div id="form-success" style="display:none; font-size:14px; color: #2a6e45; margin-top:8px;">
+          Message envoyé. Nous vous répondrons dans les 24 heures.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── */
+<footer>
+  <div class="footer-logo">Guernon Services Techniques</div>
+  <div class="footer-copy">© 2025 Guernon Services Techniques · Québec, Canada</div>
+  <div class="footer-rbq">Conformité RBQ · PCQ</div>
+</footer>
+
+<script>
+  // ── FAQ toggle ──
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const answer = item.querySelector('.faq-answer');
+    const isOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-answer').style.maxHeight = '0';
+    });
+
+    if (!isOpen) {
+      item.classList.add('open');
+      answer.style.maxHeight = answer.scrollHeight + 'px';
+    }
+  }
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Formulaire contact → mailto ──
+  function handleSubmit(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const prenom   = data.get('prenom');
+    const nom      = data.get('nom');
+    const entreprise = data.get('entreprise') || 'Non précisé';
+    const courriel = data.get('courriel');
+    const activite = data.get('activite') || 'Non précisé';
+    const message  = data.get('message') || '';
+
+    const subject = encodeURIComponent(`Demande PCQ RBQ — ${prenom} ${nom}`);
+    const body = encodeURIComponent(
+      `Nom : ${prenom} ${nom}\n` +
+      `Entreprise : ${entreprise}\n` +
+      `Courriel : ${courriel}\n` +
+      `Activité : ${activite}\n\n` +
+      `Message :\n${message}`
+    );
+
+    window.location.href = `mailto:c.guernon@hotmail.ca?subject=${subject}&body=${body}`;
+
+    document.getElementById('submit-btn').textContent = 'Envoi en cours…';
+    setTimeout(() => {
+      document.getElementById('submit-btn').textContent = 'Envoyer la demande';
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    }, 1500);
+  }
+</script>
+</body>
+</html>
