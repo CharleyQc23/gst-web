@@ -697,6 +697,10 @@
     transition: opacity 0.65s ease, transform 0.65s ease;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; }
+  }
 
   /* ── Responsive ── */
   @media (max-width: 768px) {
@@ -990,7 +994,6 @@
   </div>
 </section>
 
-<!-- ── Footer ── */
 <footer>
   <div class="footer-logo">Guernon Services Techniques</div>
   <div class="footer-copy">© 2025 Guernon Services Techniques · Québec, Canada</div>
@@ -1016,16 +1019,26 @@
   }
 
   // ── Scroll reveal ──
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Forcer les éléments déjà visibles au chargement
+setTimeout(() => {
+  document.querySelectorAll('.reveal').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.classList.add('visible');
+    }
+  });
+}, 100);
 
   // ── Formulaire contact → mailto ──
   function handleSubmit(e) {
