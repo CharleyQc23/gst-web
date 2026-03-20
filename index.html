@@ -836,8 +836,8 @@
           <span class="section-label-text">À propos</span>
         </div>
         <h2 class="section-title">Une expertise terrain<br>au service de votre conformité.</h2>
-        <p>Guernon Services Techniques est fondé par un technicien spécialisé en contrôle qualité tuyauterie industrielle, avec une expérience directe des exigences réglementaires en milieu industriel.</p>
-        <p>Notre approche combine la <strong>rigueur technique du terrain</strong> et une compréhension approfondie des attentes de la RBQ — pour produire des PCQ qui reflètent fidèlement vos opérations réelles, pas des documents génériques.</p>
+        <p>Guernon Services Techniques est fondé par un candidat à la profession d'ingénieur (CPI) spécialisé en contrôle qualité tuyauterie industrielle, avec une expérience directe des exigences réglementaires en milieu industriel.</p>
+        <p>Notre approche combine la <strong>rigueur technique du terrain</strong> et une compréhension approfondie des attentes de la RBQ — pour produire des PCQ qui reflètent fidèlement vos opérations réelles.</p>
         <ul class="credentials">
           <li><span class="cred-dot"></span>Expérience en contrôle qualité tuyauterie industrielle</li>
           <li><span class="cred-dot"></span>Baccalauréat en génie mécanique (en cours)</li>
@@ -847,8 +847,8 @@
       </div>
       <div class="reveal">
         <div class="about-right">
-          <h3>Charley Guernon</h3>
-          <div class="title">Fondateur · Technicien CQ · CPI</div>
+          <h3>Charles Guernon</h3>
+          <div class="title">Fondateur · CPI · Technicien CQ</div>
           <p>Actif dans le secteur industriel depuis plusieurs années, spécialisé dans le contrôle qualité des systèmes de tuyauterie sous pression.</p>
           <p>La création de Guernon Services Techniques répond à un besoin concret : beaucoup d'entrepreneurs en construction ont du mal à naviguer les exigences documentaires de la RBQ, sans avoir accès à un accompagnement technique abordable.</p>
           <p>Notre mission est simple — vous permettre de vous concentrer sur votre métier pendant qu'on s'occupe de votre conformité.</p>
@@ -867,7 +867,7 @@
         <span class="section-label-text">Questions fréquentes</span>
         <span class="section-label-line"></span>
       </div>
-      <h2 class="section-title">Tout ce que vous devez savoir<br>sur le PCQ RBQ.</h2>
+      <h2 class="section-title">Tout savoir sur le<br>Programme de contrôle de la qualité RBQ.</h2>
     </div>
 
     <div class="faq-list reveal">
@@ -947,7 +947,7 @@
         </div>
         <h3>Parlons de votre projet.</h3>
         <p>Décrivez-nous votre situation et nous vous répondrons dans les 24 heures pour discuter de vos besoins en conformité RBQ.</p>
-        <a href="mailto:c.guernon@hotmail.ca" class="contact-email">c.guernon@hotmail.ca</a>
+        <a href="mailto:contact@guernonservicestechniques.ca" class="contact-email">contact@guernonservicestechniques.ca</a>
       </div>
 
       <form class="contact-form reveal" onsubmit="handleSubmit(event)">
@@ -966,6 +966,9 @@
           <input type="email" name="courriel" placeholder="Courriel" required>
         </div>
         <div class="form-field">
+          <input type="tel" name="telephone" placeholder="Téléphone" required>
+        </div>
+        <div class="form-field">
           <label>Type d'activité</label>
           <select name="activite">
             <option value="">Sélectionnez...</option>
@@ -974,7 +977,7 @@
             <option>Fabrication</option>
             <option>Installation</option>
             <option>Maintenance</option>
-            <option>Autre / Je ne sais pas</option>
+            <option>Autre</option>
           </select>
         </div>
         <div class="form-field">
@@ -1056,7 +1059,7 @@ setTimeout(() => {
       `Message :\n${message}`
     );
 
-    window.location.href = `mailto:c.guernon@hotmail.ca?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:contact@guernonservicestechniques.ca?subject=${subject}&body=${body}`;
 
     document.getElementById('submit-btn').textContent = 'Envoi en cours…';
     setTimeout(() => {
