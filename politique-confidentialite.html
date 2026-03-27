@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de confidentialité — Guernon Services Techniques</title>
+<meta name="description" content="Politique de confidentialité de Guernon Services Techniques, conforme à la Loi 25 (Québec).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f38;
+    --navy-mid: #162a4a;
+    --navy-light: #1e3a60;
+    --steel: #2c4a6e;
+    --gold: #c8a84b;
+    --gold-light: #e2c97e;
+    --white: #f8f7f4;
+    --gray: #e4e2dc;
+    --gray-mid: #9a9890;
+    --gray-dark: #5a5854;
+    --text: #1a1916;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Source Sans 3', system-ui, sans-serif;
+    --radius: 4px;
+    --transition: 0.22s ease;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(15, 31, 56, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(200, 168, 75, 0.15);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-decoration: none;
+  }
+
+  .nav-logo-main {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .nav-logo-sub {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .nav-back {
+    font-size: 13px;
+    color: rgba(248,247,244,0.65);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color var(--transition);
+  }
+
+  .nav-back:hover { color: var(--gold); }
+
+  /* ── Hero ── */
+  .page-hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    padding: 120px 40px 64px;
+    text-align: center;
+    border-bottom: 2px solid rgba(200,168,75,0.2);
+  }
+
+  .page-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: 0.01em;
+  }
+
+  .page-hero-sub {
+    font-size: 14px;
+    color: rgba(248,247,244,0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .meta-bar {
+    background: #f0ede6;
+    border-bottom: 1px solid var(--gray);
+    padding: 16px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--gray-dark);
+  }
+
+  .meta-bar span { display: flex; gap: 6px; align-items: center; }
+  .meta-bar strong { color: var(--navy); }
+
+  /* ── Contenu principal ── */
+  .page-content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 64px 40px 80px;
+  }
+
+  /* ── Sections ── */
+  .policy-section {
+    margin-bottom: 48px;
+  }
+
+  .policy-section h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(200,168,75,0.4);
+    letter-spacing: 0.01em;
+  }
+
+  .policy-section p {
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .policy-section ul {
+    list-style: none;
+    margin: 12px 0 14px 0;
+    padding: 0;
+  }
+
+  .policy-section ul li {
+    padding: 5px 0 5px 22px;
+    position: relative;
+    color: var(--text);
+  }
+
+  .policy-section ul li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  strong { color: var(--navy-light); }
+
+  /* ── Encadrés ── */
+  .info-box {
+    background: #eef5fb;
+    border-left: 4px solid #1b6ca8;
+    padding: 16px 20px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #1a3a5c;
+    line-height: 1.6;
+  }
+
+  .contact-box {
+    background: #f0ede6;
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+
+  .contact-box h3 {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  .contact-box p { font-size: 14px; margin-bottom: 6px; }
+  .contact-box a { color: var(--navy-light); }
+
+  /* ── Table historique révisions ── */
+  .revision-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 16px;
+  }
+
+  .revision-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+  }
+
+  .revision-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray);
+    color: var(--text);
+  }
+
+  .revision-table tr:last-child td { border-bottom: none; }
+  .revision-table tr:nth-child(even) td { background: #f7f5f0; }
+
+  /* ── Signature ── */
+  .signature-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+
+  .sig-card {
+    background: #f0ede6;
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    font-size: 14px;
+  }
+
+  .sig-card p { margin-bottom: 8px; }
+  .sig-card .sig-line {
+    border-bottom: 1px solid var(--gray-dark);
+    margin-top: 14px;
+    padding-top: 4px;
+    color: var(--gray-mid);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--white);
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(248,247,244,0.35);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-legal a {
+    font-size: 11px;
+    color: rgba(200,168,75,0.7);
+    text-decoration: none;
+  }
+
+  .footer-legal a:hover { color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .page-hero { padding: 100px 24px 48px; }
+    .page-content { padding: 40px 24px 60px; }
+    .meta-bar { padding: 14px 24px; gap: 16px; }
+    .signature-block { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+    nav { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-main">Guernon Services Techniques</span>
+    <span class="nav-logo-sub">PCQ · RBQ</span>
+  </a>
+  <a href="index.html" class="nav-back">← Retour au site</a>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="page-hero">
+  <h1>Politique de confidentialité</h1>
+  <p class="page-hero-sub">Protection des renseignements personnels — Loi 25 (Québec)</p>
+</div>
+
+<!-- ── Barre méta ── -->
+<div class="meta-bar">
+  <span><strong>Organisme :</strong> Guernon Services Techniques</span>
+  <span><strong>RPP :</strong> Charles Guernon</span>
+  <span><strong>Version :</strong> 1.0</span>
+  <span><strong>En vigueur :</strong> Mars 2026</span>
+</div>
+
+<!-- ── Contenu ── -->
+<main class="page-content">
+
+  <div class="policy-section">
+    <h2>1. Objet et portée</h2>
+    <p>La présente politique de confidentialité décrit comment <strong>Guernon Services Techniques</strong> (ci-après « GST » ou « nous ») collecte, utilise, conserve et protège les renseignements personnels de ses clients dans le cadre de l'utilisation du générateur de manuels de programme de contrôle de la qualité (PCQ) destinés à la Régie du bâtiment du Québec (RBQ) et dans le cadre des demandes de contact reçues via ce site.</p>
+    <p>Elle s'applique à toute personne physique dont les renseignements sont traités par GST, incluant les propriétaires, dirigeants, représentants et employés des entreprises clientes.</p>
+    <p>Cette politique est conforme aux exigences de la <strong>Loi 25</strong> — Loi modernisant des dispositions législatives en matière de protection des renseignements personnels (Québec).</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>2. Renseignements personnels collectés</h2>
+    <p>GST peut collecter les catégories de renseignements personnels suivantes :</p>
+    <p><strong>Via le formulaire de contact de ce site :</strong></p>
+    <ul>
+      <li>Prénom et nom</li>
+      <li>Nom de l'entreprise</li>
+      <li>Adresse courriel</li>
+      <li>Type d'activité</li>
+      <li>Contenu du message</li>
+    </ul>
+    <p><strong>Via le générateur de manuels PCQ :</strong></p>
+    <ul>
+      <li>Nom et adresse de l'entreprise, numéro de licence RBQ</li>
+      <li>Nom du responsable de la qualité, du dirigeant, des superviseurs et soudeurs qualifiés</li>
+      <li>Titres, fonctions, années d'expérience et qualifications</li>
+    </ul>
+    <div class="info-box">
+      GST ne collecte aucun renseignement sensible au sens de la Loi 25 (données biométriques, renseignements de santé, numéro d'assurance sociale, etc.).
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2>3. Finalités de la collecte</h2>
+    <p>Les renseignements personnels collectés sont utilisés exclusivement aux fins suivantes :</p>
+    <ul>
+      <li>Répondre aux demandes de contact et établir des soumissions</li>
+      <li>Génération automatisée du manuel PCQ au format Word (.docx), conformément aux exigences de la RBQ</li>
+      <li>Conservation temporaire des données pour permettre la régénération du document à la demande du client</li>
+      <li>Communication avec le client concernant la livraison ou la correction du document</li>
+    </ul>
+    <p>Ces renseignements ne sont <strong>pas</strong> utilisés à des fins de prospection commerciale, de vente à des tiers, de profilage ou à toute autre fin incompatible avec leur finalité déclarée.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>4. Conservation et suppression des données</h2>
+    <p>Les données clients sont conservées pendant une période maximale de <strong>12 mois</strong> suivant la date de génération du dernier document PCQ pour le client concerné, ou suivant le dernier échange de courriel pour les demandes de contact.</p>
+    <p>À l'expiration de ce délai, ou sur demande du client, les données correspondantes sont supprimées définitivement.</p>
+    <div class="info-box">
+      Vous pouvez demander la suppression de vos données en tout temps en envoyant une demande écrite au RPP : <a href="mailto:contact@guernonservicestechniques.ca">contact@guernonservicestechniques.ca</a>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2>5. Mesures de sécurité</h2>
+    <p>GST met en place les mesures suivantes pour protéger les renseignements personnels :</p>
+    <ul>
+      <li>Accès à l'application web protégé par mot de passe</li>
+      <li>Sessions signées cryptographiquement</li>
+      <li>Application déployée en environnement réseau privé</li>
+      <li>Accès aux fichiers de données restreint aux seules personnes autorisées</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>6. Communication à des tiers</h2>
+    <p>GST ne vend pas, ne loue pas et ne communique pas les renseignements personnels de ses clients à des tiers, sauf dans les cas suivants :</p>
+    <ul>
+      <li>Obligation légale ou injonction judiciaire l'exigeant</li>
+      <li>Consentement explicite et écrit du client concerné</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>7. Vos droits</h2>
+    <p>Toute personne physique dont les renseignements sont détenus par GST dispose des droits suivants :</p>
+    <ul>
+      <li><strong>Accès :</strong> connaître les renseignements vous concernant détenus par GST</li>
+      <li><strong>Rectification :</strong> faire corriger des renseignements inexacts ou incomplets</li>
+      <li><strong>Effacement :</strong> demander la suppression de vos renseignements personnels</li>
+      <li><strong>Portabilité :</strong> recevoir vos données dans un format structuré et lisible</li>
+      <li><strong>Opposition :</strong> vous opposer à un traitement dans les cas permis par la loi</li>
+    </ul>
+    <p>Pour exercer ces droits, adressez une demande écrite au RPP. GST s'engage à répondre dans un délai de <strong>30 jours</strong>.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>8. Incidents de confidentialité</h2>
+    <p>GST tient un registre interne des incidents de confidentialité conformément à l'article 3.5 de la Loi 25. En cas d'incident présentant un risque de préjudice sérieux, GST notifiera la Commission d'accès à l'information (CAI) et les personnes concernées dans les délais prescrits.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>9. Plainte à la Commission d'accès à l'information</h2>
+    <p>Si vous estimez que vos droits en matière de protection des renseignements personnels ne sont pas respectés, vous pouvez déposer une plainte auprès de la CAI :</p>
+    <div class="contact-box">
+      <h3>Commission d'accès à l'information du Québec</h3>
+      <p>Site Web : <a href="https://www.cai.gouv.qc.ca" target="_blank" rel="noopener">www.cai.gouv.qc.ca</a></p>
+      <p>Téléphone : 1 888 528-7741</p>
+      <p>Courriel : <a href="mailto:secretariat@cai.gouv.qc.ca">secretariat@cai.gouv.qc.ca</a></p>
+      <p>525, boul. René-Lévesque Est, bureau 2.36, Québec (QC)&nbsp; G1R 5S9</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2>10. Coordonnées du responsable de la protection des renseignements personnels (RPP)</h2>
+    <div class="contact-box">
+      <h3>Charles Guernon — RPP</h3>
+      <p>Guernon Services Techniques</p>
+      <p>Courriel : <a href="mailto:contact@guernonservicestechniques.ca">contact@guernonservicestechniques.ca</a></p>
+      <p>Délai de réponse : 30 jours suivant réception de la demande</p>
+    </div>
+  </div>
+
+  <div class="policy-section">
+    <h2>11. Révision de la politique</h2>
+    <p>Cette politique est révisée au minimum une fois par année ou lors de toute modification significative des activités de traitement des données.</p>
+    <table class="revision-table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Date</th>
+          <th>Auteur</th>
+          <th>Modifications</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1.0</td>
+          <td>Mars 2026</td>
+          <td>Charles Guernon</td>
+          <td>Création initiale — conformité Loi 25</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-logo">Guernon Services Techniques</div>
+  <div class="footer-copy">© 2026 Guernon Services Techniques · Québec, Canada</div>
+  <div class="footer-legal">
+    <a href="politique-confidentialite.html">Politique de confidentialité</a>
+  </div>
+</footer>
+
+</body>
+</html>
