@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questionnaire — Programme de Contrôle Qualité (RBQ)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0f1f38;
+      --navy-mid:   #162a4a;
+      --navy-light: #1e3a60;
+      --steel:      #2c4a6e;
+      --gold:       rgb(200, 168, 75);
+      --gold-light: #e2c97e;
+      --white:      #f8f7f4;
+      --gray:       #e4e2dc;
+      --gray-mid:   #9a9890;
+      --gray-dark:  #5a5854;
+      --text:       #1a1916;
+      --serif:      'Playfair Display', Georgia, serif;
+      --sans:       'Source Sans 3', system-ui, sans-serif;
+      --radius:     4px;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--white);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .header-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    header h1 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    header p {
+      color: rgba(248,247,244,0.65);
+      font-weight: 300;
+      font-size: 15px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      background: var(--navy-mid);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 2px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--gold-light);
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    /* ── FORM WRAPPER ── */
+    .form-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: #fff;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--navy);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-num {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 17px;
+      color: var(--white);
+      font-weight: 400;
+    }
+    .section-body {
+      padding: 24px;
+    }
+
+    /* ── FIELD GROUPS ── */
+    .field-group {
+      margin-bottom: 20px;
+    }
+    .field-group:last-child { margin-bottom: 0; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 560px) {
+      .field-row { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    label .req {
+      color: var(--gold);
+      margin-left: 2px;
+    }
+    label .opt {
+      font-weight: 300;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 12px;
+      color: var(--gray-mid);
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="tel"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(200,168,75,0.15);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── RADIO / CHECKBOX (Oui/Non) ── */
+    .bool-group {
+      display: flex;
+      gap: 12px;
+    }
+    .bool-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .bool-label input { display: none; }
+    .bool-label:has(input:checked) {
+      border-color: var(--gold);
+      background: rgba(200,168,75,0.08);
+      color: #7a6220;
+      font-weight: 600;
+    }
+    .bool-label .dot {
+      width: 14px; height: 14px;
+      border: 2px solid var(--gray-mid);
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .bool-label:has(input:checked) .dot {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    /* ── CHECKBOXES (activités, inspection) ── */
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border: 1px solid var(--gray);
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .check-item input[type="checkbox"] { display: none; }
+    .check-item:has(input:checked) {
+      border-color: var(--gold);
+      background: rgba(200,168,75,0.08);
+      color: #7a6220;
+      font-weight: 600;
+    }
+    .check-box {
+      width: 16px; height: 16px;
+      border: 2px solid var(--gray-mid);
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .check-item:has(input:checked) .check-box {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+    .check-item:has(input:checked) .check-box::after {
+      content: '';
+      width: 9px; height: 5px;
+      border-left: 2px solid var(--navy);
+      border-bottom: 2px solid var(--navy);
+      transform: rotate(-45deg) translateY(-1px);
+    }
+
+    /* ── CONDITIONAL SECTION ── */
+    .cond-section {
+      display: none;
+      margin-top: 0;
+    }
+    .cond-section.visible {
+      display: block;
+    }
+    .cond-section .section-header {
+      background: var(--steel);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: var(--gray);
+      margin: 20px 0;
+    }
+
+    /* ── LOGO UPLOAD ── */
+    .logo-upload-zone {
+      border: 2px dashed var(--gray);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .logo-upload-zone:hover {
+      border-color: var(--gold);
+      background: rgba(200,168,75,0.04);
+    }
+    .logo-upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .logo-upload-zone .upload-icon { font-size: 24px; margin-bottom: 6px; }
+    .logo-upload-zone .upload-text { font-size: 14px; color: var(--gray-dark); }
+    .logo-upload-zone .upload-text strong { color: var(--gold); }
+    .logo-preview {
+      display: none;
+      margin-top: 10px;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(200,168,75,0.07);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius);
+    }
+    .logo-preview img { max-height: 48px; max-width: 120px; object-fit: contain; }
+    .logo-preview .logo-name { font-size: 13px; color: var(--gray-dark); flex: 1; }
+    .logo-preview .logo-remove {
+      font-size: 18px; cursor: pointer; color: var(--gray-mid); line-height: 1;
+      background: none; border: none; padding: 0;
+    }
+    .logo-preview .logo-remove:hover { color: #b94040; }
+    .logo-tip {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ── HINT ── */
+    .hint {
+      font-size: 13px;
+      color: var(--gray-mid);
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* ── SUBMIT ZONE ── */
+    .submit-zone {
+      background: var(--navy);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      text-align: center;
+      margin-top: 16px;
+    }
+    .submit-zone h3 {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--white);
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+    .submit-zone p {
+      color: rgba(248,247,244,0.6);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 13px 36px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    /* ── VALIDATION ── */
+    .field-error {
+      font-size: 12px;
+      color: #b94040;
+      margin-top: 4px;
+      display: none;
+    }
+    .invalid input,
+    .invalid textarea,
+    .invalid select {
+      border-color: #b94040 !important;
+    }
+    .invalid .field-error { display: block; }
+
+    /* ── SUCCESS / ERROR BANNERS ── */
+    .success-banner,
+    .error-banner {
+      display: none;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .success-banner {
+      background: #1a3d1a;
+      border: 1px solid #3a7a3a;
+      color: #a8e6a8;
+    }
+    .error-banner {
+      background: #3d1a1a;
+      border: 1px solid #7a3a3a;
+      color: #e6a8a8;
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--gray-mid);
+      border-top: 1px solid var(--gray);
+    }
+    footer span { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Conforme RBQ · Programme de Contrôle Qualité</div>
+  <h1>Questionnaire de collecte d'informations</h1>
+  <p>Veuillez remplir ce formulaire avec le plus de précision possible. Vos réponses serviront à la rédaction de votre programme de contrôle qualité.</p>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">0 / 14</div>
+</div>
+
+<div class="form-wrapper">
+  <form id="pcqForm" novalidate>
+
+    <!-- ═══ SECTION 1 — Informations générales ═══ -->
+    <div class="section-card" data-section="1">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Informations générales</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Nom de l'entreprise <span class="req">*</span></label>
+          <input type="text" id="nom_entreprise" placeholder="Ex. : Construction Tremblay inc." required>
+          <div class="field-error">Ce champ est requis.</div>
+        </div>
+        <div class="field-group">
+          <label>Adresse complète <span class="req">*</span></label>
+          <input type="text" id="adresse" placeholder="123, rue Principale, Montréal (QC) H1A 1A1" required>
+          <div class="field-error">Ce champ est requis.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Numéro RBQ <span class="opt">(si existant)</span></label>
+            <input type="text" id="rbq_numero" placeholder="Ex. : 1234-5678-01">
+          </div>
+          <div class="field-group">
+            <label>Personne contact responsable du dossier qualité <span class="req">*</span></label>
+            <input type="text" id="contact" placeholder="Prénom Nom" required>
+            <div class="field-error">Ce champ est requis.</div>
+            <p class="hint">La personne qui sera l'interlocuteur principal avec le consultant pour la rédaction du PCQ.</p>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Téléphone <span class="req">*</span></label>
+            <input type="tel" id="telephone" placeholder="(514) 555-0100" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+          <div class="field-group">
+            <label>Courriel <span class="req">*</span></label>
+            <input type="email" id="courriel" placeholder="contact@entreprise.ca" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Logo de l'entreprise <span class="opt">(optionnel — recommandé)</span></label>
+          <div class="logo-upload-zone" id="logoZone">
+            <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+            <div class="upload-icon">🖼</div>
+            <div class="upload-text">Cliquez pour sélectionner votre logo<br><strong>PNG, JPG ou SVG</strong> · Max 2 Mo</div>
+          </div>
+          <div class="logo-preview" id="logoPreview">
+            <img id="logoThumb" src="" alt="Aperçu logo">
+            <span class="logo-name" id="logoName"></span>
+            <button type="button" class="logo-remove" id="logoRemove" title="Retirer le logo">✕</button>
+          </div>
+          <p class="logo-tip">💡 Fournir votre logo permet de personnaliser automatiquement l'en-tête de votre manuel qualité et de tous vos registres.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 2 — Activités ═══ -->
+    <div class="section-card" data-section="2">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Activités réalisées</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Sélectionnez toutes les activités applicables <span class="req">*</span></label>
+          <div class="check-grid" id="activitesGrid">
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="tuyauterie">
+              <span class="check-box"></span>Tuyauterie
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="fabrication">
+              <span class="check-box"></span>Fabrication
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="soudage" id="cbSoudage">
+              <span class="check-box"></span>Soudage
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="assemblage">
+              <span class="check-box"></span>Assemblage
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="installation">
+              <span class="check-box"></span>Installation
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="type_activite" value="maintenance">
+              <span class="check-box"></span>Maintenance
+            </label>
+          </div>
+          <div class="field-error" id="activitesError">Veuillez sélectionner au moins une activité.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 3 — Portée ═══ -->
+    <div class="section-card" data-section="3">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">Portée des travaux</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Types de projets réalisés <span class="req">*</span></label>
+          <textarea id="types_projets" placeholder="Ex. : Installations industrielles, chantiers de tuyauterie haute pression…" required></textarea>
+          <div class="field-error">Ce champ est requis.</div>
+        </div>
+        <div class="field-group">
+          <label>Types de clients <span class="req">*</span></label>
+          <input type="text" id="types_clients" placeholder="Ex. : Municipalités, industries pétrolières, entrepreneurs généraux…" required>
+          <div class="field-error">Ce champ est requis.</div>
+        </div>
+        <div class="field-group">
+          <label>Domaine d'application <span class="req">*</span></label>
+          <input type="text" id="domaine_application" placeholder="Ex. : Tuyauterie sous pression, gaz naturel, eau potable…" required>
+          <div class="field-error">Ce champ est requis.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 4 — Organisation ═══ -->
+    <div class="section-card" data-section="4">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Structure organisationnelle</div>
+      </div>
+      <div class="section-body">
+        <div class="field-row">
+          <div class="field-group">
+            <label>Responsable qualité <span class="req">*</span></label>
+            <input type="text" id="responsable_qualite" placeholder="Prénom Nom" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+          <div class="field-group">
+            <label>Fonction / Titre <span class="req">*</span></label>
+            <input type="text" id="fonction_responsable" placeholder="Ex. : Directeur technique" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Expérience du responsable <span class="req">*</span></label>
+            <input type="text" id="experience_responsable" placeholder="Ex. : 15 ans en contrôle qualité industriel" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+          <div class="field-group">
+            <label>Nombre total d'employés de l'entreprise <span class="req">*</span></label>
+            <input type="text" id="nb_employes" placeholder="Ex. : 12 (toutes fonctions confondues)" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 5 — Ressources humaines ═══ -->
+    <div class="section-card" data-section="5">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">Ressources humaines</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Les employés affectés aux travaux (soudeurs, tuyauteurs, monteurs, etc.) détiennent-ils les certifications ou qualifications requises par leur corps de métier? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="employes_qualifies" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="employes_qualifies" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Vos soudeurs détiennent-ils des certifications valides conformes aux normes applicables à vos travaux (ex. : CWB W47.1, ASME Section IX)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="soudeurs_certifies" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="soudeurs_certifies" value="n"><span class="dot"></span>Non</label>
+          </div>
+          <p class="hint">Répondez « Non » si votre entreprise ne fait pas de soudage.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Avez-vous un programme de formation documenté sur les exigences qualité à l'intention de vos employés (procédures, NCR, traçabilité, sécurité qualité)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="formation_qualite" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="formation_qualite" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 6 — Soudage (conditionnelle) ═══ -->
+    <div class="section-card cond-section" id="sectionSoudage" data-section="6">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">Soudage</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Disposez-vous de procédures de soudage documentées et qualifiées (WPS / PQR) pour chaque procédé utilisé? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="procedures_soudage" value="o"><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="procedures_soudage" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Tenez-vous un registre de traçabilité pour chaque soudure réalisée (numéro de soudeur, procédure WPS utilisée, position, date, localisation dans l'ouvrage)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="o"><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 7 — Matériaux ═══ -->
+    <div class="section-card" data-section="7">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-title">Gestion des matériaux</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Effectuez-vous une vérification des matériaux au moment de leur réception sur chantier ou en atelier (conformité des certificats, dimensions, marquage, état physique)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="controle_materiaux" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="controle_materiaux" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Conservez-vous les certificats matière (MTR / Mill Test Reports) et pouvez-vous en assurer la traçabilité jusqu'à la pièce fabriquée ou au joint réalisé? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="tracabilite_materiaux" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="tracabilite_materiaux" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 8 — Production ═══ -->
+    <div class="section-card" data-section="8">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div class="section-title">Contrôle de production</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Avez-vous des procédures de travail écrites qui décrivent comment réaliser vos principales opérations (ex. : assemblage, soudage, montage de tuyauterie, tests)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="procedures_travail" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="procedures_travail" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Effectuez-vous des contrôles qualité pendant l'exécution des travaux (vérifications intermédiaires, points d'arrêt ou d'inspection avant de passer à l'étape suivante)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="controle_production" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="controle_production" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 9 — Inspection ═══ -->
+    <div class="section-card" data-section="9">
+      <div class="section-header">
+        <div class="section-num">9</div>
+        <div class="section-title">Inspection et contrôle</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Réalisez-vous des inspections internes de vos travaux avant livraison ou mise en service, par une personne désignée distincte de l'exécutant? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="inspection_interne" value="o" id="inspectionOui" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="inspection_interne" value="n" id="inspectionNon"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <!-- Sous-champs conditionnels -->
+        <div id="inspectionDetails" style="display:none;">
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Types d'inspection réalisés <span class="req">*</span></label>
+            <div class="check-grid">
+              <label class="check-item">
+                <input type="checkbox" name="type_inspection" value="visuelle">
+                <span class="check-box"></span>Visuelle
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="type_inspection" value="dimensionnelle">
+                <span class="check-box"></span>Dimensionnelle
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="type_inspection" value="pression">
+                <span class="check-box"></span>Test de pression
+              </label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Les personnes qui effectuent vos inspections internes détiennent-elles une certification reconnue (ex. : CWI, niveau CGSB, ou formation qualité équivalente documentée)? <span class="req">*</span></label>
+            <div class="bool-group">
+              <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="o"><span class="dot"></span>Oui</label>
+              <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="n"><span class="dot"></span>Non</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 10 — Équipements ═══ -->
+    <div class="section-card" data-section="10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div class="section-title">Équipements de mesure</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Vos instruments de mesure et de contrôle utilisés sur les travaux (manomètres, jauges, pieds à coulisse, niveaux, etc.) sont-ils soumis à une calibration périodique par un organisme accrédité? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="equipements_calibres" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="equipements_calibres" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Tenez-vous un registre de calibration pour chaque instrument (identification de l'instrument, date de calibration, résultat, prochaine échéance)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="registre_calibration" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="registre_calibration" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 11 — Non-conformités ═══ -->
+    <div class="section-card" data-section="11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <div class="section-title">Gestion des non-conformités</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Comment gérez-vous les non-conformités? <span class="req">*</span></label>
+          <textarea id="gestion_ncr" placeholder="Décrivez votre méthode actuelle : formulaires NCR, processus de correction, responsables, archivage…" required></textarea>
+          <div class="field-error">Ce champ est requis.</div>
+          <p class="hint">Si vous n'avez pas encore de processus formalisé, indiquez comment vous traitez actuellement les écarts constatés sur chantier.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 12 — Documentation ═══ -->
+    <div class="section-card" data-section="12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <div class="section-title">Gestion documentaire</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Disposez-vous d'un système permettant de contrôler les versions de vos procédures et formulaires qualité (indices de révision, approbations documentées, retrait des documents périmés)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="controle_documents" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="controle_documents" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Conservez-vous de façon organisée les documents qualité complétés après chaque projet (rapports d'inspection, registres de soudage, NCR, certificats matière, bons de livraison)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="archivage_documents" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="archivage_documents" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 13 — Audit ═══ -->
+    <div class="section-card" data-section="13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <div class="section-title">Audit interne</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Réalisez-vous périodiquement des audits internes pour évaluer l'application et l'efficacité de votre programme qualité (vérification que les procédures sont suivies, que les registres sont tenus, etc.)? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="audit_interne" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="audit_interne" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>À quelle fréquence ces audits internes sont-ils réalisés? <span class="opt">(si applicable)</span></label>
+          <input type="text" id="frequence_audit" placeholder="Ex. : Annuel, semestriel, après chaque projet, selon les projets…">
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 14 — Expérience RBQ ═══ -->
+    <div class="section-card" data-section="14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <div class="section-title">Expérience avec la RBQ</div>
+      </div>
+      <div class="section-body">
+        <div class="field-group">
+          <label>Décrivez votre expérience avec la RBQ <span class="req">*</span></label>
+          <textarea id="experience_rbq" placeholder="Ex. : Licence RBQ active depuis 2018, deux inspections réussies, dossier de conformité soumis en 2022…" required></textarea>
+          <div class="field-error">Ce champ est requis.</div>
+          <p class="hint">Indiquez notamment si vous avez déjà soumis un PCQ, passé des inspections ou reçu des avis de la RBQ.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ZONE DE SOUMISSION ═══ -->
+    <div class="submit-zone">
+      <h3>Prêt à soumettre?</h3>
+      <p>Vos réponses seront transmises directement à votre consultant. Vous recevrez une confirmation à l'écran.</p>
+      <button type="submit" class="btn-primary" id="submitBtn">Envoyer le questionnaire →</button>
+    </div>
+
+    <div class="success-banner" id="successBanner">
+      ✅ Questionnaire reçu ! Votre consultant vous contactera sous peu pour débuter la rédaction de votre programme qualité.
+    </div>
+
+    <div class="error-banner" id="errorBanner">
+      ❌ <span id="errorMsg">Une erreur est survenue. Veuillez réessayer ou contacter votre consultant directement.</span>
+    </div>
+
+  </form>
+</div>
+
+<footer>
+  Document préparé par <span>Charles Guernon</span> · Ingénieur en tuyauterie haute pression &amp; Contrôle qualité RBQ
+</footer>
+
+<script>
+  // ── Gestion du logo ──
+  let logoBase64 = null;
+  let logoFilename = null;
+
+  const logoInput = document.getElementById('logoInput');
+  const logoPreview = document.getElementById('logoPreview');
+  const logoThumb = document.getElementById('logoThumb');
+  const logoName = document.getElementById('logoName');
+  const logoRemove = document.getElementById('logoRemove');
+
+  logoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Le fichier est trop volumineux (max 2 Mo). Veuillez choisir une image plus légère.');
+      this.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      logoBase64 = e.target.result;
+      logoFilename = file.name;
+      logoThumb.src = logoBase64;
+      logoName.textContent = file.name;
+      logoPreview.style.display = 'flex';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  logoRemove.addEventListener('click', function() {
+    logoBase64 = null;
+    logoFilename = null;
+    logoInput.value = '';
+    logoThumb.src = '';
+    logoPreview.style.display = 'none';
+  });
+
+  // ── Logique conditionnelle : Section Soudage ──
+  document.querySelectorAll('input[name="type_activite"]').forEach(cb => {
+    cb.addEventListener('change', toggleSoudage);
+  });
+
+  function toggleSoudage() {
+    const hasSoudage = !!document.querySelector('input[name="type_activite"][value="soudage"]:checked');
+    const sec = document.getElementById('sectionSoudage');
+    sec.classList.toggle('visible', hasSoudage);
+    if (!hasSoudage) {
+      document.querySelectorAll('input[name="procedures_soudage"], input[name="tracabilite_soudage"]').forEach(r => r.checked = false);
+    }
+    updateProgress();
+  }
+
+  // ── Logique conditionnelle : Sous-section Inspection ──
+  document.querySelectorAll('input[name="inspection_interne"]').forEach(r => {
+    r.addEventListener('change', toggleInspection);
+  });
+
+  function toggleInspection() {
+    const val = document.querySelector('input[name="inspection_interne"]:checked')?.value;
+    const details = document.getElementById('inspectionDetails');
+    details.style.display = val === 'o' ? 'block' : 'none';
+    if (val !== 'o') {
+      document.querySelectorAll('input[name="type_inspection"], input[name="inspecteurs_qualifies"]').forEach(i => i.checked = false);
+    }
+  }
+
+  // ── Barre de progression ──
+  function updateProgress() {
+    const sections = document.querySelectorAll('.section-card:not(.cond-section), .section-card.cond-section.visible');
+    let filled = 0;
+    sections.forEach(sec => {
+      const inputs = sec.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+      const radios = [...new Set([...sec.querySelectorAll('input[type="radio"]')].map(r => r.name))];
+      const checks = sec.querySelectorAll('input[type="checkbox"]');
+      let sectionOk = true;
+      inputs.forEach(i => { if (i.hasAttribute('required') && !i.value.trim()) sectionOk = false; });
+      radios.forEach(name => {
+        const groupInputs = sec.querySelectorAll(`input[name="${name}"]`);
+        if (groupInputs.length && groupInputs[0].hasAttribute('required') || name === 'employes_qualifies' || name === 'soudeurs_certifies' || name === 'formation_qualite' || name === 'controle_materiaux' || name === 'tracabilite_materiaux' || name === 'procedures_travail' || name === 'controle_production' || name === 'inspection_interne' || name === 'equipements_calibres' || name === 'registre_calibration' || name === 'controle_documents' || name === 'archivage_documents' || name === 'audit_interne') {
+          if (!sec.querySelector(`input[name="${name}"]:checked`)) sectionOk = false;
+        }
+      });
+      if (sec.dataset.section === '2') {
+        if (!document.querySelector('input[name="type_activite"]:checked')) sectionOk = false;
+      }
+      if (sectionOk) filled++;
+    });
+    const total = sections.length;
+    const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = filled + ' / ' + total;
+  }
+
+  document.getElementById('pcqForm').addEventListener('input', updateProgress);
+  document.getElementById('pcqForm').addEventListener('change', updateProgress);
+
+  // ── Export JSON ──
+  document.getElementById('pcqForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Validation simple
+    let valid = true;
+    document.querySelectorAll('[required]').forEach(el => {
+      const group = el.closest('.field-group') || el.parentElement;
+      if (!el.value.trim()) {
+        group.classList.add('invalid');
+        valid = false;
+      } else {
+        group.classList.remove('invalid');
+      }
+    });
+
+    const activites = [...document.querySelectorAll('input[name="type_activite"]:checked')].map(c => c.value);
+    const activitesError = document.getElementById('activitesError');
+    if (activites.length === 0) {
+      activitesError.style.display = 'block';
+      valid = false;
+    } else {
+      activitesError.style.display = 'none';
+    }
+
+    if (!valid) {
+      const firstError = document.querySelector('.invalid, [style*="display: block"]');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // Collecte des données — structure identique à intake.py
+    const hasSoudage = activites.includes('soudage');
+    const inspectionInterne = document.querySelector('input[name="inspection_interne"]:checked')?.value === 'o';
+
+    const data = {
+      // Section 1
+      nom_entreprise: document.getElementById('nom_entreprise').value.trim(),
+      adresse: document.getElementById('adresse').value.trim(),
+      rbq_numero: document.getElementById('rbq_numero').value.trim(),
+      contact: document.getElementById('contact').value.trim(),
+      telephone: document.getElementById('telephone').value.trim(),
+      courriel: document.getElementById('courriel').value.trim(),
+
+      // Section 2
+      type_activite: activites,
+      a_soudage: hasSoudage,
+
+      // Section 3
+      types_projets: document.getElementById('types_projets').value.trim(),
+      types_clients: document.getElementById('types_clients').value.trim(),
+      domaine_application: document.getElementById('domaine_application').value.trim(),
+
+      // Section 4
+      responsable_qualite: document.getElementById('responsable_qualite').value.trim(),
+      fonction_responsable: document.getElementById('fonction_responsable').value.trim(),
+      experience_responsable: document.getElementById('experience_responsable').value.trim(),
+      nb_employes: document.getElementById('nb_employes').value.trim(),
+
+      // Section 5
+      employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
+      soudeurs_certifies: document.querySelector('input[name="soudeurs_certifies"]:checked')?.value === 'o',
+      formation_qualite: document.querySelector('input[name="formation_qualite"]:checked')?.value === 'o',
+
+      // Section 6 (soudage)
+      procedures_soudage: hasSoudage
+        ? document.querySelector('input[name="procedures_soudage"]:checked')?.value === 'o'
+        : false,
+      tracabilite_soudage: hasSoudage
+        ? document.querySelector('input[name="tracabilite_soudage"]:checked')?.value === 'o'
+        : false,
+
+      // Section 7
+      controle_materiaux: document.querySelector('input[name="controle_materiaux"]:checked')?.value === 'o',
+      tracabilite_materiaux: document.querySelector('input[name="tracabilite_materiaux"]:checked')?.value === 'o',
+
+      // Section 8
+      procedures_travail: document.querySelector('input[name="procedures_travail"]:checked')?.value === 'o',
+      controle_production: document.querySelector('input[name="controle_production"]:checked')?.value === 'o',
+
+      // Section 9
+      inspection_interne: inspectionInterne,
+      type_inspection: inspectionInterne
+        ? [...document.querySelectorAll('input[name="type_inspection"]:checked')].map(c => c.value)
+        : [],
+      inspecteurs_qualifies: inspectionInterne
+        ? document.querySelector('input[name="inspecteurs_qualifies"]:checked')?.value === 'o'
+        : false,
+
+      // Section 10
+      equipements_calibres: document.querySelector('input[name="equipements_calibres"]:checked')?.value === 'o',
+      registre_calibration: document.querySelector('input[name="registre_calibration"]:checked')?.value === 'o',
+
+      // Section 11
+      gestion_ncr: document.getElementById('gestion_ncr').value.trim(),
+
+      // Section 12
+      controle_documents: document.querySelector('input[name="controle_documents"]:checked')?.value === 'o',
+      archivage_documents: document.querySelector('input[name="archivage_documents"]:checked')?.value === 'o',
+
+      // Section 13
+      audit_interne: document.querySelector('input[name="audit_interne"]:checked')?.value === 'o',
+      frequence_audit: document.getElementById('frequence_audit').value.trim(),
+
+      // Section 14
+      experience_rbq: document.getElementById('experience_rbq').value.trim(),
+
+      // Logo (optionnel)
+      logo_filename: logoFilename || null,
+      logo_base64: logoBase64 || null
+    };
+
+    // ── Envoi au Cloudflare Worker ──────────────────────────────────────────
+    // 🔧 Remplacez cette URL par l'URL de votre Worker après déploiement
+    const WORKER_URL = 'https://pcq-submit.VOTRE-SOUS-DOMAINE.workers.dev';
+
+    const submitBtn = document.getElementById('submitBtn');
+    const successBanner = document.getElementById('successBanner');
+    const errorBanner = document.getElementById('errorBanner');
+    const errorMsg = document.getElementById('errorMsg');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Envoi en cours…';
+    errorBanner.style.display = 'none';
+    successBanner.style.display = 'none';
+
+    fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(async res => {
+        if (res.ok) {
+          successBanner.style.display = 'block';
+          successBanner.scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('pcqForm').reset();
+          // Réinitialiser les états UI
+          document.getElementById('logoPreview').style.display = 'none';
+          document.getElementById('sectionSoudage').classList.remove('visible');
+          document.getElementById('inspectionDetails').style.display = 'none';
+          logoBase64 = null; logoFilename = null;
+          updateProgress();
+        } else {
+          const body = await res.json().catch(() => ({}));
+          errorMsg.textContent = body.erreur || 'Erreur serveur. Veuillez réessayer.';
+          errorBanner.style.display = 'block';
+          errorBanner.scrollIntoView({ behavior: 'smooth' });
+        }
+      })
+      .catch(() => {
+        errorMsg.textContent = 'Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.';
+        errorBanner.style.display = 'block';
+        errorBanner.scrollIntoView({ behavior: 'smooth' });
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer le questionnaire →';
+      });
+  });
+</script>
+
+</body>
+</html>
