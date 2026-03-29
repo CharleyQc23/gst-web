@@ -911,9 +911,13 @@
       if (resp.ok) {
         setToken(token);
         showDashboard();
-      } else {
+      } else if (resp.status === 401) {
+        err.textContent = 'Token invalide. Veuillez réessayer.';
         err.style.display = 'block';
         document.getElementById('tokenInput').value = '';
+      } else {
+        err.textContent = `Erreur serveur (${resp.status}). Vérifiez les logs Cloudflare.`;
+        err.style.display = 'block';
       }
     } catch {
       err.textContent = 'Impossible de joindre le serveur.';
