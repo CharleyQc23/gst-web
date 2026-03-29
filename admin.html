@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <!-- Génération de documents Word dans le navigateur -->
-<script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.min.js"></script>
-<script src="https://unpkg.com/docxtemplater@3.50.0/build/docxtemplater.js"></script>
+<script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
+<script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <style>
   :root {
     --navy:       #0f1f38;
@@ -1249,7 +1249,8 @@
 
       // 3 — docxtemplater
       const zip  = new PizZip(arrayBuffer);
-      const doc  = new window.Docxtemplater(zip, {
+      const Docxtemplater = window.docxtemplater || window.Docxtemplater;
+      const doc  = new Docxtemplater(zip, {
         delimiters: { start: '{{', end: '}}' },
         paragraphLoop: true,
         linebreaks: true,
