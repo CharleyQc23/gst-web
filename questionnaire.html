@@ -418,21 +418,7 @@
     }
     .invalid .field-error { display: block; }
 
-    /* ── SUCCESS / ERROR BANNERS ── */
-    .success-banner,
-    .error-banner {
-      display: none;
-      padding: 16px 20px;
-      border-radius: var(--radius);
-      margin-top: 16px;
-      font-size: 14px;
-      text-align: center;
-    }
-    .success-banner {
-      background: #1a3d1a;
-      border: 1px solid #3a7a3a;
-      color: #a8e6a8;
-    }
+    /* ── ERROR BANNER ── */
     .error-banner {
       background: #3d1a1a;
       border: 1px solid #7a3a3a;
@@ -896,10 +882,6 @@
       <button type="submit" class="btn-primary" id="submitBtn">Envoyer le questionnaire →</button>
     </div>
 
-    <div class="success-banner" id="successBanner">
-      ✅ Questionnaire reçu ! Votre consultant vous contactera sous peu pour débuter la rédaction de votre programme qualité.
-    </div>
-
     <div class="error-banner" id="errorBanner">
       ❌ <span id="errorMsg">Une erreur est survenue. Veuillez réessayer ou contacter votre consultant directement.</span>
     </div>
@@ -1124,14 +1106,12 @@
     const WORKER_URL = 'https://pcq-submit.c-guernon.workers.dev';
 
     const submitBtn = document.getElementById('submitBtn');
-    const successBanner = document.getElementById('successBanner');
     const errorBanner = document.getElementById('errorBanner');
     const errorMsg = document.getElementById('errorMsg');
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours…';
     errorBanner.style.display = 'none';
-    successBanner.style.display = 'none';
 
     fetch(WORKER_URL, {
       method: 'POST',
@@ -1140,15 +1120,7 @@
     })
       .then(async res => {
         if (res.ok) {
-          successBanner.style.display = 'block';
-          successBanner.scrollIntoView({ behavior: 'smooth' });
-          document.getElementById('pcqForm').reset();
-          // Réinitialiser les états UI
-          document.getElementById('logoPreview').style.display = 'none';
-          document.getElementById('sectionSoudage').classList.remove('visible');
-          document.getElementById('inspectionDetails').style.display = 'none';
-          logoBase64 = null; logoFilename = null;
-          updateProgress();
+          window.location.href = '/merci.html';
         } else {
           const body = await res.json().catch(() => ({}));
           errorMsg.textContent = body.erreur || 'Erreur serveur. Veuillez réessayer.';
