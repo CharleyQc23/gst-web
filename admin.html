@@ -7,6 +7,9 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- Génération de documents Word dans le navigateur -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.7/pizzip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
 <style>
   :root {
     --navy:       #0f1f38;
@@ -558,6 +561,121 @@
   }
   .btn-modal-close:hover { border-color: var(--navy); color: var(--navy); }
 
+  /* ── Bouton Générer ── */
+  .btn-gen {
+    padding: 5px 12px;
+    background: var(--navy);
+    border: 1px solid var(--navy);
+    border-radius: var(--radius);
+    font-size: 11px;
+    font-family: var(--sans);
+    color: var(--white);
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .btn-gen:hover { background: var(--navy-light); border-color: var(--navy-light); }
+  .btn-gen:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Modal de génération ── */
+  .gen-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,20,35,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .gen-modal-overlay.open { display: flex; }
+
+  .gen-modal {
+    background: #fff;
+    border-radius: var(--radius);
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(10,20,35,0.35);
+  }
+
+  .gen-modal-header {
+    background: var(--navy);
+    padding: 18px 24px;
+  }
+
+  .gen-modal-header h2 {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  .gen-modal-header p {
+    font-size: 12px;
+    color: rgba(200,168,75,0.8);
+    margin-top: 3px;
+  }
+
+  .gen-modal-body { padding: 20px 24px; }
+
+  .gen-modal-body label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .template-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .template-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--gray);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    background: var(--white);
+  }
+  .template-option:hover { border-color: var(--gold); background: rgba(200,168,75,0.04); }
+  .template-option.selected { border-color: var(--navy); background: rgba(15,31,56,0.04); }
+
+  .template-option input[type="radio"] { accent-color: var(--navy); }
+
+  .tpl-label { font-size: 13px; color: var(--text); }
+  .tpl-desc  { font-size: 11px; color: var(--gray-mid); margin-top: 1px; }
+
+  .gen-modal-footer {
+    padding: 14px 24px;
+    border-top: 1px solid var(--gray);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .gen-status {
+    font-size: 12px;
+    color: var(--gray-dark);
+    margin-top: 12px;
+    min-height: 18px;
+    text-align: center;
+  }
+
+  .gen-status.error { color: #c0392b; }
+  .gen-status.success { color: #1a6b1a; }
+
   /* ── Responsive ── */
   @media (max-width: 680px) {
     main { padding: 72px 16px 40px; }
@@ -649,6 +767,27 @@
   </div>
 
 </main>
+
+<!-- ── Modal de génération ── -->
+<div class="gen-modal-overlay" id="genModalOverlay">
+  <div class="gen-modal">
+    <div class="gen-modal-header">
+      <h2 id="genModalTitle">Générer le document</h2>
+      <p id="genModalSub">Sélectionnez le template à utiliser</p>
+    </div>
+    <div class="gen-modal-body">
+      <label>Template</label>
+      <div class="template-list" id="templateList">
+        <!-- Rempli dynamiquement -->
+      </div>
+      <div class="gen-status" id="genStatus"></div>
+    </div>
+    <div class="gen-modal-footer">
+      <button class="btn-modal-close" id="genModalClose">Annuler</button>
+      <button class="btn-modal-dl" id="btnGenerate">↓ Générer le .docx</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── Modal détail ── -->
 <div class="modal-overlay" id="modalOverlay">
@@ -792,7 +931,10 @@
           ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>`
           : '—'}</td>
         <td><span class="badge-activite" title="${esc(s.type_activite || '')}">${esc(s.type_activite || '—')}</span></td>
-        <td><button class="btn-dl" onclick="event.stopPropagation();downloadJSON(allSoumissions[${i}])">↓ JSON</button></td>
+        <td style="white-space:nowrap;display:flex;gap:6px;">
+          <button class="btn-dl" onclick="event.stopPropagation();downloadJSON(allSoumissions[${i}])">↓ JSON</button>
+          <button class="btn-gen" onclick="event.stopPropagation();openGenModal(${i})">⚙ Générer</button>
+        </td>
       </tr>
     `).join('');
 
@@ -934,6 +1076,221 @@
 
   document.getElementById('btnLogout').addEventListener('click', showLogin);
   document.getElementById('btnRefresh').addEventListener('click', loadSoumissions);
+
+  /* ══════════════════════════════════════════════════════
+     GÉNÉRATION DOCX — docxtemplater
+  ══════════════════════════════════════════════════════ */
+
+  // Mapping des templates disponibles dans R2
+  const TEMPLATES_DISPONIBLES = [
+    { id: 'pcq_fabricant',    label: 'PCQ Fabricant',              desc: 'Programme de contrôle qualité — fabricant',     file: 'template_pcq_fabricant_v1.docx' },
+    { id: 'pcq_installateur', label: 'PCQ Installateur',           desc: 'Programme de contrôle qualité — installateur',  file: 'template_pcq_installateur_v1.docx' },
+    { id: 'pcq_generique',    label: 'PCQ Générique',              desc: 'Programme de contrôle qualité — générique',     file: 'template_pcq_rbq_v2.docx' },
+    { id: 'ann09',            label: 'Rapport d\'essai de pression', desc: 'Annexe 09',                                   file: 'template_ann09_rapport_essai_pression_v1.docx' },
+    { id: 'ann10',            label: 'Rapport d\'installation',    desc: 'Annexe 10',                                     file: 'template_ann10_rapport_installation_v1.docx' },
+    { id: 'ann11',            label: 'Registre des soudeurs',      desc: 'Annexe 11',                                     file: 'template_ann11_registre_soudeurs_v1.docx' },
+    { id: 'ann14',            label: 'Fiche de vérification',      desc: 'Annexe 14',                                     file: 'template_ann14_fiche_verification_v1.docx' },
+    { id: 'ann15',            label: 'Mention de conformité',      desc: 'Annexe 15',                                     file: 'template_ann15_mention_conformite_v1.docx' },
+    { id: 'ncr',              label: 'NCR Installateur',           desc: 'Rapport de non-conformité',                     file: 'template_ncr_installateur_v1.docx' },
+  ];
+
+  // Sélection automatique selon type_pcq dans le JSON
+  const TYPE_PCQ_MAP = {
+    'fabricant':    'pcq_fabricant',
+    'installateur': 'pcq_installateur',
+    'generique':    'pcq_generique',
+  };
+
+  let genSoumission = null;
+  let selectedTemplateId = null;
+
+  function buildContext(data) {
+    const ctx = { ...data };
+    const now = new Date();
+
+    // Métadonnées
+    ctx.date_generation = ctx.date_generation ||
+      now.toLocaleDateString('fr-CA', { day: '2-digit', month: 'long', year: 'numeric' });
+    ctx.version  = ctx.version  || '1.0';
+    ctx.revision = ctx.revision || '00';
+
+    // Valeurs par défaut
+    const defaults = {
+      nom_entreprise:'', adresse:'', rbq_numero:'En cours d\'obtention',
+      contact:'', telephone:'', courriel:'', responsable_qualite:'',
+      fonction_responsable:'', experience_responsable:'', nb_employes:'',
+      types_projets:'', types_clients:'', domaine_application:'',
+      gestion_ncr:'Formulaire de non-conformité interne',
+      frequence_audit:'Annuelle', experience_rbq:'', codes_applicables:'BNQ 3650-900, CSA B51, ASME B31.x, ASME Section IX',
+      exploitant_utilisateur:'', duree_maintien_pression:'30 minutes',
+      sous_traitant_end:'À déterminer selon chantier', frequence_etalonnage:'Annuelle',
+      gamme_manometres:'0–2× MAWP', methode_statut_etalonnage:'Étiquette de couleur + registre',
+      source_specs_materiaux:'Plans d\'ingénierie approuvés',
+      methode_identification:'Transfert numéro de chaleur + étiquette',
+    };
+    for (const [k, v] of Object.entries(defaults)) {
+      if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v;
+    }
+
+    // Activités
+    const activites = Array.isArray(ctx.type_activite) ? ctx.type_activite.map(a => a.toLowerCase()) : [];
+    ctx.activites_liste = activites.join(', ') || 'Non spécifié';
+    ctx.a_soudage      = ctx.a_soudage      ?? activites.includes('soudage');
+    ctx.a_tuyauterie   = ctx.a_tuyauterie   ?? activites.includes('tuyauterie');
+    ctx.a_fabrication  = ctx.a_fabrication  ?? activites.includes('fabrication');
+    ctx.a_installation = ctx.a_installation ?? activites.includes('installation');
+    ctx.a_maintenance  = ctx.a_maintenance  ?? activites.includes('maintenance');
+
+    // Inspection
+    const typesInsp = Array.isArray(ctx.type_inspection) ? ctx.type_inspection : [];
+    ctx.inspections_liste = typesInsp.join(', ') || '';
+
+    // Aliases
+    ctx.methode_ncr = ctx.methode_ncr || ctx.gestion_ncr;
+    ctx.dirigeant_entreprise = ctx.dirigeant_entreprise || ctx.contact || '';
+    ctx.responsable_formation = ctx.responsable_formation || ctx.responsable_qualite || '';
+
+    // Helpers Oui/Non
+    const ouiNon = v => v ? 'Oui' : 'Non';
+    ctx.txt_soudeurs_certifies   = ouiNon(ctx.soudeurs_certifies);
+    ctx.txt_inspection_interne   = ouiNon(ctx.inspection_interne);
+    ctx.txt_controle_materiaux   = ouiNon(ctx.controle_materiaux);
+    ctx.txt_audit_interne        = ouiNon(ctx.audit_interne);
+    ctx.txt_equipements_calibres = ouiNon(ctx.equipements_calibres);
+    ctx.txt_procedures_travail   = ouiNon(ctx.procedures_travail);
+    ctx.txt_gaz_medicaux         = ouiNon(ctx.gaz_medicaux);
+    ctx.txt_assemblage_chantier  = ouiNon(ctx.assemblage_chantier);
+
+    return ctx;
+  }
+
+  function openGenModal(idx) {
+    genSoumission = allSoumissions[idx];
+
+    let data;
+    try { data = JSON.parse(genSoumission.donnees_json); } catch { data = {}; }
+
+    // Auto-sélection du template selon type_pcq
+    const typePcq = (data.type_pcq || '').toLowerCase();
+    selectedTemplateId = TYPE_PCQ_MAP[typePcq] || 'pcq_installateur';
+
+    document.getElementById('genModalTitle').textContent = genSoumission.nom_entreprise || 'Générer le document';
+    document.getElementById('genModalSub').textContent = 'Sélectionnez le template à utiliser';
+    document.getElementById('genStatus').textContent = '';
+    document.getElementById('genStatus').className = 'gen-status';
+    document.getElementById('btnGenerate').disabled = false;
+    document.getElementById('btnGenerate').textContent = '↓ Générer le .docx';
+
+    // Remplir la liste de templates
+    const list = document.getElementById('templateList');
+    list.innerHTML = TEMPLATES_DISPONIBLES.map(t => `
+      <label class="template-option ${t.id === selectedTemplateId ? 'selected' : ''}">
+        <input type="radio" name="tpl" value="${t.id}" ${t.id === selectedTemplateId ? 'checked' : ''}>
+        <div>
+          <div class="tpl-label">${esc(t.label)}</div>
+          <div class="tpl-desc">${esc(t.desc)}</div>
+        </div>
+      </label>
+    `).join('');
+
+    list.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        selectedTemplateId = radio.value;
+        list.querySelectorAll('.template-option').forEach(o => o.classList.remove('selected'));
+        radio.closest('.template-option').classList.add('selected');
+      });
+    });
+
+    document.getElementById('genModalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeGenModal() {
+    document.getElementById('genModalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    genSoumission = null;
+  }
+
+  async function generateDocx() {
+    if (!genSoumission || !selectedTemplateId) return;
+
+    const tplDef = TEMPLATES_DISPONIBLES.find(t => t.id === selectedTemplateId);
+    if (!tplDef) return;
+
+    const btn    = document.getElementById('btnGenerate');
+    const status = document.getElementById('genStatus');
+
+    btn.disabled = true;
+    btn.textContent = 'Chargement du template…';
+    status.textContent = '';
+    status.className = 'gen-status';
+
+    try {
+      // 1 — Charger le template depuis le Worker (R2)
+      status.textContent = 'Récupération du template depuis R2…';
+      const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tplDef.file)}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.erreur || `HTTP ${resp.status}`);
+      }
+
+      const arrayBuffer = await resp.arrayBuffer();
+
+      // 2 — Préparer le contexte
+      btn.textContent = 'Génération en cours…';
+      status.textContent = 'Remplissage du template…';
+
+      let rawData;
+      try { rawData = JSON.parse(genSoumission.donnees_json); } catch { rawData = {}; }
+      const ctx = buildContext(rawData);
+
+      // 3 — docxtemplater
+      const zip  = new PizZip(arrayBuffer);
+      const doc  = new window.Docxtemplater(zip, {
+        delimiters: { start: '{{', end: '}}' },
+        paragraphLoop: true,
+        linebreaks: true,
+      });
+
+      doc.render(ctx);
+
+      // 4 — Téléchargement
+      const blob = doc.getZip().generate({
+        type: 'blob',
+        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      });
+
+      const nomFichier = (genSoumission.nom_entreprise || 'client').replace(/\s+/g, '_')
+        + '_' + tplDef.id + '.docx';
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = nomFichier;
+      a.click();
+      URL.revokeObjectURL(a.href);
+
+      status.textContent = `✓ ${nomFichier} téléchargé avec succès.`;
+      status.className = 'gen-status success';
+      btn.textContent = '↓ Générer le .docx';
+      btn.disabled = false;
+
+    } catch (err) {
+      console.error(err);
+      status.textContent = `Erreur : ${err.message}`;
+      status.className = 'gen-status error';
+      btn.textContent = '↓ Générer le .docx';
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById('genModalClose').addEventListener('click', closeGenModal);
+  document.getElementById('btnGenerate').addEventListener('click', generateDocx);
+  document.getElementById('genModalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeGenModal();
+  });
 
   /* ══════════════════════════════════════════════════════
      INIT — vérifie si déjà connecté (même onglet)
