@@ -10,6 +10,7 @@
 <!-- Génération de documents Word dans le navigateur -->
 <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
+<script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
 <style>
   :root {
     --navy:       #0f1f38;
@@ -1161,6 +1162,9 @@
     ctx.txt_gaz_medicaux         = ouiNon(ctx.gaz_medicaux);
     ctx.txt_assemblage_chantier  = ouiNon(ctx.assemblage_chantier);
 
+    // Logo
+    ctx.has_logo = !!(ctx.logo_base64);
+
     return ctx;
   }
 
@@ -1250,11 +1254,45 @@
       // 3 — docxtemplater
       const zip  = new PizZip(arrayBuffer);
       const Docxtemplater = window.docxtemplater || window.Docxtemplater;
-      const doc  = new Docxtemplater(zip, {
+
+      // Module image : convertit logo_base64 (data URI ou base64 brut) en image inline
+      const ImageModule = window.ImageModule || window.docxtemplaterImageModuleFree;
+      const imageModule = ImageModule ? new ImageModule({
+        centered: false,
+        getImage(tagValue) {
+          if (!tagValue) return null;
+          const b64 = tagValue.includes(',') ? tagValue.split(',')[1] : tagValue;
+          return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        },
+        getSize(img, tagValue) {
+          // Taille fixe : 150 × 60 px (environ 40 mm de large à 96 dpi)
+          return [150, 60];
+        },
+      }) : null;
+
+      // Parser personnalisé : trim les espaces dans les noms de variables
+      // Les templates utilisent {{ nom_entreprise }} (style Jinja2 avec espaces)
+      const customParser = (tag) => {
+        const trimmed = tag.trim();
+        return {
+          get: (scope) => {
+            if (scope == null) return '';
+            const val = scope[trimmed];
+            return (val !== undefined && val !== null) ? val : '';
+          }
+        };
+      };
+
+      const docOptions = {
         delimiters: { start: '{{', end: '}}' },
         paragraphLoop: true,
         linebreaks: true,
-      });
+        parser: customParser,
+        nullGetter: () => '',
+      };
+      if (imageModule) docOptions.modules = [imageModule];
+
+      const doc  = new Docxtemplater(zip, docOptions);
 
       doc.render(ctx);
 
