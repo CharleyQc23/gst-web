@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
-<!-- Génération de documents Word dans le navigateur -->
+<script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
@@ -29,662 +29,104 @@
     --radius: 4px;
     --transition: 0.22s ease;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--sans);
-    background: #f0ede6;
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  /* ── Navigation ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(15, 31, 56, 0.97);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(200, 168, 75, 0.2);
-    padding: 0 32px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nav-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .nav-logo {
-    font-family: var(--serif);
-    font-size: 16px;
-    color: var(--white);
-    text-decoration: none;
-    opacity: 0.85;
-    transition: opacity var(--transition);
-  }
+  body { font-family: var(--sans); background: #f0ede6; color: var(--text); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,31,56,0.97); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(200,168,75,0.2); padding: 0 32px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-left { display: flex; align-items: center; gap: 20px; }
+  .nav-logo { font-family: var(--serif); font-size: 16px; color: var(--white); text-decoration: none; opacity: 0.85; transition: opacity var(--transition); }
   .nav-logo:hover { opacity: 1; }
-
-  .nav-badge {
-    font-size: 10px;
-    background: rgba(200,168,75,0.15);
-    border: 1px solid rgba(200,168,75,0.35);
-    color: var(--gold);
-    padding: 2px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .btn-logout {
-    font-size: 12px;
-    color: rgba(248,247,244,0.5);
-    background: transparent;
-    border: 1px solid rgba(248,247,244,0.15);
-    padding: 6px 16px;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all var(--transition);
-    font-family: var(--sans);
-    letter-spacing: 0.04em;
-  }
+  .nav-badge { font-size: 10px; background: rgba(200,168,75,0.15); border: 1px solid rgba(200,168,75,0.35); color: var(--gold); padding: 2px 10px; border-radius: 20px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+  .btn-logout { font-size: 12px; color: rgba(248,247,244,0.5); background: transparent; border: 1px solid rgba(248,247,244,0.15); padding: 6px 16px; border-radius: var(--radius); cursor: pointer; transition: all var(--transition); font-family: var(--sans); letter-spacing: 0.04em; }
   .btn-logout:hover { color: var(--white); border-color: rgba(248,247,244,0.4); }
-
-  /* ── Layout ── */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 80px 32px 60px;
-  }
-
-  /* ════════════════════════════════════════════════
-     ÉCRAN DE CONNEXION
-  ════════════════════════════════════════════════ */
-  #loginScreen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: calc(100vh - 60px);
-    padding: 60px 20px;
-  }
-
-  .login-card {
-    background: #fff;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    max-width: 420px;
-    width: 100%;
-    overflow: hidden;
-    box-shadow: 0 4px 32px rgba(15,31,56,0.1);
-  }
-
-  .login-header {
-    background: var(--navy);
-    padding: 28px 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .login-header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      -45deg, transparent, transparent 24px,
-      rgba(200,168,75,0.03) 24px, rgba(200,168,75,0.03) 25px
-    );
-  }
-
-  .login-header p {
-    font-size: 10px;
-    color: var(--gold);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .login-header h1 {
-    font-family: var(--serif);
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--white);
-    position: relative;
-    z-index: 1;
-  }
-
+  main { max-width: 1100px; margin: 0 auto; padding: 80px 32px 60px; }
+  #loginScreen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 60px); padding: 60px 20px; }
+  .login-card { background: #fff; border: 1px solid var(--gray); border-radius: var(--radius); max-width: 420px; width: 100%; overflow: hidden; box-shadow: 0 4px 32px rgba(15,31,56,0.1); }
+  .login-header { background: var(--navy); padding: 28px 32px; position: relative; overflow: hidden; }
+  .login-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg, transparent, transparent 24px, rgba(200,168,75,0.03) 24px, rgba(200,168,75,0.03) 25px); }
+  .login-header p { font-size: 10px; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 1; }
+  .login-header h1 { font-family: var(--serif); font-size: 20px; font-weight: 400; color: var(--white); position: relative; z-index: 1; }
   .login-body { padding: 28px 32px 32px; }
-
-  .login-body label {
-    display: block;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-dark);
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .login-body input[type="password"] {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-family: var(--sans);
-    background: var(--white);
-    color: var(--text);
-    transition: border-color var(--transition);
-    outline: none;
-  }
-
+  .login-body label { display: block; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-dark); font-weight: 600; margin-bottom: 8px; }
+  .login-body input[type="password"] { width: 100%; padding: 11px 14px; border: 1px solid var(--gray); border-radius: var(--radius); font-size: 14px; font-family: var(--sans); background: var(--white); color: var(--text); transition: border-color var(--transition); outline: none; }
   .login-body input[type="password"]:focus { border-color: var(--gold); }
-
-  .login-error {
-    display: none;
-    margin-top: 10px;
-    font-size: 13px;
-    color: var(--red);
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    margin-top: 16px;
-    background: var(--gold);
-    color: var(--navy);
-    padding: 12px 24px;
-    border-radius: var(--radius);
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    transition: background var(--transition);
-  }
+  .login-error { display: none; margin-top: 10px; font-size: 13px; color: var(--red); }
+  .btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 16px; background: var(--gold); color: var(--navy); padding: 12px 24px; border-radius: var(--radius); font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border: none; cursor: pointer; transition: background var(--transition); }
   .btn-primary:hover { background: var(--gold-light); }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-  /* ════════════════════════════════════════════════
-     DASHBOARD
-  ════════════════════════════════════════════════ */
   #dashboard { display: none; }
-
-  .dash-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-
-  .dash-title {
-    font-family: var(--serif);
-    font-size: 24px;
-    font-weight: 400;
-    color: var(--navy);
-    line-height: 1.2;
-  }
-
-  .dash-subtitle {
-    font-size: 13px;
-    color: var(--gray-dark);
-    margin-top: 4px;
-  }
-
-  .dash-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .search-box {
-    padding: 9px 14px 9px 36px;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    font-size: 13px;
-    font-family: var(--sans);
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239a9890' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center;
-    color: var(--text);
-    width: 240px;
-    outline: none;
-    transition: border-color var(--transition);
-  }
+  .dash-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+  .dash-title { font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--navy); line-height: 1.2; }
+  .dash-subtitle { font-size: 13px; color: var(--gray-dark); margin-top: 4px; }
+  .dash-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .search-box { padding: 9px 14px 9px 36px; border: 1px solid var(--gray); border-radius: var(--radius); font-size: 13px; font-family: var(--sans); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239a9890' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 12px center; color: var(--text); width: 240px; outline: none; transition: border-color var(--transition); }
   .search-box:focus { border-color: var(--gold); }
-
-  .btn-refresh {
-    padding: 9px 16px;
-    background: var(--navy);
-    color: var(--white);
-    border: none;
-    border-radius: var(--radius);
-    font-size: 12px;
-    font-family: var(--sans);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background var(--transition);
-  }
+  .btn-refresh { padding: 9px 16px; background: var(--navy); color: var(--white); border: none; border-radius: var(--radius); font-size: 12px; font-family: var(--sans); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background var(--transition); }
   .btn-refresh:hover { background: var(--navy-light); }
-
-  /* Stats rapides */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .stat-card {
-    background: #fff;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-  }
-
-  .stat-label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-mid);
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .stat-value {
-    font-size: 28px;
-    font-family: var(--serif);
-    color: var(--navy);
-    line-height: 1;
-  }
-
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: #fff; border: 1px solid var(--gray); border-radius: var(--radius); padding: 16px 20px; }
+  .stat-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-mid); font-weight: 600; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-family: var(--serif); color: var(--navy); line-height: 1; }
   .stat-value.gold { color: var(--gold); }
-
-  /* Tableau */
-  .table-wrap {
-    background: #fff;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  thead {
-    background: var(--navy);
-  }
-
-  thead th {
-    padding: 12px 16px;
-    text-align: left;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(248,247,244,0.65);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--gray);
-    transition: background var(--transition);
-    cursor: pointer;
-  }
-
+  .table-wrap { background: #fff; border: 1px solid var(--gray); border-radius: var(--radius); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--navy); }
+  thead th { padding: 12px 16px; text-align: left; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(248,247,244,0.65); font-weight: 600; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--gray); transition: background var(--transition); cursor: pointer; }
   tbody tr:last-child { border-bottom: none; }
-
   tbody tr:hover { background: #f8f7f4; }
-
-  tbody td {
-    padding: 13px 16px;
-    vertical-align: middle;
-    color: var(--text);
-  }
-
+  tbody td { padding: 13px 16px; vertical-align: middle; color: var(--text); }
   .td-date { color: var(--gray-dark); font-size: 12px; white-space: nowrap; }
-
   .td-entreprise { font-weight: 600; color: var(--navy); }
-
-  .badge-activite {
-    display: inline-block;
-    background: rgba(15,31,56,0.06);
-    color: var(--navy-light);
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 180px;
-  }
-
-  .btn-dl {
-    padding: 5px 12px;
-    background: transparent;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    font-size: 11px;
-    font-family: var(--sans);
-    color: var(--gray-dark);
-    cursor: pointer;
-    transition: all var(--transition);
-    white-space: nowrap;
-  }
+  .badge-activite { display: inline-block; background: rgba(15,31,56,0.06); color: var(--navy-light); font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+  .btn-dl { padding: 5px 12px; background: transparent; border: 1px solid var(--gray); border-radius: var(--radius); font-size: 11px; font-family: var(--sans); color: var(--gray-dark); cursor: pointer; transition: all var(--transition); white-space: nowrap; }
   .btn-dl:hover { border-color: var(--gold); color: var(--navy); background: rgba(200,168,75,0.06); }
-
-  .empty-state {
-    padding: 60px 20px;
-    text-align: center;
-    color: var(--gray-mid);
-    font-size: 14px;
-  }
-
-  .loading-state {
-    padding: 60px 20px;
-    text-align: center;
-    color: var(--gray-mid);
-    font-size: 14px;
-  }
-
-  /* ── Modal détail ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,20,35,0.65);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
+  .empty-state { padding: 60px 20px; text-align: center; color: var(--gray-mid); font-size: 14px; }
+  .loading-state { padding: 60px 20px; text-align: center; color: var(--gray-mid); font-size: 14px; }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,35,0.65); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: #fff;
-    border-radius: var(--radius);
-    max-width: 700px;
-    width: 100%;
-    max-height: 85vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(10,20,35,0.35);
-    overflow: hidden;
-  }
-
-  .modal-header {
-    background: var(--navy);
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-
-  .modal-title {
-    font-family: var(--serif);
-    font-size: 18px;
-    color: var(--white);
-    font-weight: 400;
-  }
-
-  .modal-subtitle {
-    font-size: 11px;
-    color: rgba(200,168,75,0.8);
-    margin-top: 2px;
-    letter-spacing: 0.06em;
-  }
-
-  .modal-close {
-    background: transparent;
-    border: none;
-    color: rgba(248,247,244,0.5);
-    font-size: 22px;
-    cursor: pointer;
-    line-height: 1;
-    padding: 4px;
-    transition: color var(--transition);
-  }
+  .modal { background: #fff; border-radius: var(--radius); max-width: 700px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(10,20,35,0.35); overflow: hidden; }
+  .modal-header { background: var(--navy); padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .modal-title { font-family: var(--serif); font-size: 18px; color: var(--white); font-weight: 400; }
+  .modal-subtitle { font-size: 11px; color: rgba(200,168,75,0.8); margin-top: 2px; letter-spacing: 0.06em; }
+  .modal-close { background: transparent; border: none; color: rgba(248,247,244,0.5); font-size: 22px; cursor: pointer; line-height: 1; padding: 4px; transition: color var(--transition); }
   .modal-close:hover { color: var(--white); }
-
-  .modal-body {
-    overflow-y: auto;
-    padding: 24px;
-    flex: 1;
-  }
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 20px;
-    font-size: 13px;
-  }
-
-  .detail-row {
-    display: contents;
-  }
-
-  .detail-row > * {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--gray);
-  }
-
+  .modal-body { overflow-y: auto; padding: 24px; flex: 1; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--gray); border-radius: var(--radius); overflow: hidden; margin-bottom: 20px; font-size: 13px; }
+  .detail-row { display: contents; }
+  .detail-row > * { padding: 10px 14px; border-bottom: 1px solid var(--gray); }
   .detail-row:last-child > * { border-bottom: none; }
-
-  .detail-label {
-    background: #f8f7f4;
-    color: var(--gray-dark);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
+  .detail-label { background: #f8f7f4; color: var(--gray-dark); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
   .detail-value { color: var(--text); }
-
-  .json-block {
-    background: #1a1916;
-    border-radius: var(--radius);
-    padding: 16px;
-    overflow-x: auto;
-    font-size: 11px;
-    line-height: 1.6;
-    color: #c8d8e8;
-    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  .modal-footer {
-    padding: 16px 24px;
-    border-top: 1px solid var(--gray);
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    flex-shrink: 0;
-    background: #fafaf8;
-  }
-
-  .btn-modal-dl {
-    padding: 9px 20px;
-    background: var(--gold);
-    color: var(--navy);
-    border: none;
-    border-radius: var(--radius);
-    font-size: 12px;
-    font-family: var(--sans);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background var(--transition);
-  }
+  .json-block { background: #1a1916; border-radius: var(--radius); padding: 16px; overflow-x: auto; font-size: 11px; line-height: 1.6; color: #c8d8e8; font-family: 'Menlo','Monaco','Courier New',monospace; max-height: 300px; overflow-y: auto; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray); display: flex; gap: 10px; justify-content: flex-end; flex-shrink: 0; background: #fafaf8; }
+  .btn-modal-dl { padding: 9px 20px; background: var(--gold); color: var(--navy); border: none; border-radius: var(--radius); font-size: 12px; font-family: var(--sans); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background var(--transition); }
   .btn-modal-dl:hover { background: var(--gold-light); }
-
-  .btn-modal-close {
-    padding: 9px 20px;
-    background: transparent;
-    color: var(--gray-dark);
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    font-size: 12px;
-    font-family: var(--sans);
-    cursor: pointer;
-    transition: all var(--transition);
-  }
+  .btn-modal-close { padding: 9px 20px; background: transparent; color: var(--gray-dark); border: 1px solid var(--gray); border-radius: var(--radius); font-size: 12px; font-family: var(--sans); cursor: pointer; transition: all var(--transition); }
   .btn-modal-close:hover { border-color: var(--navy); color: var(--navy); }
-
-  /* ── Bouton Générer ── */
-  .btn-gen {
-    padding: 5px 12px;
-    background: var(--navy);
-    border: 1px solid var(--navy);
-    border-radius: var(--radius);
-    font-size: 11px;
-    font-family: var(--sans);
-    color: var(--white);
-    cursor: pointer;
-    transition: all var(--transition);
-    white-space: nowrap;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
+  .btn-gen { padding: 5px 12px; background: var(--navy); border: 1px solid var(--navy); border-radius: var(--radius); font-size: 11px; font-family: var(--sans); color: var(--white); cursor: pointer; transition: all var(--transition); white-space: nowrap; font-weight: 600; letter-spacing: 0.04em; }
   .btn-gen:hover { background: var(--navy-light); border-color: var(--navy-light); }
   .btn-gen:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* ── Modal de génération ── */
-  .gen-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(10,20,35,0.65);
-    backdrop-filter: blur(4px);
-    z-index: 300;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
+  .gen-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,20,35,0.65); backdrop-filter: blur(4px); z-index: 300; align-items: center; justify-content: center; padding: 20px; }
   .gen-modal-overlay.open { display: flex; }
-
-  .gen-modal {
-    background: #fff;
-    border-radius: var(--radius);
-    max-width: 480px;
-    width: 100%;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(10,20,35,0.35);
-  }
-
-  .gen-modal-header {
-    background: var(--navy);
-    padding: 18px 24px;
-  }
-
-  .gen-modal-header h2 {
-    font-family: var(--serif);
-    font-size: 18px;
-    color: var(--white);
-    font-weight: 400;
-  }
-
-  .gen-modal-header p {
-    font-size: 12px;
-    color: rgba(200,168,75,0.8);
-    margin-top: 3px;
-  }
-
+  .gen-modal { background: #fff; border-radius: var(--radius); max-width: 480px; width: 100%; overflow: hidden; box-shadow: 0 20px 60px rgba(10,20,35,0.35); }
+  .gen-modal-header { background: var(--navy); padding: 18px 24px; }
+  .gen-modal-header h2 { font-family: var(--serif); font-size: 18px; color: var(--white); font-weight: 400; }
+  .gen-modal-header p { font-size: 12px; color: rgba(200,168,75,0.8); margin-top: 3px; }
   .gen-modal-body { padding: 20px 24px; }
-
-  .gen-modal-body label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-dark);
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .template-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .template-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border: 1px solid var(--gray);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all var(--transition);
-    background: var(--white);
-  }
-  .template-option:hover { border-color: var(--gold); background: rgba(200,168,75,0.04); }
+  .template-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--gray); border-radius: var(--radius); margin-bottom: 6px; background: var(--white); }
   .template-option.selected { border-color: var(--navy); background: rgba(15,31,56,0.04); }
-
-  .template-option input[type="radio"] { accent-color: var(--navy); }
-
   .tpl-label { font-size: 13px; color: var(--text); }
-  .tpl-desc  { font-size: 11px; color: var(--gray-mid); margin-top: 1px; }
-
-  .gen-modal-footer {
-    padding: 14px 24px;
-    border-top: 1px solid var(--gray);
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-  }
-
-  .gen-status {
-    font-size: 12px;
-    color: var(--gray-dark);
-    margin-top: 12px;
-    min-height: 18px;
-    text-align: center;
-  }
-
+  .gen-modal-footer { padding: 14px 24px; border-top: 1px solid var(--gray); display: flex; gap: 10px; justify-content: flex-end; }
+  .gen-status { font-size: 12px; color: var(--gray-dark); margin-top: 12px; min-height: 18px; text-align: center; }
   .gen-status.error { color: #c0392b; }
   .gen-status.success { color: #1a6b1a; }
-
-  /* ── Responsive ── */
   @media (max-width: 680px) {
     main { padding: 72px 16px 40px; }
     nav { padding: 0 16px; }
     .search-box { width: 100%; }
     table { font-size: 12px; }
-    thead th:nth-child(4),
-    tbody td:nth-child(4) { display: none; }
+    thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
     .detail-grid { grid-template-columns: 1fr; }
     .detail-label, .detail-value { grid-column: 1; }
     .detail-label { border-bottom: none; padding-bottom: 2px; }
@@ -693,7 +135,6 @@
 </head>
 <body>
 
-<!-- ── Navigation ── -->
 <nav>
   <div class="nav-left">
     <a href="/" class="nav-logo">Guernon Services Techniques</a>
@@ -702,7 +143,6 @@
   <button class="btn-logout" id="btnLogout" style="display:none;">Déconnexion</button>
 </nav>
 
-<!-- ── Écran de connexion ── -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-header">
@@ -710,87 +150,63 @@
       <h1>Tableau de bord PCQ</h1>
     </div>
     <div class="login-body">
-      <label for="tokenInput">Token d'accès</label>
+      <label for="tokenInput">Clé d'accès</label>
       <input type="password" id="tokenInput" placeholder="••••••••••••••••" autocomplete="off">
-      <div class="login-error" id="loginError">Token invalide. Veuillez réessayer.</div>
+      <div class="login-error" id="loginError">Clé invalide. Veuillez réessayer.</div>
       <button class="btn-primary" id="btnLogin">Accéder →</button>
     </div>
   </div>
 </div>
 
-<!-- ── Dashboard ── -->
 <main id="dashboard">
-
   <div class="dash-header">
     <div>
       <h1 class="dash-title">Soumissions PCQ</h1>
-      <p class="dash-subtitle">Questionnaires reçus via guernonservicestechniques.ca</p>
+      <p class="dash-subtitle">Questionnaires reçus via guernonservicestechniques.ca/questionnaire</p>
     </div>
     <div class="dash-controls">
       <input type="text" class="search-box" id="searchBox" placeholder="Rechercher…">
       <button class="btn-refresh" id="btnRefresh">↻ Actualiser</button>
     </div>
   </div>
-
-  <!-- Stats -->
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">Total soumissions</div>
-      <div class="stat-value" id="statTotal">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Ce mois-ci</div>
-      <div class="stat-value gold" id="statMois">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Dernière réception</div>
-      <div class="stat-value" id="statDerniere" style="font-size:16px;padding-top:6px;">—</div>
-    </div>
+    <div class="stat-card"><div class="stat-label">Total soumissions</div><div class="stat-value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="stat-label">Ce mois-ci</div><div class="stat-value gold" id="statMois">—</div></div>
+    <div class="stat-card"><div class="stat-label">Dernière réception</div><div class="stat-value" id="statDerniere" style="font-size:16px;padding-top:6px;">—</div></div>
   </div>
-
-  <!-- Tableau -->
   <div class="table-wrap">
     <div class="loading-state" id="loadingState">Chargement…</div>
     <div class="empty-state" id="emptyState" style="display:none;">Aucune soumission trouvée.</div>
     <table id="tableData" style="display:none;">
       <thead>
         <tr>
-          <th>Date</th>
-          <th>Entreprise</th>
-          <th>Contact</th>
-          <th>Courriel</th>
-          <th>Activités</th>
-          <th></th>
+          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
   </div>
-
 </main>
 
-<!-- ── Modal de génération ── -->
+<!-- Modal génération -->
 <div class="gen-modal-overlay" id="genModalOverlay">
   <div class="gen-modal">
     <div class="gen-modal-header">
-      <h2 id="genModalTitle">Générer le document</h2>
-      <p id="genModalSub">Sélectionnez le template à utiliser</p>
+      <h2 id="genModalTitle">Générer les documents</h2>
+      <p id="genModalSub">Documents applicables selon le profil du client</p>
     </div>
     <div class="gen-modal-body">
-      <label>Template</label>
-      <div class="template-list" id="templateList">
-        <!-- Rempli dynamiquement -->
-      </div>
+      <div id="templateList"></div>
       <div class="gen-status" id="genStatus"></div>
     </div>
     <div class="gen-modal-footer">
       <button class="btn-modal-close" id="genModalClose">Annuler</button>
-      <button class="btn-modal-dl" id="btnGenerate">↓ Générer le .docx</button>
+      <button class="btn-modal-dl" id="btnGenerate">↓ Générer le ZIP</button>
     </div>
   </div>
 </div>
 
-<!-- ── Modal détail ── -->
+<!-- Modal détail -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
@@ -803,9 +219,7 @@
     <div class="modal-body">
       <div class="detail-grid" id="detailGrid"></div>
       <details style="margin-top:4px;">
-        <summary style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);cursor:pointer;user-select:none;padding:8px 0;">
-          JSON brut
-        </summary>
+        <summary style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-mid);cursor:pointer;user-select:none;padding:8px 0;">JSON brut</summary>
         <pre class="json-block" id="modalJson"></pre>
       </details>
     </div>
@@ -817,86 +231,62 @@
 </div>
 
 <script>
-  /* ══════════════════════════════════════════════════════
-     CONFIG
-  ══════════════════════════════════════════════════════ */
   const WORKER_URL = 'https://pcq-submit.c-guernon.workers.dev';
-  const TOKEN_KEY  = 'pcq_admin_token';  // sessionStorage (effacé à la fermeture de l'onglet)
+  const TOKEN_KEY  = 'pcq_admin_token';
 
-  /* ══════════════════════════════════════════════════════
-     ÉTAT
-  ══════════════════════════════════════════════════════ */
-  let allSoumissions = [];
+  let allSoumissions    = [];
   let currentSoumission = null;
 
-  /* ══════════════════════════════════════════════════════
-     UTILITAIRES
-  ══════════════════════════════════════════════════════ */
+  /* ── Utilitaires ── */
   function fmtDate(iso) {
     if (!iso) return '—';
     const d = new Date(iso);
-    return d.toLocaleDateString('fr-CA', { year: 'numeric', month: 'short', day: 'numeric' })
-      + ' ' + d.toLocaleTimeString('fr-CA', { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleDateString('fr-CA', { year:'numeric', month:'short', day:'numeric' })
+      + ' ' + d.toLocaleTimeString('fr-CA', { hour:'2-digit', minute:'2-digit' });
   }
-
   function fmtDateShort(iso) {
     if (!iso) return '—';
-    const d = new Date(iso);
-    return d.toLocaleDateString('fr-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+    return new Date(iso).toLocaleDateString('fr-CA', { year:'numeric', month:'short', day:'numeric' });
   }
-
-  function nomFichier(s) {
-    return (s.nom_entreprise || 'client').replace(/\s+/g, '_') + '.json';
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-
   function downloadJSON(s) {
-    let data;
-    try { data = JSON.parse(s.donnees_json); } catch { data = s.donnees_json; }
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    let data; try { data = JSON.parse(s.donnees_json); } catch { data = s.donnees_json; }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = nomFichier(s);
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.download = (s.nom_entreprise || 'client').replace(/\s+/g,'_') + '.json';
+    a.click(); URL.revokeObjectURL(a.href);
   }
 
-  /* ══════════════════════════════════════════════════════
-     AUTHENTIFICATION
-  ══════════════════════════════════════════════════════ */
-  function getToken() { return sessionStorage.getItem(TOKEN_KEY) || ''; }
+  /* ── Auth ── */
+  function getToken()  { return sessionStorage.getItem(TOKEN_KEY) || ''; }
   function setToken(t) { sessionStorage.setItem(TOKEN_KEY, t); }
-  function clearToken() { sessionStorage.removeItem(TOKEN_KEY); }
+  function clearToken(){ sessionStorage.removeItem(TOKEN_KEY); }
 
   function showDashboard() {
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-    document.getElementById('btnLogout').style.display = 'block';
+    document.getElementById('dashboard').style.display   = 'block';
+    document.getElementById('btnLogout').style.display   = 'block';
     loadSoumissions();
   }
-
   function showLogin() {
     document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('btnLogout').style.display = 'none';
+    document.getElementById('dashboard').style.display   = 'none';
+    document.getElementById('btnLogout').style.display   = 'none';
     clearToken();
   }
 
-  /* ══════════════════════════════════════════════════════
-     CHARGEMENT DES DONNÉES
-  ══════════════════════════════════════════════════════ */
+  /* ── Chargement ── */
   async function loadSoumissions() {
     document.getElementById('loadingState').style.display = 'block';
-    document.getElementById('tableData').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'none';
-
+    document.getElementById('tableData').style.display    = 'none';
+    document.getElementById('emptyState').style.display   = 'none';
     try {
-      const resp = await fetch(`${WORKER_URL}/submissions`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-
+      const resp = await fetch(`${WORKER_URL}/submissions`, { headers: { Authorization:`Bearer ${getToken()}` } });
       if (resp.status === 401) { showLogin(); return; }
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-
       const { soumissions } = await resp.json();
       allSoumissions = soumissions || [];
       renderTable(allSoumissions);
@@ -907,233 +297,128 @@
     }
   }
 
-  /* ══════════════════════════════════════════════════════
-     RENDU TABLEAU
-  ══════════════════════════════════════════════════════ */
+  /* ── Rendu tableau ── */
   function renderTable(list) {
     const tbody = document.getElementById('tableBody');
     document.getElementById('loadingState').style.display = 'none';
-
     if (!list.length) {
       document.getElementById('emptyState').style.display = 'block';
-      document.getElementById('tableData').style.display = 'none';
+      document.getElementById('tableData').style.display  = 'none';
       return;
     }
-
-    document.getElementById('tableData').style.display = 'table';
+    document.getElementById('tableData').style.display  = 'table';
     document.getElementById('emptyState').style.display = 'none';
-
     tbody.innerHTML = list.map((s, i) => `
       <tr data-idx="${i}">
         <td class="td-date">${fmtDateShort(s.soumis_le)}</td>
         <td class="td-entreprise">${esc(s.nom_entreprise || '—')}</td>
         <td>${esc(s.contact || '—')}</td>
-        <td>${s.courriel
-          ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>`
-          : '—'}</td>
-        <td><span class="badge-activite" title="${esc(s.type_activite || '')}">${esc(s.type_activite || '—')}</span></td>
+        <td>${s.courriel ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>` : '—'}</td>
+        <td><span class="badge-activite" title="${esc(s.type_activite||'')}">${esc(s.type_activite||'—')}</span></td>
         <td style="white-space:nowrap;display:flex;gap:6px;">
           <button class="btn-dl" onclick="event.stopPropagation();downloadJSON(allSoumissions[${i}])">↓ JSON</button>
           <button class="btn-gen" onclick="event.stopPropagation();openGenModal(${i})">⚙ Générer</button>
         </td>
-      </tr>
-    `).join('');
-
-    tbody.querySelectorAll('tr').forEach(row => {
-      row.addEventListener('click', () => {
-        const idx = +row.dataset.idx;
-        openModal(allSoumissions[idx]);
-      });
-    });
+      </tr>`).join('');
+    tbody.querySelectorAll('tr').forEach(row =>
+      row.addEventListener('click', () => openModal(allSoumissions[+row.dataset.idx]))
+    );
   }
 
   function renderStats(list) {
     document.getElementById('statTotal').textContent = list.length;
-
     const now = new Date();
-    const mois = list.filter(s => {
+    document.getElementById('statMois').textContent = list.filter(s => {
       const d = new Date(s.soumis_le);
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     }).length;
-    document.getElementById('statMois').textContent = mois;
-
-    const derniere = list[0]?.soumis_le;
-    document.getElementById('statDerniere').textContent = derniere ? fmtDateShort(derniere) : '—';
+    document.getElementById('statDerniere').textContent = list[0]?.soumis_le ? fmtDateShort(list[0].soumis_le) : '—';
   }
 
-  function esc(s) {
-    return String(s)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  /* ══════════════════════════════════════════════════════
-     RECHERCHE
-  ══════════════════════════════════════════════════════ */
+  /* ── Recherche ── */
   document.getElementById('searchBox').addEventListener('input', function() {
     const q = this.value.toLowerCase().trim();
-    if (!q) { renderTable(allSoumissions); return; }
-    const filtered = allSoumissions.filter(s =>
-      (s.nom_entreprise || '').toLowerCase().includes(q) ||
-      (s.contact || '').toLowerCase().includes(q) ||
-      (s.courriel || '').toLowerCase().includes(q) ||
-      (s.type_activite || '').toLowerCase().includes(q)
-    );
-    renderTable(filtered);
+    renderTable(q ? allSoumissions.filter(s =>
+      (s.nom_entreprise||'').toLowerCase().includes(q) ||
+      (s.contact||'').toLowerCase().includes(q) ||
+      (s.courriel||'').toLowerCase().includes(q) ||
+      (s.type_activite||'').toLowerCase().includes(q)
+    ) : allSoumissions);
   });
 
-  /* ══════════════════════════════════════════════════════
-     MODAL DÉTAIL
-  ══════════════════════════════════════════════════════ */
+  /* ── Modal détail ── */
   function openModal(s) {
     currentSoumission = s;
-
-    document.getElementById('modalTitle').textContent = s.nom_entreprise || '—';
+    document.getElementById('modalTitle').textContent    = s.nom_entreprise || '—';
     document.getElementById('modalSubtitle').textContent = fmtDate(s.soumis_le);
-
-    // Grille de détails
-    const champs = [
-      ['Entreprise',  s.nom_entreprise],
-      ['Contact',     s.contact],
-      ['Courriel',    s.courriel],
-      ['Téléphone',   s.telephone],
-      ['Activités',   s.type_activite],
-      ['Reçu le',     fmtDate(s.soumis_le)],
-    ];
-
-    document.getElementById('detailGrid').innerHTML = champs.map(([l, v]) => `
-      <div class="detail-row">
-        <div class="detail-label">${esc(l)}</div>
-        <div class="detail-value">${esc(v || '—')}</div>
-      </div>
-    `).join('');
-
-    // JSON brut formaté
-    let parsed;
-    try { parsed = JSON.parse(s.donnees_json); } catch { parsed = s.donnees_json; }
+    document.getElementById('detailGrid').innerHTML = [
+      ['Entreprise', s.nom_entreprise], ['Contact', s.contact],
+      ['Courriel',   s.courriel],       ['Téléphone', s.telephone],
+      ['Activités',  s.type_activite],  ['Reçu le', fmtDate(s.soumis_le)],
+    ].map(([l,v]) => `<div class="detail-row"><div class="detail-label">${esc(l)}</div><div class="detail-value">${esc(v||'—')}</div></div>`).join('');
+    let parsed; try { parsed = JSON.parse(s.donnees_json); } catch { parsed = s.donnees_json; }
     document.getElementById('modalJson').textContent = JSON.stringify(parsed, null, 2);
-
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
-
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.body.style.overflow = '';
     currentSoumission = null;
   }
-
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalCloseFt').addEventListener('click', closeModal);
-  document.getElementById('modalDownload').addEventListener('click', () => {
-    if (currentSoumission) downloadJSON(currentSoumission);
-  });
-  document.getElementById('modalOverlay').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeModal();
-  });
+  document.getElementById('modalDownload').addEventListener('click', () => { if (currentSoumission) downloadJSON(currentSoumission); });
+  document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-  /* ══════════════════════════════════════════════════════
-     ÉVÉNEMENTS PRINCIPAUX
-  ══════════════════════════════════════════════════════ */
+  /* ── Login / Logout ── */
   document.getElementById('btnLogin').addEventListener('click', async () => {
     const token = document.getElementById('tokenInput').value.trim();
     if (!token) return;
-
     const btn = document.getElementById('btnLogin');
     const err = document.getElementById('loginError');
-    btn.disabled = true;
-    btn.textContent = 'Vérification…';
-    err.style.display = 'none';
-
+    btn.disabled = true; btn.textContent = 'Vérification…'; err.style.display = 'none';
     try {
-      const resp = await fetch(`${WORKER_URL}/submissions`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (resp.ok) {
-        setToken(token);
-        showDashboard();
-      } else if (resp.status === 401) {
-        err.textContent = 'Token invalide. Veuillez réessayer.';
-        err.style.display = 'block';
-        document.getElementById('tokenInput').value = '';
-      } else {
-        err.textContent = `Erreur serveur (${resp.status}). Vérifiez les logs Cloudflare.`;
-        err.style.display = 'block';
-      }
-    } catch {
-      err.textContent = 'Impossible de joindre le serveur.';
-      err.style.display = 'block';
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Accéder →';
-    }
+      const resp = await fetch(`${WORKER_URL}/submissions`, { headers: { Authorization:`Bearer ${token}` } });
+      if (resp.ok) { setToken(token); showDashboard(); }
+      else if (resp.status === 401) { err.textContent = 'Token invalide. Veuillez réessayer.'; err.style.display = 'block'; document.getElementById('tokenInput').value = ''; }
+      else { err.textContent = `Erreur serveur (${resp.status}).`; err.style.display = 'block'; }
+    } catch { err.textContent = 'Impossible de joindre le serveur.'; err.style.display = 'block'; }
+    finally { btn.disabled = false; btn.textContent = 'Accéder →'; }
   });
-
-  document.getElementById('tokenInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('btnLogin').click();
-  });
-
+  document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnLogin').click(); });
   document.getElementById('btnLogout').addEventListener('click', showLogin);
   document.getElementById('btnRefresh').addEventListener('click', loadSoumissions);
 
   /* ══════════════════════════════════════════════════════
-     GÉNÉRATION DOCX — docxtemplater
+     buildContext
   ══════════════════════════════════════════════════════ */
-
-  // Mapping des templates disponibles dans R2
-  const TEMPLATES_DISPONIBLES = [
-    { id: 'pcq_fabricant',    label: 'PCQ Fabricant',              desc: 'Programme de contrôle qualité — fabricant',     file: 'template_pcq_fabricant_v1.docx' },
-    { id: 'pcq_installateur', label: 'PCQ Installateur',           desc: 'Programme de contrôle qualité — installateur',  file: 'template_pcq_installateur_v1.docx' },
-    { id: 'pcq_generique',    label: 'PCQ Générique',              desc: 'Programme de contrôle qualité — générique',     file: 'template_pcq_rbq_v2.docx' },
-    { id: 'ann09',            label: 'Rapport d\'essai de pression', desc: 'Annexe 09',                                   file: 'template_ann09_rapport_essai_pression_v1.docx' },
-    { id: 'ann10',            label: 'Rapport d\'installation',    desc: 'Annexe 10',                                     file: 'template_ann10_rapport_installation_v1.docx' },
-    { id: 'ann11',            label: 'Registre des soudeurs',      desc: 'Annexe 11',                                     file: 'template_ann11_registre_soudeurs_v1.docx' },
-    { id: 'ann14',            label: 'Fiche de vérification',      desc: 'Annexe 14',                                     file: 'template_ann14_fiche_verification_v1.docx' },
-    { id: 'ann15',            label: 'Mention de conformité',      desc: 'Annexe 15',                                     file: 'template_ann15_mention_conformite_v1.docx' },
-    { id: 'ncr',              label: 'NCR Installateur',           desc: 'Rapport de non-conformité',                     file: 'template_ncr_installateur_v1.docx' },
-  ];
-
-  // Sélection automatique selon type_pcq dans le JSON
-  const TYPE_PCQ_MAP = {
-    'fabricant':    'pcq_fabricant',
-    'installateur': 'pcq_installateur',
-    'generique':    'pcq_generique',
-  };
-
-  let genSoumission = null;
-  let selectedTemplateId = null;
-
   function buildContext(data) {
     const ctx = { ...data };
     const now = new Date();
-
-    // Métadonnées
-    ctx.date_generation = ctx.date_generation ||
-      now.toLocaleDateString('fr-CA', { day: '2-digit', month: 'long', year: 'numeric' });
+    ctx.date_generation = ctx.date_generation || now.toLocaleDateString('fr-CA', { day:'2-digit', month:'long', year:'numeric' });
     ctx.version  = ctx.version  || '1.0';
     ctx.revision = ctx.revision || '00';
 
-    // Valeurs par défaut
     const defaults = {
-      nom_entreprise:'', adresse:'', rbq_numero:'En cours d\'obtention',
+      nom_entreprise:'', adresse:'', rbq_numero:"En cours d'obtention",
       contact:'', telephone:'', courriel:'', responsable_qualite:'',
       fonction_responsable:'', experience_responsable:'', nb_employes:'',
       types_projets:'', types_clients:'', domaine_application:'',
       gestion_ncr:'Formulaire de non-conformité interne',
-      frequence_audit:'Annuelle', experience_rbq:'', codes_applicables:'BNQ 3650-900, CSA B51, ASME B31.x, ASME Section IX',
+      frequence_audit:'Annuelle', experience_rbq:'',
+      codes_applicables:'BNQ 3650-900, CSA B51, ASME B31.x, ASME Section IX',
       exploitant_utilisateur:'', duree_maintien_pression:'30 minutes',
-      sous_traitant_end:'À déterminer selon chantier', frequence_etalonnage:'Annuelle',
-      gamme_manometres:'0–2× MAWP', methode_statut_etalonnage:'Étiquette de couleur + registre',
-      source_specs_materiaux:'Plans d\'ingénierie approuvés',
+      sous_traitant_end:'À déterminer selon chantier',
+      frequence_etalonnage:'Annuelle', gamme_manometres:'0–2× MAWP',
+      methode_statut_etalonnage:'Étiquette de couleur + registre',
+      source_specs_materiaux:"Plans d'ingénierie approuvés",
       methode_identification:'Transfert numéro de chaleur + étiquette',
+      titre_responsable_pcq:'Responsable qualité', types_equipements:'',
     };
-    for (const [k, v] of Object.entries(defaults)) {
-      if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v;
-    }
+    for (const [k,v] of Object.entries(defaults)) { if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v; }
 
-    // Activités
     const activites = Array.isArray(ctx.type_activite) ? ctx.type_activite.map(a => a.toLowerCase()) : [];
     ctx.activites_liste = activites.join(', ') || 'Non spécifié';
     ctx.a_soudage      = ctx.a_soudage      ?? activites.includes('soudage');
@@ -1142,16 +427,29 @@
     ctx.a_installation = ctx.a_installation ?? activites.includes('installation');
     ctx.a_maintenance  = ctx.a_maintenance  ?? activites.includes('maintenance');
 
-    // Inspection
     const typesInsp = Array.isArray(ctx.type_inspection) ? ctx.type_inspection : [];
     ctx.inspections_liste = typesInsp.join(', ') || '';
 
-    // Aliases
-    ctx.methode_ncr = ctx.methode_ncr || ctx.gestion_ncr;
-    ctx.dirigeant_entreprise = ctx.dirigeant_entreprise || ctx.contact || '';
-    ctx.responsable_formation = ctx.responsable_formation || ctx.responsable_qualite || '';
+    ctx.methode_ncr                      = ctx.methode_ncr || ctx.gestion_ncr;
+    ctx.dirigeant_entreprise             = ctx.dirigeant_entreprise || ctx.contact || '';
+    ctx.responsable_formation            = ctx.responsable_formation || ctx.responsable_qualite || '';
+    ctx.approbateur_bons_achat           = ctx.approbateur_bons_achat || ctx.approbateur_bons_commande || '';
+    ctx.methode_identification_materiaux = ctx.methode_identification_materiaux || ctx.methode_identification || '';
+    ctx.champ_vapeur_air    = ctx.champ_vapeur_air    ?? false;
+    ctx.champ_refrigeration = ctx.champ_refrigeration ?? false;
+    ctx.champ_gaz_medicaux  = ctx.champ_gaz_medicaux  ?? ctx.gaz_medicaux ?? false;
 
-    // Helpers Oui/Non
+    const fab = ['responsable_calculs','approbateur_calculs','dessinateur','approbateur_dessins',
+      'distribution_dessins','responsable_achats','responsable_reception','responsable_essai_pression',
+      'responsable_verification_finale','superviseur_soudage','responsable_chantier','inspecteur_qualite',
+      'ingenieur_conception','nb_superviseurs_soudage','nb_soudeurs','nb_inspecteurs',
+      'liste_instruments_etalonnage','sous_traitant_ht'];
+    fab.forEach(k => { ctx[k] = ctx[k] || ''; });
+    ctx.methode_tracabilite_decoupe  = ctx.methode_tracabilite_decoupe  || 'Transfert numéro de chaleur';
+    ctx.methode_id_instruments       = ctx.methode_id_instruments       || 'Étiquette + registre';
+    ctx.methode_entreposage_chantier = ctx.methode_entreposage_chantier || "Entreposage en lieu sec, à l'abri des intempéries";
+    ctx.pas_de_traitement_thermique  = ctx.pas_de_traitement_thermique  ?? false;
+
     const ouiNon = v => v ? 'Oui' : 'Non';
     ctx.txt_soudeurs_certifies   = ouiNon(ctx.soudeurs_certifies);
     ctx.txt_inspection_interne   = ouiNon(ctx.inspection_interne);
@@ -1161,49 +459,64 @@
     ctx.txt_procedures_travail   = ouiNon(ctx.procedures_travail);
     ctx.txt_gaz_medicaux         = ouiNon(ctx.gaz_medicaux);
     ctx.txt_assemblage_chantier  = ouiNon(ctx.assemblage_chantier);
-
-    // Logo
     ctx.has_logo = !!(ctx.logo_base64);
-
     return ctx;
   }
 
+  /* ══════════════════════════════════════════════════════
+     GÉNÉRATION ZIP
+  ══════════════════════════════════════════════════════ */
+  const TEMPLATES_DISPONIBLES = {
+    pcq_installateur: { label:'PCQ Installateur',            file:'template_pcq_installateur_v1.docx' },
+    pcq_fabricant:    { label:'PCQ Fabricant',               file:'template_pcq_fabricant_v1.docx' },
+    pcq_generique:    { label:'PCQ Générique',               file:'template_pcq_rbq_v2.docx' },
+    ann09:            { label:"Rapport d'essai de pression", file:'template_ann09_rapport_essai_pression_v1.docx' },
+    ann10:            { label:"Rapport d'installation",      file:'template_ann10_rapport_installation_v1.docx' },
+    ann11:            { label:'Registre des soudeurs',       file:'template_ann11_registre_soudeurs_v1.docx' },
+    ann14:            { label:'Fiche de vérification',       file:'template_ann14_fiche_verification_v1.docx' },
+    ann15:            { label:'Mention de conformité',       file:'template_ann15_mention_conformite_v1.docx' },
+    ncr:              { label:'Rapport de non-conformité',   file:'template_ncr_installateur_v1.docx' },
+  };
+
+  function getDocumentIds(data) {
+    const type     = (data.type_pcq || 'installateur').toLowerCase();
+    const aSoudage = !!(data.soudeurs_certifies || data.procedures_soudage);
+    const docs     = [];
+    if (type === 'fabricant') {
+      docs.push('pcq_fabricant', 'ann09');
+      if (aSoudage) docs.push('ann11');
+      docs.push('ncr');
+    } else {
+      docs.push(type === 'generique' ? 'pcq_generique' : 'pcq_installateur');
+      docs.push('ann09', 'ann10');
+      if (aSoudage) docs.push('ann11');
+      docs.push('ann14', 'ann15', 'ncr');
+    }
+    return docs;
+  }
+
+  let genSoumission = null;
+
   function openGenModal(idx) {
     genSoumission = allSoumissions[idx];
+    let data = {}; try { data = JSON.parse(genSoumission.donnees_json); } catch { data = {}; }
+    const docIds   = getDocumentIds(data);
+    const aSoudage = !!(data.soudeurs_certifies || data.procedures_soudage);
 
-    let data;
-    try { data = JSON.parse(genSoumission.donnees_json); } catch { data = {}; }
+    document.getElementById('genModalTitle').textContent = genSoumission.nom_entreprise || 'Générer les documents';
+    document.getElementById('genModalSub').textContent   = `${docIds.length} document${docIds.length > 1 ? 's' : ''} — téléchargement en ZIP`;
+    document.getElementById('genStatus').textContent     = '';
+    document.getElementById('genStatus').className       = 'gen-status';
+    document.getElementById('btnGenerate').disabled      = false;
+    document.getElementById('btnGenerate').textContent   = '↓ Générer le ZIP';
 
-    // Auto-sélection du template selon type_pcq
-    const typePcq = (data.type_pcq || '').toLowerCase();
-    selectedTemplateId = TYPE_PCQ_MAP[typePcq] || 'pcq_installateur';
-
-    document.getElementById('genModalTitle').textContent = genSoumission.nom_entreprise || 'Générer le document';
-    document.getElementById('genModalSub').textContent = 'Sélectionnez le template à utiliser';
-    document.getElementById('genStatus').textContent = '';
-    document.getElementById('genStatus').className = 'gen-status';
-    document.getElementById('btnGenerate').disabled = false;
-    document.getElementById('btnGenerate').textContent = '↓ Générer le .docx';
-
-    // Remplir la liste de templates
-    const list = document.getElementById('templateList');
-    list.innerHTML = TEMPLATES_DISPONIBLES.map(t => `
-      <label class="template-option ${t.id === selectedTemplateId ? 'selected' : ''}">
-        <input type="radio" name="tpl" value="${t.id}" ${t.id === selectedTemplateId ? 'checked' : ''}>
-        <div>
-          <div class="tpl-label">${esc(t.label)}</div>
-          <div class="tpl-desc">${esc(t.desc)}</div>
-        </div>
-      </label>
-    `).join('');
-
-    list.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        selectedTemplateId = radio.value;
-        list.querySelectorAll('.template-option').forEach(o => o.classList.remove('selected'));
-        radio.closest('.template-option').classList.add('selected');
-      });
-    });
+    const listEl = document.getElementById('templateList');
+    listEl.innerHTML = docIds.map(id => {
+      const tpl  = TEMPLATES_DISPONIBLES[id];
+      const note = id === 'ann11' ? ' <span style="color:var(--gold);font-size:11px;">(soudage détecté)</span>' : '';
+      return `<div class="template-option selected" style="cursor:default;"><div class="tpl-label">✓ ${esc(tpl.label)}${note}</div></div>`;
+    }).join('');
+    if (!aSoudage) listEl.innerHTML += `<div style="margin-top:8px;font-size:11px;color:var(--gray-mid);">Registre des soudeurs exclu (soudage non déclaré)</div>`;
 
     document.getElementById('genModalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1216,127 +529,70 @@
   }
 
   async function generateDocx() {
-    if (!genSoumission || !selectedTemplateId) return;
+    if (!genSoumission) return;
+    let data = {}; try { data = JSON.parse(genSoumission.donnees_json); } catch { data = {}; }
+    const docIds    = getDocumentIds(data);
+    const ctx       = buildContext(data);
+    const nomClient = (genSoumission.nom_entreprise || 'client').replace(/\s+/g, '_');
+    const btn       = document.getElementById('btnGenerate');
+    const status    = document.getElementById('genStatus');
+    btn.disabled    = true;
+    const zip       = new JSZip();
+    const errors    = [];
 
-    const tplDef = TEMPLATES_DISPONIBLES.find(t => t.id === selectedTemplateId);
-    if (!tplDef) return;
-
-    const btn    = document.getElementById('btnGenerate');
-    const status = document.getElementById('genStatus');
-
-    btn.disabled = true;
-    btn.textContent = 'Chargement du template…';
-    status.textContent = '';
-    status.className = 'gen-status';
-
-    try {
-      // 1 — Charger le template depuis le Worker (R2)
-      status.textContent = 'Récupération du template depuis R2…';
-      const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tplDef.file)}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        throw new Error(err.erreur || `HTTP ${resp.status}`);
-      }
-
-      const arrayBuffer = await resp.arrayBuffer();
-
-      // 2 — Préparer le contexte
-      btn.textContent = 'Génération en cours…';
-      status.textContent = 'Remplissage du template…';
-
-      let rawData;
-      try { rawData = JSON.parse(genSoumission.donnees_json); } catch { rawData = {}; }
-      const ctx = buildContext(rawData);
-
-      // 3 — docxtemplater
-      const zip  = new PizZip(arrayBuffer);
-      const Docxtemplater = window.docxtemplater || window.Docxtemplater;
-
-      // Module image : convertit logo_base64 (data URI ou base64 brut) en image inline
-      const ImageModule = window.ImageModule || window.docxtemplaterImageModuleFree;
-      const imageModule = ImageModule ? new ImageModule({
-        centered: false,
-        getImage(tagValue) {
-          if (!tagValue) return null;
-          const b64 = tagValue.includes(',') ? tagValue.split(',')[1] : tagValue;
-          return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-        },
-        getSize(img, tagValue) {
-          // Taille fixe : 150 × 60 px (environ 40 mm de large à 96 dpi)
-          return [150, 60];
-        },
-      }) : null;
-
-      // Parser personnalisé : trim les espaces dans les noms de variables
-      // Les templates utilisent {{ nom_entreprise }} (style Jinja2 avec espaces)
-      const customParser = (tag) => {
-        const trimmed = tag.trim();
-        return {
-          get: (scope) => {
-            if (scope == null) return '';
-            const val = scope[trimmed];
-            return (val !== undefined && val !== null) ? val : '';
-          }
-        };
-      };
-
-      const docOptions = {
-        delimiters: { start: '{{', end: '}}' },
-        paragraphLoop: true,
-        linebreaks: true,
-        parser: customParser,
-        nullGetter: () => '',
-      };
-      if (imageModule) docOptions.modules = [imageModule];
-
-      const doc  = new Docxtemplater(zip, docOptions);
-
-      doc.render(ctx);
-
-      // 4 — Téléchargement
-      const blob = doc.getZip().generate({
-        type: 'blob',
-        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      });
-
-      const nomFichier = (genSoumission.nom_entreprise || 'client').replace(/\s+/g, '_')
-        + '_' + tplDef.id + '.docx';
-
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = nomFichier;
-      a.click();
-      URL.revokeObjectURL(a.href);
-
-      status.textContent = `✓ ${nomFichier} téléchargé avec succès.`;
-      status.className = 'gen-status success';
-      btn.textContent = '↓ Générer le .docx';
-      btn.disabled = false;
-
-    } catch (err) {
-      console.error(err);
-      status.textContent = `Erreur : ${err.message}`;
-      status.className = 'gen-status error';
-      btn.textContent = '↓ Générer le .docx';
-      btn.disabled = false;
+    for (let i = 0; i < docIds.length; i++) {
+      const id  = docIds[i];
+      const tpl = TEMPLATES_DISPONIBLES[id];
+      btn.textContent    = `Chargement ${i+1}/${docIds.length}…`;
+      status.textContent = tpl.label;
+      status.className   = 'gen-status';
+      try {
+        const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
+        if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${resp.status}`); }
+        const arrayBuffer = await resp.arrayBuffer();
+        const pzip          = new PizZip(arrayBuffer);
+        const Docxtemplater = window.docxtemplater || window.Docxtemplater;
+        const ImageModule   = window.ImageModule   || window.docxtemplaterImageModuleFree;
+        const imageModule   = ImageModule ? new ImageModule({
+          centered: false,
+          getImage(v) { if (!v) return null; const b64 = v.includes(',') ? v.split(',')[1] : v; return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); },
+          getSize()   { return [150, 60]; },
+        }) : null;
+        const customParser = tag => { const t = tag.trim(); return { get: s => { if (s==null) return ''; const v = s[t]; return (v!==undefined && v!==null) ? v : ''; } }; };
+        const docOptions = { delimiters:{start:'{{',end:'}}' }, paragraphLoop:true, linebreaks:true, parser:customParser, nullGetter:()=>'' };
+        if (imageModule) docOptions.modules = [imageModule];
+        const doc = new Docxtemplater(pzip, docOptions);
+        doc.render(ctx);
+        zip.file(`${nomClient}_${id}.docx`, doc.getZip().generate({ type:'arraybuffer' }));
+      } catch (err) { console.error(err); errors.push(`${tpl.label} : ${err.message}`); }
     }
+
+    btn.textContent = 'Compression…';
+    try {
+      const zipBlob = await zip.generateAsync({ type:'blob' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(zipBlob);
+      a.download = `${nomClient}_PCQ_documents.zip`;
+      a.click(); URL.revokeObjectURL(a.href);
+      if (errors.length === 0) {
+        status.textContent = `✓ ${docIds.length} document${docIds.length>1?'s':''} téléchargés avec succès.`;
+        status.className   = 'gen-status success';
+      } else {
+        status.textContent = `Partiel — ${errors.length} erreur(s) : ${errors.join(' | ')}`;
+        status.className   = 'gen-status error';
+      }
+    } catch (err) { status.textContent = `Erreur ZIP : ${err.message}`; status.className = 'gen-status error'; }
+
+    btn.textContent = '↓ Générer le ZIP';
+    btn.disabled    = false;
   }
 
   document.getElementById('genModalClose').addEventListener('click', closeGenModal);
   document.getElementById('btnGenerate').addEventListener('click', generateDocx);
-  document.getElementById('genModalOverlay').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeGenModal();
-  });
+  document.getElementById('genModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeGenModal(); });
 
-  /* ══════════════════════════════════════════════════════
-     INIT — vérifie si déjà connecté (même onglet)
-  ══════════════════════════════════════════════════════ */
-  if (getToken()) {
-    showDashboard();
-  }
+  /* ── Init ── */
+  if (getToken()) showDashboard();
 </script>
 
 </body>

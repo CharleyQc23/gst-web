@@ -292,18 +292,6 @@
       transform: rotate(-45deg) translateY(-1px);
     }
 
-    /* ── CONDITIONAL SECTION ── */
-    .cond-section {
-      display: none;
-      margin-top: 0;
-    }
-    .cond-section.visible {
-      display: block;
-    }
-    .cond-section .section-header {
-      background: var(--steel);
-    }
-
     /* ── DIVIDER ── */
     .divider {
       height: 1px;
@@ -512,18 +500,27 @@
             <span class="logo-name" id="logoName"></span>
             <button type="button" class="logo-remove" id="logoRemove" title="Retirer le logo">✕</button>
           </div>
-          <p class="logo-tip">💡 Fournir votre logo permet de personnaliser automatiquement l'en-tête de votre manuel qualité et de tous vos registres.</p>
+          <p class="logo-tip"> Fournir votre logo permet de personnaliser automatiquement l'en-tête de votre manuel qualité et de tous vos registres.</p>
         </div>
       </div>
     </div>
 
-    <!-- ═══ SECTION 2 — Activités ═══ -->
+    <!-- ═══ SECTION 2 — Type de permis et activités ═══ -->
     <div class="section-card" data-section="2">
       <div class="section-header">
         <div class="section-num">2</div>
-        <div class="section-title">Activités réalisées</div>
+        <div class="section-title">Type de permis et activités réalisées</div>
       </div>
       <div class="section-body">
+        <div class="field-group">
+          <label>Type de programme de contrôle qualité demandé <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="type_pcq" value="installateur" required><span class="dot"></span>Installateur</label>
+            <label class="bool-label"><input type="radio" name="type_pcq" value="fabricant"><span class="dot"></span>Fabricant</label>
+          </div>
+          <p class="hint">Installateur : entreprise qui installe des équipements sous pression sur chantier. Fabricant : entreprise qui fabrique des équipements sous pression, accessoires ou tuyauteries en atelier.</p>
+        </div>
+        <div class="divider"></div>
         <div class="field-group">
           <label>Sélectionnez toutes les activités applicables <span class="req">*</span></label>
           <div class="check-grid" id="activitesGrid">
@@ -613,6 +610,12 @@
             <div class="field-error">Ce champ est requis.</div>
           </div>
         </div>
+        <div class="field-group">
+          <label>Dirigeant de l'entreprise (signataire du PCQ) <span class="req">*</span></label>
+          <input type="text" id="dirigeant_entreprise" placeholder="Prénom Nom — Ex. : Jean Tremblay, Président" required>
+          <div class="field-error">Ce champ est requis.</div>
+          <p class="hint">Cette personne signera la déclaration d'autorité et de responsabilité du programme qualité (directeur général, président ou associé principal).</p>
+        </div>
       </div>
     </div>
 
@@ -650,26 +653,56 @@
       </div>
     </div>
 
-    <!-- ═══ SECTION 6 — Soudage (conditionnelle) ═══ -->
-    <div class="section-card cond-section" id="sectionSoudage" data-section="6">
+    <!-- ═══ SECTION 6 — Soudage ═══ -->
+    <div class="section-card" id="sectionSoudage" data-section="6">
       <div class="section-header">
         <div class="section-num">6</div>
         <div class="section-title">Soudage</div>
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Disposez-vous de procédures de soudage documentées et qualifiées (WPS / PQR) pour chaque procédé utilisé? <span class="req">*</span></label>
+          <label>Votre entreprise réalise-t-elle des travaux de soudage? <span class="req">*</span></label>
           <div class="bool-group">
-            <label class="bool-label"><input type="radio" name="procedures_soudage" value="o"><span class="dot"></span>Oui</label>
-            <label class="bool-label"><input type="radio" name="procedures_soudage" value="n"><span class="dot"></span>Non</label>
+            <label class="bool-label"><input type="radio" name="a_soudage_declare" value="o" id="soudageOui" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="a_soudage_declare" value="n" id="soudageNon"><span class="dot"></span>Non — section non applicable</label>
           </div>
         </div>
-        <div class="divider"></div>
-        <div class="field-group">
-          <label>Tenez-vous un registre de traçabilité pour chaque soudure réalisée (numéro de soudeur, procédure WPS utilisée, position, date, localisation dans l'ouvrage)? <span class="req">*</span></label>
-          <div class="bool-group">
-            <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="o"><span class="dot"></span>Oui</label>
-            <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="n"><span class="dot"></span>Non</label>
+        <div id="soudageDetails" style="display:none;">
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Nom du superviseur en soudage <span class="req">*</span></label>
+            <input type="text" id="superviseur_soudage" placeholder="Prénom Nom">
+            <div class="field-error">Ce champ est requis.</div>
+            <p class="hint">Personne désignée par écrit comme superviseur en soudage, responsable de la certification des DMS/RMS et de la qualification des soudeurs.</p>
+          </div>
+          <div class="divider"></div>
+          <div class="field-row">
+            <div class="field-group">
+              <label>Nombre de soudeurs qualifiés <span class="req">*</span></label>
+              <input type="text" id="nb_soudeurs" placeholder="Ex. : 3">
+              <div class="field-error">Ce champ est requis.</div>
+            </div>
+            <div class="field-group">
+              <label>Nombre de superviseurs en soudage <span class="req">*</span></label>
+              <input type="text" id="nb_superviseurs_soudage" placeholder="Ex. : 1">
+              <div class="field-error">Ce champ est requis.</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Disposez-vous de procédures de soudage documentées et qualifiées (WPS / PQR) pour chaque procédé utilisé? <span class="req">*</span></label>
+            <div class="bool-group">
+              <label class="bool-label"><input type="radio" name="procedures_soudage" value="o"><span class="dot"></span>Oui</label>
+              <label class="bool-label"><input type="radio" name="procedures_soudage" value="n"><span class="dot"></span>Non</label>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Tenez-vous un registre de traçabilité pour chaque soudure réalisée (numéro de soudeur, procédure WPS utilisée, position, date, localisation dans l'ouvrage)? <span class="req">*</span></label>
+            <div class="bool-group">
+              <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="o"><span class="dot"></span>Oui</label>
+              <label class="bool-label"><input type="radio" name="tracabilite_soudage" value="n"><span class="dot"></span>Non</label>
+            </div>
           </div>
         </div>
       </div>
@@ -766,6 +799,12 @@
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="o"><span class="dot"></span>Oui</label>
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="n"><span class="dot"></span>Non</label>
             </div>
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Si vous sous-traitez vos examens non destructifs (END), quel est le nom de votre sous-traitant EN D? <span class="opt">(si applicable)</span></label>
+            <input type="text" id="sous_traitant_end" placeholder="Ex. : Inspection Industrielle ABC inc.">
+            <p class="hint">Inscrivez le nom de l'entreprise spécialisée que vous mandatez pour vos radiographies, ultrasons, ressuages ou autres END. Laissez vide si vous ne sous-traitez pas ces examens.</p>
           </div>
         </div>
       </div>
@@ -878,11 +917,11 @@
     <!-- ═══ ZONE DE SOUMISSION ═══ -->
     <div class="submit-zone">
       <h3>Prêt à soumettre?</h3>
-      <p>Vos réponses seront transmises directement à votre consultant. Vous recevrez une confirmation à l'écran.</p>
+      <p>Vos réponses sont transmises directement. Vous recevrez une confirmation à l'écran.</p>
       <button type="submit" class="btn-primary" id="submitBtn">Envoyer le questionnaire →</button>
     </div>
 
-    <div class="error-banner" id="errorBanner">
+    <div class="error-banner" id="errorBanner" style="display:none;">
       ❌ <span id="errorMsg">Une erreur est survenue. Veuillez réessayer ou contacter votre consultant directement.</span>
     </div>
 
@@ -890,7 +929,7 @@
 </div>
 
 <footer>
-  Document préparé par <span>Charles Guernon</span> · Ingénieur en tuyauterie haute pression &amp; Contrôle qualité RBQ
+  Document préparé par <span>Charles Guernon</span> · CPI en tuyauterie haute pression &amp; Contrôle qualité RBQ
 </footer>
 
 <script>
@@ -931,17 +970,21 @@
     logoPreview.style.display = 'none';
   });
 
-  // ── Logique conditionnelle : Section Soudage ──
-  document.querySelectorAll('input[name="type_activite"]').forEach(cb => {
-    cb.addEventListener('change', toggleSoudage);
+  // ── Logique conditionnelle : Sous-section Soudage ──
+  document.querySelectorAll('input[name="a_soudage_declare"]').forEach(r => {
+    r.addEventListener('change', toggleSoudageDetails);
   });
 
-  function toggleSoudage() {
-    const hasSoudage = !!document.querySelector('input[name="type_activite"][value="soudage"]:checked');
-    const sec = document.getElementById('sectionSoudage');
-    sec.classList.toggle('visible', hasSoudage);
+  function toggleSoudageDetails() {
+    const hasSoudage = document.querySelector('input[name="a_soudage_declare"]:checked')?.value === 'o';
+    const details = document.getElementById('soudageDetails');
+    details.style.display = hasSoudage ? 'block' : 'none';
     if (!hasSoudage) {
       document.querySelectorAll('input[name="procedures_soudage"], input[name="tracabilite_soudage"]').forEach(r => r.checked = false);
+      ['superviseur_soudage','nb_soudeurs','nb_superviseurs_soudage'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
     }
     updateProgress();
   }
@@ -962,7 +1005,7 @@
 
   // ── Barre de progression ──
   function updateProgress() {
-    const sections = document.querySelectorAll('.section-card:not(.cond-section), .section-card.cond-section.visible');
+    const sections = document.querySelectorAll('.section-card');
     let filled = 0;
     sections.forEach(sec => {
       const inputs = sec.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
@@ -1022,7 +1065,7 @@
     }
 
     // Collecte des données — structure identique à intake.py
-    const hasSoudage = activites.includes('soudage');
+    const hasSoudage = document.querySelector('input[name="a_soudage_declare"]:checked')?.value === 'o';
     const inspectionInterne = document.querySelector('input[name="inspection_interne"]:checked')?.value === 'o';
 
     const data = {
@@ -1035,6 +1078,7 @@
       courriel: document.getElementById('courriel').value.trim(),
 
       // Section 2
+      type_pcq: document.querySelector('input[name="type_pcq"]:checked')?.value || 'installateur',
       type_activite: activites,
       a_soudage: hasSoudage,
 
@@ -1048,6 +1092,7 @@
       fonction_responsable: document.getElementById('fonction_responsable').value.trim(),
       experience_responsable: document.getElementById('experience_responsable').value.trim(),
       nb_employes: document.getElementById('nb_employes').value.trim(),
+      dirigeant_entreprise: document.getElementById('dirigeant_entreprise').value.trim(),
 
       // Section 5
       employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
@@ -1055,6 +1100,9 @@
       formation_qualite: document.querySelector('input[name="formation_qualite"]:checked')?.value === 'o',
 
       // Section 6 (soudage)
+      superviseur_soudage: hasSoudage ? (document.getElementById('superviseur_soudage')?.value.trim() || '') : '',
+      nb_soudeurs: hasSoudage ? (document.getElementById('nb_soudeurs')?.value.trim() || '') : '',
+      nb_superviseurs_soudage: hasSoudage ? (document.getElementById('nb_superviseurs_soudage')?.value.trim() || '') : '',
       procedures_soudage: hasSoudage
         ? document.querySelector('input[name="procedures_soudage"]:checked')?.value === 'o'
         : false,
@@ -1071,6 +1119,7 @@
       controle_production: document.querySelector('input[name="controle_production"]:checked')?.value === 'o',
 
       // Section 9
+      sous_traitant_end: document.getElementById('sous_traitant_end')?.value.trim() || '',
       inspection_interne: inspectionInterne,
       type_inspection: inspectionInterne
         ? [...document.querySelectorAll('input[name="type_inspection"]:checked')].map(c => c.value)
