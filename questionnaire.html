@@ -561,21 +561,79 @@
         <div class="section-title">Portée des travaux</div>
       </div>
       <div class="section-body">
+
         <div class="field-group">
           <label>Types de projets réalisés <span class="req">*</span></label>
-          <textarea id="types_projets" placeholder="Ex. : Installations industrielles, chantiers de tuyauterie haute pression…" required></textarea>
-          <div class="field-error">Ce champ est requis.</div>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="types_projets" value="Installations industrielles (pétrochimie, raffinerie, papetière)"><span class="check-box"></span>Industriel (pétrochimie, raffinerie, papetière)</label>
+            <label class="check-item"><input type="checkbox" name="types_projets" value="Bâtiments commerciaux et institutionnels"><span class="check-box"></span>Commercial / Institutionnel</label>
+            <label class="check-item"><input type="checkbox" name="types_projets" value="Infrastructures municipales (eau, gaz, vapeur)"><span class="check-box"></span>Infrastructures municipales</label>
+            <label class="check-item"><input type="checkbox" name="types_projets" value="Résidentiel multifamilial"><span class="check-box"></span>Résidentiel multifamilial</label>
+            <label class="check-item"><input type="checkbox" name="types_projets" value="Projets miniers"><span class="check-box"></span>Minier</label>
+          </div>
+          <div class="field-group" style="margin-top:10px;margin-bottom:0;">
+            <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
+            <input type="text" id="types_projets_autre" placeholder="Ex. : Agroalimentaire, pharmaceutique…">
+          </div>
+          <div class="field-error" id="typesProjetsError">Veuillez sélectionner au moins un type de projet.</div>
         </div>
+
+        <div class="divider"></div>
+
         <div class="field-group">
           <label>Types de clients <span class="req">*</span></label>
-          <input type="text" id="types_clients" placeholder="Ex. : Municipalités, industries pétrolières, entrepreneurs généraux…" required>
-          <div class="field-error">Ce champ est requis.</div>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="types_clients" value="Entrepreneurs généraux"><span class="check-box"></span>Entrepreneurs généraux</label>
+            <label class="check-item"><input type="checkbox" name="types_clients" value="Municipalités et organismes publics"><span class="check-box"></span>Municipalités / Organismes publics</label>
+            <label class="check-item"><input type="checkbox" name="types_clients" value="Industries (manufacturières, chimiques, alimentaires)"><span class="check-box"></span>Industries (manufacturières, chimiques…)</label>
+            <label class="check-item"><input type="checkbox" name="types_clients" value="Propriétaires et gestionnaires d'immeubles"><span class="check-box"></span>Propriétaires / Gestionnaires d'immeubles</label>
+          </div>
+          <div class="field-group" style="margin-top:10px;margin-bottom:0;">
+            <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
+            <input type="text" id="types_clients_autre" placeholder="Ex. : Hôpitaux, centres de données…">
+          </div>
+          <div class="field-error" id="typesClientsError">Veuillez sélectionner au moins un type de client.</div>
         </div>
+
+        <div class="divider"></div>
+
         <div class="field-group">
-          <label>Domaine d'application <span class="req">*</span></label>
-          <input type="text" id="domaine_application" placeholder="Ex. : Tuyauterie sous pression, gaz naturel, eau potable…" required>
-          <div class="field-error">Ce champ est requis.</div>
+          <label>Domaines d'application — fluides et systèmes concernés <span class="req">*</span></label>
+          <p class="hint" style="margin-bottom:10px;">Ces choix déterminent les sections réglementaires de votre PCQ. Cochez tous les domaines applicables à vos travaux.</p>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="vapeur_air" id="domaineVapeurAir"><span class="check-box"></span>Vapeur / Air comprimé</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="refrigeration" id="domaineRefrigeration"><span class="check-box"></span>Réfrigération / Climatisation</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="gaz_medicaux" id="domaineGazMedicaux"><span class="check-box"></span>Gaz médicaux</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="eau_chaude"><span class="check-box"></span>Eau chaude / Fluides thermiques</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="gaz_naturel"><span class="check-box"></span>Gaz naturel / Propane</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="hydrocarbures"><span class="check-box"></span>Hydrocarbures / Pétrochimie</label>
+          </div>
+          <div class="field-group" style="margin-top:10px;margin-bottom:0;">
+            <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
+            <input type="text" id="domaine_application_autre" placeholder="Ex. : Oxygène industriel, ammoniac…">
+          </div>
+          <div class="field-error" id="domaineError">Veuillez sélectionner au moins un domaine d'application.</div>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+          <label>Types d'équipements concernés <span class="req">*</span></label>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Chaudières (vapeur haute et basse pression)"><span class="check-box"></span>Chaudières (vapeur haute/basse pression)</label>
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Appareils sous pression (réservoirs, échangeurs)"><span class="check-box"></span>Appareils sous pression (réservoirs, échangeurs)</label>
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Tuyauteries sous pression (procédé, service)"><span class="check-box"></span>Tuyauteries sous pression (procédé, service)</label>
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Accessoires (vannes, soupapes, raccords)"><span class="check-box"></span>Accessoires (vannes, soupapes, raccords)</label>
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Équipements frigorifiques"><span class="check-box"></span>Équipements frigorifiques</label>
+            <label class="check-item"><input type="checkbox" name="types_equipements" value="Centrales de gaz médicaux"><span class="check-box"></span>Centrales de gaz médicaux</label>
+          </div>
+          <div class="field-group" style="margin-top:10px;margin-bottom:0;">
+            <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
+            <input type="text" id="types_equipements_autre" placeholder="Ex. : Appareils miniatures, tuyauteries BEP…">
+          </div>
+          <div class="field-error" id="typesEquipError">Veuillez sélectionner au moins un type d'équipement.</div>
+        </div>
+
       </div>
     </div>
 
@@ -610,11 +668,18 @@
             <div class="field-error">Ce champ est requis.</div>
           </div>
         </div>
-        <div class="field-group">
-          <label>Dirigeant de l'entreprise (signataire du PCQ) <span class="req">*</span></label>
-          <input type="text" id="dirigeant_entreprise" placeholder="Prénom Nom — Ex. : Jean Tremblay, Président" required>
-          <div class="field-error">Ce champ est requis.</div>
-          <p class="hint">Cette personne signera la déclaration d'autorité et de responsabilité du programme qualité (directeur général, président ou associé principal).</p>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Dirigeant de l'entreprise (signataire du PCQ) <span class="req">*</span></label>
+            <input type="text" id="dirigeant_entreprise" placeholder="Ex. : Jean Tremblay" required>
+            <div class="field-error">Ce champ est requis.</div>
+            <p class="hint">Cette personne signera la déclaration d'autorité et de responsabilité du PCQ.</p>
+          </div>
+          <div class="field-group">
+            <label>Titre / Fonction du dirigeant <span class="req">*</span></label>
+            <input type="text" id="titre_dirigeant" placeholder="Ex. : Président, Directeur général" required>
+            <div class="field-error">Ce champ est requis.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -627,7 +692,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Les employés affectés aux travaux (soudeurs, tuyauteurs, monteurs, etc.) détiennent-ils les certifications ou qualifications requises par leur corps de métier? <span class="req">*</span></label>
+          <label>Vos employés de métier (tuyauteurs, monteurs, mécaniciens) détiennent-ils les certifications requises pour leurs travaux? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="employes_qualifies" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="employes_qualifies" value="n"><span class="dot"></span>Non</label>
@@ -635,7 +700,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Vos soudeurs détiennent-ils des certifications valides conformes aux normes applicables à vos travaux (ex. : CWB W47.1, ASME Section IX)? <span class="req">*</span></label>
+          <label>Vos soudeurs sont-ils certifiés selon les normes applicables (ex. : CWB W47.1, ASME Section IX)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="soudeurs_certifies" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="soudeurs_certifies" value="n"><span class="dot"></span>Non</label>
@@ -644,7 +709,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Avez-vous un programme de formation documenté sur les exigences qualité à l'intention de vos employés (procédures, NCR, traçabilité, sécurité qualité)? <span class="req">*</span></label>
+          <label>Vos employés reçoivent-ils une formation qualité qui est documentée? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="formation_qualite" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="formation_qualite" value="n"><span class="dot"></span>Non</label>
@@ -716,7 +781,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Effectuez-vous une vérification des matériaux au moment de leur réception sur chantier ou en atelier (conformité des certificats, dimensions, marquage, état physique)? <span class="req">*</span></label>
+          <label>Vérifiez-vous les matériaux à la réception (certificats, dimensions, marquage, état physique)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="controle_materiaux" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="controle_materiaux" value="n"><span class="dot"></span>Non</label>
@@ -724,7 +789,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Conservez-vous les certificats matière (MTR / Mill Test Reports) et pouvez-vous en assurer la traçabilité jusqu'à la pièce fabriquée ou au joint réalisé? <span class="req">*</span></label>
+          <label>Conservez-vous les certificats matière (Mill Test Reports) et pouvez-vous en assurer la traçabilité jusqu'à la pièce ou au joint? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="tracabilite_materiaux" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="tracabilite_materiaux" value="n"><span class="dot"></span>Non</label>
@@ -741,7 +806,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Avez-vous des procédures de travail écrites qui décrivent comment réaliser vos principales opérations (ex. : assemblage, soudage, montage de tuyauterie, tests)? <span class="req">*</span></label>
+          <label>Avez-vous des procédures de travail écrites pour vos principales opérations (assemblage, soudage, montage, tests)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="procedures_travail" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="procedures_travail" value="n"><span class="dot"></span>Non</label>
@@ -749,7 +814,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Effectuez-vous des contrôles qualité pendant l'exécution des travaux (vérifications intermédiaires, points d'arrêt ou d'inspection avant de passer à l'étape suivante)? <span class="req">*</span></label>
+          <label>Effectuez-vous des contrôles qualité en cours de travaux (vérifications intermédiaires, points d'arrêt)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="controle_production" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="controle_production" value="n"><span class="dot"></span>Non</label>
@@ -766,7 +831,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Réalisez-vous des inspections internes de vos travaux avant livraison ou mise en service, par une personne désignée distincte de l'exécutant? <span class="req">*</span></label>
+          <label>Faites-vous inspecter vos travaux par une autre personne que celle qui les a réalisés, avant la livraison? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="inspection_interne" value="o" id="inspectionOui" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="inspection_interne" value="n" id="inspectionNon"><span class="dot"></span>Non</label>
@@ -794,7 +859,7 @@
           </div>
           <div class="divider"></div>
           <div class="field-group">
-            <label>Les personnes qui effectuent vos inspections internes détiennent-elles une certification reconnue (ex. : CWI, niveau CGSB, ou formation qualité équivalente documentée)? <span class="req">*</span></label>
+            <label>Vos inspecteurs internes détiennent-ils une certification reconnue (ex. : CWI, niveau CGSB)? <span class="req">*</span></label>
             <div class="bool-group">
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="o"><span class="dot"></span>Oui</label>
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="n"><span class="dot"></span>Non</label>
@@ -818,7 +883,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Vos instruments de mesure et de contrôle utilisés sur les travaux (manomètres, jauges, pieds à coulisse, niveaux, etc.) sont-ils soumis à une calibration périodique par un organisme accrédité? <span class="req">*</span></label>
+          <label>Vos instruments de mesure (manomètres, jauges, pieds à coulisse, etc.) sont-ils calibrés périodiquement par un organisme accrédité? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="equipements_calibres" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="equipements_calibres" value="n"><span class="dot"></span>Non</label>
@@ -826,7 +891,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Tenez-vous un registre de calibration pour chaque instrument (identification de l'instrument, date de calibration, résultat, prochaine échéance)? <span class="req">*</span></label>
+          <label>Tenez-vous un registre de calibration pour chaque instrument (identification, date, résultat, prochaine échéance)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="registre_calibration" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="registre_calibration" value="n"><span class="dot"></span>Non</label>
@@ -843,10 +908,20 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Comment gérez-vous les non-conformités? <span class="req">*</span></label>
-          <textarea id="gestion_ncr" placeholder="Décrivez votre méthode actuelle : formulaires NCR, processus de correction, responsables, archivage…" required></textarea>
-          <div class="field-error">Ce champ est requis.</div>
-          <p class="hint">Si vous n'avez pas encore de processus formalisé, indiquez comment vous traitez actuellement les écarts constatés sur chantier.</p>
+          <label>Comment gérez-vous actuellement les non-conformités? <span class="req">*</span></label>
+          <p class="hint" style="margin-bottom:10px;">Sélectionnez la méthode qui correspond le mieux à votre pratique actuelle. Vous pourrez préciser au bas.</p>
+          <div class="check-grid">
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Rapport de non-conformité (NCR) papier"><span class="check-box"></span>Rapport NCR papier</label>
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Rapport de non-conformité (NCR) numérique"><span class="check-box"></span>Rapport NCR numérique</label>
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Registre interne de suivi des écarts"><span class="check-box"></span>Registre interne de suivi des écarts</label>
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Avis verbal avec correction immédiate documentée"><span class="check-box"></span>Avis verbal avec correction documentée</label>
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Procédure de correction intégrée à la feuille de route"><span class="check-box"></span>Correction intégrée à la feuille de route</label>
+            <label class="check-item"><input type="checkbox" name="gestion_ncr_methode" value="Logiciel de gestion qualité (ex. : IsoTracker, MasterControl)"><span class="check-box"></span>Logiciel de gestion qualité</label>
+          </div>
+          <div class="field-error" id="ncrError">Veuillez sélectionner au moins une méthode.</div>
+          <div class="divider" style="margin-top:16px;"></div>
+          <label style="margin-top:4px;">Précisions supplémentaires <span class="opt">(responsables, délais de correction, archivage…)</span></label>
+          <textarea id="gestion_ncr_details" placeholder="Ex. : Le responsable qualité ouvre un NCR dans les 24h, le chef de chantier propose une correction, fermeture après vérification…"></textarea>
         </div>
       </div>
     </div>
@@ -859,7 +934,7 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Disposez-vous d'un système permettant de contrôler les versions de vos procédures et formulaires qualité (indices de révision, approbations documentées, retrait des documents périmés)? <span class="req">*</span></label>
+          <label>Contrôlez-vous les versions de vos documents qualité (indices de révision, approbations, retrait des documents périmés)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="controle_documents" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="controle_documents" value="n"><span class="dot"></span>Non</label>
@@ -867,7 +942,7 @@
         </div>
         <div class="divider"></div>
         <div class="field-group">
-          <label>Conservez-vous de façon organisée les documents qualité complétés après chaque projet (rapports d'inspection, registres de soudage, NCR, certificats matière, bons de livraison)? <span class="req">*</span></label>
+          <label>Archivez-vous les documents qualité complétés après chaque projet (rapports d'inspection, registres de soudage, NCR, certificats matière)? <span class="req">*</span></label>
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="archivage_documents" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="archivage_documents" value="n"><span class="dot"></span>Non</label>
@@ -893,7 +968,18 @@
         <div class="divider"></div>
         <div class="field-group">
           <label>À quelle fréquence ces audits internes sont-ils réalisés? <span class="opt">(si applicable)</span></label>
-          <input type="text" id="frequence_audit" placeholder="Ex. : Annuel, semestriel, après chaque projet, selon les projets…">
+          <div class="bool-group" style="flex-wrap:wrap;gap:8px;">
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Annuelle"><span class="dot"></span>Annuelle</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Semestrielle"><span class="dot"></span>Semestrielle</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Trimestrielle"><span class="dot"></span>Trimestrielle</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Après chaque projet"><span class="dot"></span>Après chaque projet</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Au besoin"><span class="dot"></span>Au besoin</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="autre_frequence"><span class="dot"></span>Autre</label>
+            <label class="bool-label"><input type="radio" name="frequence_audit_choix" value="Non applicable"><span class="dot"></span>Non applicable</label>
+          </div>
+          <div id="frequenceAutreBox" style="display:none;margin-top:10px;">
+            <input type="text" id="frequence_audit_autre" placeholder="Précisez la fréquence…">
+          </div>
         </div>
       </div>
     </div>
@@ -906,10 +992,47 @@
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Décrivez votre expérience avec la RBQ <span class="req">*</span></label>
-          <textarea id="experience_rbq" placeholder="Ex. : Licence RBQ active depuis 2018, deux inspections réussies, dossier de conformité soumis en 2022…" required></textarea>
-          <div class="field-error">Ce champ est requis.</div>
-          <p class="hint">Indiquez notamment si vous avez déjà soumis un PCQ, passé des inspections ou reçu des avis de la RBQ.</p>
+          <label>Avez-vous déjà soumis un programme de contrôle qualité (PCQ) à la RBQ? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="pcq_deja_soumis" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="pcq_deja_soumis" value="n"><span class="dot"></span>Non — c'est notre première demande</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Avez-vous déjà subi des inspections ou audits de la RBQ? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="inspections_rbq" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="inspections_rbq" value="n"><span class="dot"></span>Non</label>
+          </div>
+          <div id="inspectionsRbqDetails" style="display:none;margin-top:12px;">
+            <input type="text" id="nb_inspections_rbq" placeholder="Ex. : 3 inspections réussies, dernière en 2023">
+            <p class="hint">Indiquez le nombre approximatif et le résultat général (réussies, avis émis, etc.).</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Avez-vous déjà reçu des avis de non-conformité ou des demandes de correction de la RBQ? <span class="req">*</span></label>
+          <div class="bool-group">
+            <label class="bool-label"><input type="radio" name="avis_rbq" value="o" required><span class="dot"></span>Oui</label>
+            <label class="bool-label"><input type="radio" name="avis_rbq" value="n"><span class="dot"></span>Non</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Depuis combien d'années détenez-vous votre licence RBQ? <span class="req">*</span></label>
+          <div class="bool-group" style="flex-wrap:wrap;gap:8px;">
+            <label class="bool-label"><input type="radio" name="anciennete_rbq" value="Moins d'un an" required><span class="dot"></span>Moins d'un an</label>
+            <label class="bool-label"><input type="radio" name="anciennete_rbq" value="1 à 3 ans"><span class="dot"></span>1 à 3 ans</label>
+            <label class="bool-label"><input type="radio" name="anciennete_rbq" value="4 à 9 ans"><span class="dot"></span>4 à 9 ans</label>
+            <label class="bool-label"><input type="radio" name="anciennete_rbq" value="10 ans et plus"><span class="dot"></span>10 ans et plus</label>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Informations complémentaires sur votre dossier RBQ <span class="opt">(optionnel)</span></label>
+          <textarea id="experience_rbq" placeholder="Ex. : PCQ approuvé en 2020, renouvellement en cours, catégories de licence 15.1 et 16.2…"></textarea>
+          <p class="hint">Tout détail utile sur votre historique avec la RBQ, vos catégories de licence ou vos dossiers en cours.</p>
         </div>
       </div>
     </div>
@@ -1003,6 +1126,22 @@
     }
   }
 
+  // ── Toggle fréquence audit ──
+  document.querySelectorAll('input[name="frequence_audit_choix"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('frequenceAutreBox').style.display =
+        this.value === 'autre_frequence' ? 'block' : 'none';
+    });
+  });
+
+  // ── Toggle inspections RBQ détails ──
+  document.querySelectorAll('input[name="inspections_rbq"]').forEach(r => {
+    r.addEventListener('change', function() {
+      document.getElementById('inspectionsRbqDetails').style.display =
+        this.value === 'o' ? 'block' : 'none';
+    });
+  });
+
   // ── Barre de progression ──
   function updateProgress() {
     const sections = document.querySelectorAll('.section-card');
@@ -1021,6 +1160,23 @@
       });
       if (sec.dataset.section === '2') {
         if (!document.querySelector('input[name="type_activite"]:checked')) sectionOk = false;
+        if (!document.querySelector('input[name="type_pcq"]:checked')) sectionOk = false;
+      }
+      if (sec.dataset.section === '11') {
+        if (!document.querySelector('input[name="gestion_ncr_methode"]:checked')) sectionOk = false;
+      }
+      if (sec.dataset.section === '14') {
+        if (!document.querySelector('input[name="pcq_deja_soumis"]:checked')) sectionOk = false;
+        if (!document.querySelector('input[name="inspections_rbq"]:checked')) sectionOk = false;
+        if (!document.querySelector('input[name="avis_rbq"]:checked')) sectionOk = false;
+        if (!document.querySelector('input[name="anciennete_rbq"]:checked')) sectionOk = false;
+      }
+      if (sec.dataset.section === '3') {
+        const hasProjets  = document.querySelectorAll('input[name="types_projets"]:checked').length > 0 || document.getElementById('types_projets_autre')?.value.trim();
+        const hasClients  = document.querySelectorAll('input[name="types_clients"]:checked').length > 0 || document.getElementById('types_clients_autre')?.value.trim();
+        const hasDomaine  = document.querySelectorAll('input[name="domaine_application"]:checked').length > 0 || document.getElementById('domaine_application_autre')?.value.trim();
+        const hasEquip    = document.getElementById('types_equipements')?.value.trim();
+        if (!hasProjets || !hasClients || !hasDomaine || !hasEquip) sectionOk = false;
       }
       if (sectionOk) filled++;
     });
@@ -1058,6 +1214,36 @@
       activitesError.style.display = 'none';
     }
 
+    // Validation section 3 checkboxes
+    const typesProjetsChecked = document.querySelectorAll('input[name="types_projets"]:checked').length > 0
+      || document.getElementById('types_projets_autre')?.value.trim();
+    const typesProjetsError = document.getElementById('typesProjetsError');
+    if (!typesProjetsChecked) { typesProjetsError.style.display = 'block'; valid = false; }
+    else { typesProjetsError.style.display = 'none'; }
+
+    const typesClientsChecked = document.querySelectorAll('input[name="types_clients"]:checked').length > 0
+      || document.getElementById('types_clients_autre')?.value.trim();
+    const typesClientsError = document.getElementById('typesClientsError');
+    if (!typesClientsChecked) { typesClientsError.style.display = 'block'; valid = false; }
+    else { typesClientsError.style.display = 'none'; }
+
+    const domaineChecked = document.querySelectorAll('input[name="domaine_application"]:checked').length > 0
+      || document.getElementById('domaine_application_autre')?.value.trim();
+    const domaineError = document.getElementById('domaineError');
+    if (!domaineChecked) { domaineError.style.display = 'block'; valid = false; }
+    else { domaineError.style.display = 'none'; }
+
+    const typesEquipChecked = document.querySelectorAll('input[name="types_equipements"]:checked').length > 0
+      || document.getElementById('types_equipements_autre')?.value.trim();
+    const typesEquipError = document.getElementById('typesEquipError');
+    if (!typesEquipChecked) { typesEquipError.style.display = 'block'; valid = false; }
+    else { typesEquipError.style.display = 'none'; }
+
+    const ncrChecked = document.querySelectorAll('input[name="gestion_ncr_methode"]:checked').length > 0;
+    const ncrError = document.getElementById('ncrError');
+    if (!ncrChecked) { ncrError.style.display = 'block'; valid = false; }
+    else { ncrError.style.display = 'none'; }
+
     if (!valid) {
       const firstError = document.querySelector('.invalid, [style*="display: block"]');
       if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1083,9 +1269,33 @@
       a_soudage: hasSoudage,
 
       // Section 3
-      types_projets: document.getElementById('types_projets').value.trim(),
-      types_clients: document.getElementById('types_clients').value.trim(),
-      domaine_application: document.getElementById('domaine_application').value.trim(),
+      types_projets: (() => {
+        const checked = [...document.querySelectorAll('input[name="types_projets"]:checked')].map(c => c.value);
+        const autre = document.getElementById('types_projets_autre')?.value.trim();
+        if (autre) checked.push(autre);
+        return checked.join(', ');
+      })(),
+      types_clients: (() => {
+        const checked = [...document.querySelectorAll('input[name="types_clients"]:checked')].map(c => c.value);
+        const autre = document.getElementById('types_clients_autre')?.value.trim();
+        if (autre) checked.push(autre);
+        return checked.join(', ');
+      })(),
+      domaine_application: (() => {
+        const checked = [...document.querySelectorAll('input[name="domaine_application"]:checked')].map(c => c.value);
+        const autre = document.getElementById('domaine_application_autre')?.value.trim();
+        if (autre) checked.push(autre);
+        return checked.join(', ');
+      })(),
+      champ_vapeur_air:    !!document.querySelector('input[name="domaine_application"][value="vapeur_air"]:checked'),
+      champ_refrigeration: !!document.querySelector('input[name="domaine_application"][value="refrigeration"]:checked'),
+      champ_gaz_medicaux:  !!document.querySelector('input[name="domaine_application"][value="gaz_medicaux"]:checked'),
+      types_equipements: (() => {
+        const checked = [...document.querySelectorAll('input[name="types_equipements"]:checked')].map(c => c.value);
+        const autre = document.getElementById('types_equipements_autre')?.value.trim();
+        if (autre) checked.push(autre);
+        return checked.join(', ');
+      })(),
 
       // Section 4
       responsable_qualite: document.getElementById('responsable_qualite').value.trim(),
@@ -1093,6 +1303,7 @@
       experience_responsable: document.getElementById('experience_responsable').value.trim(),
       nb_employes: document.getElementById('nb_employes').value.trim(),
       dirigeant_entreprise: document.getElementById('dirigeant_entreprise').value.trim(),
+      titre_dirigeant: document.getElementById('titre_dirigeant').value.trim(),
 
       // Section 5
       employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
@@ -1133,7 +1344,13 @@
       registre_calibration: document.querySelector('input[name="registre_calibration"]:checked')?.value === 'o',
 
       // Section 11
-      gestion_ncr: document.getElementById('gestion_ncr').value.trim(),
+      gestion_ncr: (() => {
+        const methodes = [...document.querySelectorAll('input[name="gestion_ncr_methode"]:checked')].map(c => c.value);
+        const details = document.getElementById('gestion_ncr_details')?.value.trim();
+        let result = methodes.join(', ');
+        if (details) result += (result ? ' — ' : '') + details;
+        return result || 'Formulaire de non-conformité interne';
+      })(),
 
       // Section 12
       controle_documents: document.querySelector('input[name="controle_documents"]:checked')?.value === 'o',
@@ -1141,10 +1358,24 @@
 
       // Section 13
       audit_interne: document.querySelector('input[name="audit_interne"]:checked')?.value === 'o',
-      frequence_audit: document.getElementById('frequence_audit').value.trim(),
+      frequence_audit: (() => {
+        const choix = document.querySelector('input[name="frequence_audit_choix"]:checked')?.value;
+        if (choix === 'autre_frequence') return document.getElementById('frequence_audit_autre')?.value.trim() || 'Annuelle';
+        return choix || 'Annuelle';
+      })(),
 
       // Section 14
-      experience_rbq: document.getElementById('experience_rbq').value.trim(),
+      experience_rbq: (() => {
+        const pcq     = document.querySelector('input[name="pcq_deja_soumis"]:checked')?.value === 'o' ? 'PCQ déjà soumis à la RBQ' : 'Première demande de PCQ';
+        const insp    = document.querySelector('input[name="inspections_rbq"]:checked')?.value === 'o';
+        const inspDet = insp ? (document.getElementById('nb_inspections_rbq')?.value.trim() || 'Inspections réalisées') : 'Aucune inspection antérieure';
+        const avis    = document.querySelector('input[name="avis_rbq"]:checked')?.value === 'o' ? 'Avis de non-conformité reçus' : 'Aucun avis de non-conformité';
+        const anc     = document.querySelector('input[name="anciennete_rbq"]:checked')?.value || '';
+        const detail  = document.getElementById('experience_rbq')?.value.trim();
+        const parts   = [pcq, inspDet, avis, anc ? `Licence détenue depuis : ${anc}` : ''].filter(Boolean);
+        if (detail) parts.push(detail);
+        return parts.join(' · ');
+      })(),
 
       // Logo (optionnel)
       logo_filename: logoFilename || null,
