@@ -429,6 +429,8 @@
 
     const typesInsp = Array.isArray(ctx.type_inspection) ? ctx.type_inspection : [];
     ctx.inspections_liste = typesInsp.join(', ') || '';
+    const typesInspSoudure = Array.isArray(ctx.type_inspection_soudure) ? ctx.type_inspection_soudure : [];
+    ctx.inspections_soudure_liste = typesInspSoudure.join(', ') || '';
 
     ctx.methode_ncr                      = ctx.methode_ncr || ctx.gestion_ncr;
     ctx.dirigeant_entreprise             = ctx.dirigeant_entreprise || ctx.contact || '';

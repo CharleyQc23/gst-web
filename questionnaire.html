@@ -601,12 +601,12 @@
           <label>Domaines d'application — fluides et systèmes concernés <span class="req">*</span></label>
           <p class="hint" style="margin-bottom:10px;">Ces choix déterminent les sections réglementaires de votre PCQ. Cochez tous les domaines applicables à vos travaux.</p>
           <div class="check-grid">
-            <label class="check-item"><input type="checkbox" name="domaine_application" value="vapeur_air" id="domaineVapeurAir"><span class="check-box"></span>Vapeur / Air comprimé</label>
-            <label class="check-item"><input type="checkbox" name="domaine_application" value="refrigeration" id="domaineRefrigeration"><span class="check-box"></span>Réfrigération / Climatisation</label>
-            <label class="check-item"><input type="checkbox" name="domaine_application" value="gaz_medicaux" id="domaineGazMedicaux"><span class="check-box"></span>Gaz médicaux</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="vapeur_air" id="domaineVapeurAir"><span class="check-box"></span>Vapeur / Air comprimé (BNQ 3650-900, ASME B31.1)</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="refrigeration" id="domaineRefrigeration"><span class="check-box"></span>Réfrigération / Climatisation (CSA B52, ASME B31.5)</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="gaz_medicaux" id="domaineGazMedicaux"><span class="check-box"></span>Gaz médicaux (CSA Z7396.1)</label>
             <label class="check-item"><input type="checkbox" name="domaine_application" value="eau_chaude"><span class="check-box"></span>Eau chaude / Fluides thermiques</label>
             <label class="check-item"><input type="checkbox" name="domaine_application" value="gaz_naturel"><span class="check-box"></span>Gaz naturel / Propane</label>
-            <label class="check-item"><input type="checkbox" name="domaine_application" value="hydrocarbures"><span class="check-box"></span>Hydrocarbures / Pétrochimie</label>
+            <label class="check-item"><input type="checkbox" name="domaine_application" value="hydrocarbures"><span class="check-box"></span>Hydrocarbures / Pétrochimie (ASME B31.3)</label>
           </div>
           <div class="field-group" style="margin-top:10px;margin-bottom:0;">
             <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
@@ -618,7 +618,7 @@
         <div class="divider"></div>
 
         <div class="field-group">
-          <label>Types d'équipements concernés <span class="req">*</span></label>
+          <label>Quels types d'équipements sous pression fabriquez-vous ou installez-vous directement? <span class="req">*</span></label>
           <div class="check-grid">
             <label class="check-item"><input type="checkbox" name="types_equipements" value="Chaudières (vapeur haute et basse pression)"><span class="check-box"></span>Chaudières (vapeur haute/basse pression)</label>
             <label class="check-item"><input type="checkbox" name="types_equipements" value="Appareils sous pression (réservoirs, échangeurs)"><span class="check-box"></span>Appareils sous pression (réservoirs, échangeurs)</label>
@@ -631,6 +631,7 @@
             <label style="text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;">Autre <span class="opt">(précisez)</span></label>
             <input type="text" id="types_equipements_autre" placeholder="Ex. : Appareils miniatures, tuyauteries BEP…">
           </div>
+          <p class="hint">Cochez uniquement les équipements que vous fabriquez ou installez vous-même — pas ceux présents sur le chantier mais réalisés par d'autres corps de métier.</p>
           <div class="field-error" id="typesEquipError">Veuillez sélectionner au moins un type d'équipement.</div>
         </div>
 
@@ -840,23 +841,35 @@
         <!-- Sous-champs conditionnels -->
         <div id="inspectionDetails" style="display:none;">
           <div class="divider"></div>
+
+          <!-- Sous-section A : Inspection générale -->
           <div class="field-group">
-            <label>Types d'inspection réalisés <span class="req">*</span></label>
+            <label>Types d'inspection générale réalisés <span class="req">*</span></label>
             <div class="check-grid">
-              <label class="check-item">
-                <input type="checkbox" name="type_inspection" value="visuelle">
-                <span class="check-box"></span>Visuelle
-              </label>
-              <label class="check-item">
-                <input type="checkbox" name="type_inspection" value="dimensionnelle">
-                <span class="check-box"></span>Dimensionnelle
-              </label>
-              <label class="check-item">
-                <input type="checkbox" name="type_inspection" value="pression">
-                <span class="check-box"></span>Test de pression
-              </label>
+              <label class="check-item"><input type="checkbox" name="type_inspection" value="Inspection visuelle générale"><span class="check-box"></span>Inspection visuelle générale</label>
+              <label class="check-item"><input type="checkbox" name="type_inspection" value="Vérification dimensionnelle"><span class="check-box"></span>Vérification dimensionnelle</label>
+              <label class="check-item"><input type="checkbox" name="type_inspection" value="Test de pression / essai d'étanchéité"><span class="check-box"></span>Test de pression / essai d'étanchéité</label>
+              <label class="check-item"><input type="checkbox" name="type_inspection" value="Inspection finale avant livraison"><span class="check-box"></span>Inspection finale avant livraison</label>
             </div>
           </div>
+
+          <!-- Sous-section B : Inspection des soudures (conditionnelle) -->
+          <div id="inspectionSoudureSection" style="display:none;">
+            <div class="divider"></div>
+            <div class="field-group">
+              <label>Types d'examen des soudures réalisés</label>
+              <p class="hint" style="margin-bottom:10px;">Cochez les méthodes d'examen non destructif (END) que vous utilisez ou sous-traitez.</p>
+              <div class="check-grid">
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Examen visuel des soudures (VT)"><span class="check-box"></span>Examen visuel (VT)</label>
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Radiographie industrielle (RT)"><span class="check-box"></span>Radiographie (RT)</label>
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Ultrasons (UT)"><span class="check-box"></span>Ultrasons (UT)</label>
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Ressuage (PT)"><span class="check-box"></span>Ressuage (PT)</label>
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Magnétoscopie (MT)"><span class="check-box"></span>Magnétoscopie (MT)</label>
+                <label class="check-item"><input type="checkbox" name="type_inspection_soudure" value="Sous-traité à un organisme END accrédité"><span class="check-box"></span>Sous-traité — organisme END accrédité</label>
+              </div>
+            </div>
+          </div>
+
           <div class="divider"></div>
           <div class="field-group">
             <label>Vos inspecteurs internes détiennent-ils une certification reconnue (ex. : CWI, niveau CGSB)? <span class="req">*</span></label>
@@ -864,12 +877,6 @@
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="o"><span class="dot"></span>Oui</label>
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="n"><span class="dot"></span>Non</label>
             </div>
-          </div>
-          <div class="divider"></div>
-          <div class="field-group">
-            <label>Si vous sous-traitez vos examens non destructifs (END), quel est le nom de votre sous-traitant EN D? <span class="opt">(si applicable)</span></label>
-            <input type="text" id="sous_traitant_end" placeholder="Ex. : Inspection Industrielle ABC inc.">
-            <p class="hint">Inscrivez le nom de l'entreprise spécialisée que vous mandatez pour vos radiographies, ultrasons, ressuages ou autres END. Laissez vide si vous ne sous-traitez pas ces examens.</p>
           </div>
         </div>
       </div>
@@ -1126,6 +1133,17 @@
     }
   }
 
+  // ── Toggle inspection soudures (lié à la déclaration de soudage section 6) ──
+  function toggleInspectionSoudure() {
+    const hasSoudage = document.querySelector('input[name="a_soudage_declare"]:checked')?.value === 'o';
+    const sec = document.getElementById('inspectionSoudureSection');
+    if (sec) sec.style.display = hasSoudage ? 'block' : 'none';
+  }
+  // Appliquer au changement de la question soudage S6
+  document.querySelectorAll('input[name="a_soudage_declare"]').forEach(r => {
+    r.addEventListener('change', toggleInspectionSoudure);
+  });
+
   // ── Toggle fréquence audit ──
   document.querySelectorAll('input[name="frequence_audit_choix"]').forEach(r => {
     r.addEventListener('change', function() {
@@ -1334,6 +1352,9 @@
       inspection_interne: inspectionInterne,
       type_inspection: inspectionInterne
         ? [...document.querySelectorAll('input[name="type_inspection"]:checked')].map(c => c.value)
+        : [],
+      type_inspection_soudure: inspectionInterne
+        ? [...document.querySelectorAll('input[name="type_inspection_soudure"]:checked')].map(c => c.value)
         : [],
       inspecteurs_qualifies: inspectionInterne
         ? document.querySelector('input[name="inspecteurs_qualifies"]:checked')?.value === 'o'
