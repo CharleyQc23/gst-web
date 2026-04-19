@@ -11,7 +11,7 @@
 <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
-<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@9.0.2/dist/index.iife.js"></script>
 <style>
   :root {
     --navy:       #0f1f38;
@@ -610,7 +610,7 @@
   ══════════════════════════════════════════════════════ */
   async function generateGuide(clientData, cfg) {
     const D = window.docx;
-    if (!D) throw new Error('Librairie docx non chargée');
+    if (!D || !D.Document) throw new Error('Librairie docx non chargée — vérifiez la connexion CDN');
 
     const NAVY='0F1F38', GOLD='C8A84B', GOLD_LIGHT='E2C97E', WHITE='F8F7F4';
     const GRAY='E4E2DC', GRAY_DARK='5A5854', TEXT='1A1916', AMBER='8B6914';
