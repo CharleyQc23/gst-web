@@ -505,49 +505,60 @@
       </div>
     </div>
 
-    <!-- ═══ SECTION 2 — Type de permis et activités ═══ -->
+    <!-- ═══ SECTION 2 — Type de mandat ═══ -->
     <div class="section-card" data-section="2">
       <div class="section-header">
         <div class="section-num">2</div>
-        <div class="section-title">Type de permis et activités réalisées</div>
+        <div class="section-title">Type de mandat visé par le PCQ</div>
       </div>
       <div class="section-body">
         <div class="field-group">
-          <label>Type de programme de contrôle qualité demandé <span class="req">*</span></label>
-          <div class="bool-group">
-            <label class="bool-label"><input type="radio" name="type_pcq" value="installateur" required><span class="dot"></span>Installateur</label>
-            <label class="bool-label"><input type="radio" name="type_pcq" value="fabricant"><span class="dot"></span>Fabricant</label>
+          <label>Sélectionnez le ou les types de mandats couverts par votre programme <span class="req">*</span></label>
+          <p class="hint" style="margin-bottom:12px;">Ces choix déterminent les normes applicables à votre programme. Cochez tous les types de travaux que votre entreprise réalise sous ce permis.</p>
+
+          <div style="margin-bottom:16px;">
+            <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Installation sur chantier</p>
+            <div class="check-grid">
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="installation_chantier"><span class="check-box"></span>Installer des équipements sous pression (chaudières, appareils, tuyauteries, accessoires)</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="installation_soi_meme"><span class="check-box"></span>Installer de la tuyauterie pour soi-même (exploitant-utilisateur)</label>
+            </div>
           </div>
-          <p class="hint">Installateur : entreprise qui installe des équipements sous pression sur chantier. Fabricant : entreprise qui fabrique des équipements sous pression, accessoires ou tuyauteries en atelier.</p>
+
+          <div style="margin-bottom:16px;">
+            <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Fabrication en atelier</p>
+            <div class="check-grid">
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_tuyauterie"><span class="check-box"></span>Fabriquer de la tuyauterie sous pression</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_chaudiere_hp"><span class="check-box"></span>Fabriquer une chaudière haute pression (vapeur &gt; 103 kPa)</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_chaudiere_bp"><span class="check-box"></span>Fabriquer une chaudière basse pression (chauffage, vapeur ≤ 103 kPa)</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_appareil_sp"><span class="check-box"></span>Fabriquer un appareil sous pression (réservoirs, échangeurs, colonnes)</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_nucleaire"><span class="check-box"></span>Fabriquer des articles pour centrale nucléaire</label>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Réparation</p>
+            <div class="check-grid">
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="reparation_equipement"><span class="check-box"></span>Réparer un équipement sous pression (chaudières, appareils et tuyauteries)</label>
+              <label class="check-item"><input type="checkbox" name="type_mandat" value="reparation_soupapes"><span class="check-box"></span>Réparer des soupapes de sûreté</label>
+            </div>
+          </div>
+
+          <div class="field-error" id="mandatError">Veuillez sélectionner au moins un type de mandat.</div>
         </div>
+
         <div class="divider"></div>
+
         <div class="field-group">
-          <label>Sélectionnez toutes les activités applicables <span class="req">*</span></label>
+          <label>Activités réalisées <span class="req">*</span></label>
+          <p class="hint" style="margin-bottom:8px;">Cochez toutes les activités effectuées dans le cadre de vos mandats.</p>
           <div class="check-grid" id="activitesGrid">
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="tuyauterie">
-              <span class="check-box"></span>Tuyauterie
-            </label>
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="fabrication">
-              <span class="check-box"></span>Fabrication
-            </label>
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="soudage" id="cbSoudage">
-              <span class="check-box"></span>Soudage
-            </label>
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="assemblage">
-              <span class="check-box"></span>Assemblage
-            </label>
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="installation">
-              <span class="check-box"></span>Installation
-            </label>
-            <label class="check-item">
-              <input type="checkbox" name="type_activite" value="maintenance">
-              <span class="check-box"></span>Maintenance
-            </label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="tuyauterie"><span class="check-box"></span>Tuyauterie</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="fabrication"><span class="check-box"></span>Fabrication</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="soudage" id="cbSoudage"><span class="check-box"></span>Soudage</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="assemblage"><span class="check-box"></span>Assemblage</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="installation"><span class="check-box"></span>Installation</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="reparation"><span class="check-box"></span>Réparation</label>
+            <label class="check-item"><input type="checkbox" name="type_activite" value="maintenance"><span class="check-box"></span>Maintenance</label>
           </div>
           <div class="field-error" id="activitesError">Veuillez sélectionner au moins une activité.</div>
         </div>
@@ -1177,8 +1188,8 @@
         }
       });
       if (sec.dataset.section === '2') {
+        if (!document.querySelector('input[name="type_mandat"]:checked')) sectionOk = false;
         if (!document.querySelector('input[name="type_activite"]:checked')) sectionOk = false;
-        if (!document.querySelector('input[name="type_pcq"]:checked')) sectionOk = false;
       }
       if (sec.dataset.section === '11') {
         if (!document.querySelector('input[name="gestion_ncr_methode"]:checked')) sectionOk = false;
@@ -1222,6 +1233,15 @@
         group.classList.remove('invalid');
       }
     });
+
+    const mandats = [...document.querySelectorAll('input[name="type_mandat"]:checked')].map(c => c.value);
+    const mandatError = document.getElementById('mandatError');
+    if (mandats.length === 0) {
+      mandatError.style.display = 'block';
+      valid = false;
+    } else {
+      mandatError.style.display = 'none';
+    }
 
     const activites = [...document.querySelectorAll('input[name="type_activite"]:checked')].map(c => c.value);
     const activitesError = document.getElementById('activitesError');
@@ -1282,7 +1302,15 @@
       courriel: document.getElementById('courriel').value.trim(),
 
       // Section 2
-      type_pcq: document.querySelector('input[name="type_pcq"]:checked')?.value || 'installateur',
+      type_mandat: [...document.querySelectorAll('input[name="type_mandat"]:checked')].map(c => c.value),
+      type_pcq: (() => {
+        const mandats = [...document.querySelectorAll('input[name="type_mandat"]:checked')].map(c => c.value);
+        const isFab = mandats.some(m => m.startsWith('fabrication') || m.startsWith('reparation'));
+        const isInst = mandats.some(m => m.startsWith('installation'));
+        if (isFab && isInst) return 'mixte';
+        if (isFab) return 'fabricant';
+        return 'installateur';
+      })(),
       type_activite: activites,
       a_soudage: hasSoudage,
 

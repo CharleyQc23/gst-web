@@ -11,6 +11,7 @@
 <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
+<script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
 <style>
   :root {
     --navy:       #0f1f38;
@@ -479,6 +480,7 @@
     ann14:            { label:'Fiche de vérification',       file:'template_ann14_fiche_verification_v1.docx' },
     ann15:            { label:'Mention de conformité',       file:'template_ann15_mention_conformite_v1.docx' },
     ncr:              { label:'Rapport de non-conformité',   file:'template_ncr_installateur_v1.docx' },
+    guide:            { label:'Guide de remise client',            file:'guide_config.json' },
   };
 
   function getDocumentIds(data) {
@@ -488,12 +490,12 @@
     if (type === 'fabricant') {
       docs.push('pcq_fabricant', 'ann09');
       if (aSoudage) docs.push('ann11');
-      docs.push('ncr');
+      docs.push('ncr', 'guide');
     } else {
       docs.push(type === 'generique' ? 'pcq_generique' : 'pcq_installateur');
       docs.push('ann09', 'ann10');
       if (aSoudage) docs.push('ann11');
-      docs.push('ann14', 'ann15', 'ncr');
+      docs.push('ann14', 'ann15', 'ncr', 'guide');
     }
     return docs;
   }
@@ -550,23 +552,32 @@
       status.textContent = tpl.label;
       status.className   = 'gen-status';
       try {
-        const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
-        if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${resp.status}`); }
-        const arrayBuffer = await resp.arrayBuffer();
-        const pzip          = new PizZip(arrayBuffer);
-        const Docxtemplater = window.docxtemplater || window.Docxtemplater;
-        const ImageModule   = window.ImageModule   || window.docxtemplaterImageModuleFree;
-        const imageModule   = ImageModule ? new ImageModule({
-          centered: false,
-          getImage(v) { if (!v) return null; const b64 = v.includes(',') ? v.split(',')[1] : v; return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); },
-          getSize()   { return [150, 60]; },
-        }) : null;
-        const customParser = tag => { const t = tag.trim(); return { get: s => { if (s==null) return ''; const v = s[t]; return (v!==undefined && v!==null) ? v : ''; } }; };
-        const docOptions = { delimiters:{start:'{{',end:'}}' }, paragraphLoop:true, linebreaks:true, parser:customParser, nullGetter:()=>'' };
-        if (imageModule) docOptions.modules = [imageModule];
-        const doc = new Docxtemplater(pzip, docOptions);
-        doc.render(ctx);
-        zip.file(`${nomClient}_${id}.docx`, doc.getZip().generate({ type:'arraybuffer' }));
+        if (id === 'guide') {
+          // Guide généré dynamiquement via docx.js + guide_config.json
+          const cfgResp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
+          if (!cfgResp.ok) { const e = await cfgResp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${cfgResp.status}`); }
+          const cfg = await cfgResp.json();
+          const guideBuffer = await generateGuide(data, cfg);
+          zip.file(`${nomClient}_guide_remise.docx`, guideBuffer);
+        } else {
+          const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
+          if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${resp.status}`); }
+          const arrayBuffer = await resp.arrayBuffer();
+          const pzip          = new PizZip(arrayBuffer);
+          const Docxtemplater = window.docxtemplater || window.Docxtemplater;
+          const ImageModule   = window.ImageModule   || window.docxtemplaterImageModuleFree;
+          const imageModule   = ImageModule ? new ImageModule({
+            centered: false,
+            getImage(v) { if (!v) return null; const b64 = v.includes(',') ? v.split(',')[1] : v; return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); },
+            getSize()   { return [150, 60]; },
+          }) : null;
+          const customParser = tag => { const t = tag.trim(); return { get: s => { if (s==null) return ''; const v = s[t]; return (v!==undefined && v!==null) ? v : ''; } }; };
+          const docOptions = { delimiters:{start:'{{',end:'}}' }, paragraphLoop:true, linebreaks:true, parser:customParser, nullGetter:()=>'' };
+          if (imageModule) docOptions.modules = [imageModule];
+          const doc = new Docxtemplater(pzip, docOptions);
+          doc.render(ctx);
+          zip.file(`${nomClient}_${id}.docx`, doc.getZip().generate({ type:'arraybuffer' }));
+        }
       } catch (err) { console.error(err); errors.push(`${tpl.label} : ${err.message}`); }
     }
 
@@ -593,6 +604,164 @@
   document.getElementById('genModalClose').addEventListener('click', closeGenModal);
   document.getElementById('btnGenerate').addEventListener('click', generateDocx);
   document.getElementById('genModalOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeGenModal(); });
+
+  /* ══════════════════════════════════════════════════════
+     GÉNÉRATION GUIDE CLIENT — docx.js
+  ══════════════════════════════════════════════════════ */
+  async function generateGuide(clientData, cfg) {
+    const D = window.docx;
+    if (!D) throw new Error('Librairie docx non chargée');
+
+    const NAVY='0F1F38', GOLD='C8A84B', GOLD_LIGHT='E2C97E', WHITE='F8F7F4';
+    const GRAY='E4E2DC', GRAY_DARK='5A5854', TEXT='1A1916', AMBER='8B6914';
+    const BS = D.BorderStyle;
+
+    const nb = () => { const b={style:BS.NONE,size:0,color:'FFFFFF'}; return{top:b,bottom:b,left:b,right:b}; };
+    const sp = (pts=120) => new D.Paragraph({spacing:{before:pts,after:0},children:[]});
+    const body = (text, opts={}) => new D.Paragraph({spacing:{before:60,after:100},children:[new D.TextRun({text,font:'Calibri',size:22,color:TEXT,...opts})]});
+    const secTitle = (text) => new D.Paragraph({spacing:{before:320,after:80},border:{bottom:{style:BS.SINGLE,size:6,color:GOLD,space:4}},children:[new D.TextRun({text:text.toUpperCase(),font:'Calibri',size:22,bold:true,color:NAVY,characterSpacing:40})]});
+    const subTitle = (text) => new D.Paragraph({spacing:{before:200,after:60},children:[new D.TextRun({text,font:'Calibri',size:22,bold:true,color:NAVY})]});
+    const bul = (text) => new D.Paragraph({spacing:{before:40,after:40},indent:{left:360,hanging:240},children:[new D.TextRun({text:'\u2022   ',font:'Calibri',size:22,color:GOLD,bold:true}),new D.TextRun({text,font:'Calibri',size:22,color:TEXT})]});
+
+    const stepRow = (num,titre,desc) => [
+      new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[560,8800],
+        borders:{top:{style:BS.NONE},bottom:{style:BS.NONE},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},
+        rows:[new D.TableRow({children:[
+          new D.TableCell({width:{size:560,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:100,right:100},verticalAlign:D.VerticalAlign.CENTER,children:[new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:String(num),font:'Calibri',size:24,bold:true,color:GOLD_LIGHT})]})]}),
+          new D.TableCell({width:{size:8800,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},margins:{top:80,bottom:80,left:200,right:100},children:[
+            new D.Paragraph({spacing:{before:0,after:40},children:[new D.TextRun({text:titre,font:'Calibri',size:22,bold:true,color:NAVY})]}),
+            new D.Paragraph({spacing:{before:0,after:0},children:[new D.TextRun({text:desc,font:'Calibri',size:20,color:GRAY_DARK})]})
+          ]})
+        ]})]
+      }), sp(60)
+    ];
+
+    const docCard = (code,nom,desc,aCompleter) => [
+      new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[9360],
+        borders:{top:{style:BS.NONE},bottom:{style:BS.NONE},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},
+        rows:[new D.TableRow({children:[new D.TableCell({width:{size:9360,type:D.WidthType.DXA},
+          borders:{top:{style:BS.NONE,size:0,color:'FFFFFF'},bottom:{style:BS.SINGLE,size:4,color:GRAY},left:{style:BS.SINGLE,size:16,color:GOLD},right:{style:BS.NONE,size:0,color:'FFFFFF'}},
+          margins:{top:100,bottom:100,left:240,right:120},shading:{fill:'F8F7F4',type:D.ShadingType.CLEAR},
+          children:[
+            new D.Paragraph({spacing:{before:0,after:40},children:[new D.TextRun({text:code+'  ',font:'Calibri',size:18,bold:true,color:GOLD}),new D.TextRun({text:nom,font:'Calibri',size:22,bold:true,color:NAVY})]}),
+            new D.Paragraph({spacing:{before:0,after:40},children:[new D.TextRun({text:desc,font:'Calibri',size:20,color:GRAY_DARK})]}),
+            ...(aCompleter?[new D.Paragraph({spacing:{before:40,after:0},children:[new D.TextRun({text:'\u270E  \u00C0 compl\u00E9ter : ',font:'Calibri',size:20,bold:true,color:AMBER}),new D.TextRun({text:aCompleter,font:'Calibri',size:20,color:AMBER})]})]:[])
+          ]
+        })]})]}
+      ), sp(80)
+    ];
+
+    const normesTable = (docs) => {
+      const hdr = new D.TableRow({tableHeader:true,children:[
+        new D.TableCell({width:{size:3200,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'Document',font:'Calibri',size:18,bold:true,color:WHITE})]})]  }),
+        new D.TableCell({width:{size:3560,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'Description',font:'Calibri',size:18,bold:true,color:WHITE})]})]  }),
+        new D.TableCell({width:{size:1400,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:'Prix (USD)',font:'Calibri',size:18,bold:true,color:WHITE})]})]  }),
+        new D.TableCell({width:{size:1200,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'Source',font:'Calibri',size:18,bold:true,color:WHITE})]})]  }),
+      ]});
+      const rows = docs.map((d,i) => new D.TableRow({children:[
+        new D.TableCell({width:{size:3200,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:d.doc,font:'Calibri',size:18,bold:true,color:NAVY})]})]  }),
+        new D.TableCell({width:{size:3560,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:d.description,font:'Calibri',size:18,color:GRAY_DARK})]})]  }),
+        new D.TableCell({width:{size:1400,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.TextRun({text:d.prix,font:'Calibri',size:18,color:TEXT})]})]  }),
+        new D.TableCell({width:{size:1200,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:d.source,font:'Calibri',size:18,color:'1B6EBF',underline:{}})]})]  }),
+      ]}));
+      return new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[3200,3560,1400,1200],rows:[hdr,...rows]});
+    };
+
+    const infoBox = (lines) => new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[9360],
+      borders:{top:{style:BS.NONE},bottom:{style:BS.NONE},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},
+      rows:[new D.TableRow({children:[new D.TableCell({width:{size:9360,type:D.WidthType.DXA},
+        borders:{top:{style:BS.SINGLE,size:4,color:GOLD},bottom:{style:BS.SINGLE,size:4,color:GOLD},left:{style:BS.SINGLE,size:4,color:GOLD},right:{style:BS.SINGLE,size:4,color:GOLD}},
+        margins:{top:140,bottom:140,left:240,right:240},shading:{fill:'FBF7EC',type:D.ShadingType.CLEAR},
+        children:lines.map(([l,v])=>new D.Paragraph({spacing:{before:30,after:30},children:[new D.TextRun({text:l+'  ',font:'Calibri',size:20,bold:true,color:GRAY_DARK}),new D.TextRun({text:v,font:'Calibri',size:20,color:TEXT})]}))
+      })]})]}
+    );
+
+    const mandats = Array.isArray(clientData.type_mandat) ? clientData.type_mandat : [];
+
+    const doc = new D.Document({
+      styles:{default:{document:{run:{font:'Calibri',size:22}}}},
+      sections:[{
+        properties:{page:{size:{width:12240,height:15840},margin:{top:1440,right:1440,bottom:1440,left:1440}}},
+        headers:{default:new D.Header({children:[new D.Table({
+          width:{size:9360,type:D.WidthType.DXA},columnWidths:[7000,2360],
+          borders:{top:{style:BS.NONE},bottom:{style:BS.SINGLE,size:6,color:GOLD},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},
+          rows:[new D.TableRow({children:[
+            new D.TableCell({width:{size:7000,type:D.WidthType.DXA},borders:nb(),verticalAlign:D.VerticalAlign.CENTER,children:[new D.Paragraph({children:[new D.TextRun({text:'Guernon Services Techniques',font:'Calibri',size:18,bold:true,color:NAVY})]})]}),
+            new D.TableCell({width:{size:2360,type:D.WidthType.DXA},borders:nb(),children:[new D.Paragraph({alignment:D.AlignmentType.RIGHT,children:[new D.TextRun({text:'Programme de contr\u00F4le qualit\u00E9 \u2014 RBQ',font:'Calibri',size:16,color:GRAY_DARK})]})]}),
+          ]})]
+        })]})},
+        footers:{default:new D.Footer({children:[new D.Table({
+          width:{size:9360,type:D.WidthType.DXA},columnWidths:[7000,2360],
+          borders:{top:{style:BS.SINGLE,size:4,color:GRAY},bottom:{style:BS.NONE},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},
+          rows:[new D.TableRow({children:[
+            new D.TableCell({width:{size:7000,type:D.WidthType.DXA},borders:nb(),children:[new D.Paragraph({spacing:{before:60},children:[new D.TextRun({text:cfg.consultant.courriel+'  \u00B7  '+cfg.consultant.site,font:'Calibri',size:16,color:GRAY_DARK})]})]}),
+            new D.TableCell({width:{size:2360,type:D.WidthType.DXA},borders:nb(),children:[new D.Paragraph({alignment:D.AlignmentType.RIGHT,spacing:{before:60},children:[new D.TextRun({text:'Page ',font:'Calibri',size:16,color:GRAY_DARK}),new D.TextRun({children:[D.PageNumber.CURRENT],font:'Calibri',size:16,color:GRAY_DARK}),new D.TextRun({text:' de ',font:'Calibri',size:16,color:GRAY_DARK}),new D.TextRun({children:[D.PageNumber.TOTAL_PAGES],font:'Calibri',size:16,color:GRAY_DARK})]})]}),
+          ]})]
+        })]})},
+        children:[
+          new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[9360],borders:{top:{style:BS.NONE},bottom:{style:BS.NONE},left:{style:BS.NONE},right:{style:BS.NONE},insideH:{style:BS.NONE},insideV:{style:BS.NONE}},rows:[new D.TableRow({children:[new D.TableCell({width:{size:9360,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:640,bottom:640,left:480,right:480},children:[
+            new D.Paragraph({spacing:{before:0,after:80},children:[new D.TextRun({text:'PROGRAMME DE CONTR\u00D4LE QUALIT\u00C9 \u2014 RBQ',font:'Calibri',size:18,bold:true,color:GOLD,characterSpacing:60})]}),
+            new D.Paragraph({spacing:{before:0,after:120},children:[new D.TextRun({text:cfg.titre,font:'Calibri',size:52,color:WHITE})]}),
+            new D.Paragraph({spacing:{before:0,after:0},children:[new D.TextRun({text:cfg.sous_titre,font:'Calibri',size:20,color:'A0A8B8'})]}),
+          ]})]})]  }),
+          sp(400),
+          secTitle('1.  Mot d\u2019introduction'),
+          ...cfg.introduction.map(t=>body(t)),
+          sp(80),
+          secTitle('2.  Documents inclus dans ce package'),
+          body('Votre package contient les documents suivants, pr\u00E9par\u00E9s conform\u00E9ment au R\u00E8glement sur les installations sous pression (B-1.1, r.6.1).'),
+          sp(80),
+          subTitle('Document principal'),
+          ...cfg.documents.slice(0,1).flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
+          subTitle('Registres et formulaires d\u2019utilisation courante'),
+          ...cfg.documents.slice(1).flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
+          sp(80),
+          secTitle('3.  Ce que vous devez compl\u00E9ter avant soumission'),
+          body('Votre PCQ est r\u00E9dig\u00E9 sur mesure. Certains \u00E9l\u00E9ments n\u00E9cessitent votre attention avant la soumission \u00E0 la RBQ :'),
+          sp(80),
+          new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[480,2200,6680],rows:[
+            new D.TableRow({tableHeader:true,children:[
+              new D.TableCell({width:{size:480,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'#',font:'Calibri',size:18,bold:true,color:GOLD})]})]}),
+              new D.TableCell({width:{size:2200,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'Section',font:'Calibri',size:18,bold:true,color:WHITE})]})]}),
+              new D.TableCell({width:{size:6680,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'\u00C0 compl\u00E9ter',font:'Calibri',size:18,bold:true,color:WHITE})]})]}),
+            ]}),
+            ...cfg.a_completer.map((item,i)=>new D.TableRow({children:[
+              new D.TableCell({width:{size:480,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:String(i+1),font:'Calibri',size:20,bold:true,color:GOLD})]})]}),
+              new D.TableCell({width:{size:2200,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:item.section,font:'Calibri',size:20,bold:true,color:NAVY})]})]}),
+              new D.TableCell({width:{size:6680,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:item.description,font:'Calibri',size:20,color:GRAY_DARK})]})]}),
+            ]}))
+          ]}),
+          sp(120),
+          secTitle('4.  Prochaines \u00E9tapes \u2014 Soumission \u00E0 la RBQ'),
+          body('Une fois votre PCQ compl\u00E9t\u00E9, voici le processus de soumission et d\u2019approbation :'),
+          sp(80),
+          ...cfg.etapes.flatMap((e,i)=>stepRow(i+1,e.titre,e.description)),
+          sp(80),
+          secTitle('5.  Normes et codes applicables \u00E0 vos activit\u00E9s'),
+          body('En tant que d\u00E9tenteur d\u2019un PCQ, vous devez poss\u00E9der les \u00E9ditions en vigueur des normes applicables. Ces documents sont votre r\u00E9f\u00E9rence technique au quotidien et sont exig\u00E9s lors des audits RBQ.'),
+          ...(mandats.length===0
+            ?[body('Aucun type de mandat sp\u00E9cifi\u00E9 \u2014 contactez votre consultant pour la liste compl\u00E8te.',{color:GRAY_DARK})]
+            :mandats.flatMap(m=>{const s=cfg.normes[m];if(!s)return[];return[subTitle(s.label),normesTable(s.docs),sp(100)];})
+          ),
+          body(cfg.normes_note,{color:GRAY_DARK,italics:true}),
+          sp(80),
+          secTitle('6.  Informations importantes \u00E0 retenir'),
+          ...cfg.infos_importantes.flatMap(item=>[subTitle(item.titre),body(item.texte)]),
+          sp(80),
+          secTitle('7.  Ressources utiles'),
+          ...cfg.ressources.map(r=>bul(r.label+' \u2014 '+r.url)),
+          sp(160),
+          secTitle('8.  Votre consultant'),
+          body('Pour toute question relative \u00E0 votre PCQ :'),
+          sp(80),
+          infoBox([['Consultant :',cfg.consultant.nom],['Entreprise :',cfg.consultant.entreprise],['Courriel :',cfg.consultant.courriel],['Site web :',cfg.consultant.site]]),
+          sp(80),
+          body(cfg.consultant.mot_fin,{color:GRAY_DARK}),
+        ],
+      }],
+    });
+    return await D.Packer.toBuffer(doc);
+  }
 
   /* ── Init ── */
   if (getToken()) showDashboard();
