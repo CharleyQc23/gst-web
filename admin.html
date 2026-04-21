@@ -572,6 +572,16 @@
           const cfg = await cfgResp.json();
           const guideBuffer = await generateGuide(data, cfg);
           zip.file(`${nomClient}_guide_remise.docx`, guideBuffer);
+          // PDF du guide
+          try {
+            status.textContent = 'Guide \u2014 g\u00E9n\u00E9ration PDF\u2026';
+            const guideHtml = buildGuideHTML(data, cfg);
+            const guidePdf  = await generateGuidePDF(guideHtml);
+            zip.file(`${nomClient}_guide_remise.pdf`, guidePdf);
+          } catch(pdfErr) {
+            console.warn('Guide PDF:', pdfErr.message);
+            errors.push(`Guide PDF : ${pdfErr.message}`);
+          }
         } else {
           const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
           if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${resp.status}`); }
@@ -650,6 +660,31 @@
       }
     }
     if (!D || !D.Document) throw new Error('Librairie docx non chargée — vérifiez la connexion CDN');
+
+    // ── Filtrage selon les activités de l'entrepreneur ──
+    const hasSoudage  = !!(clientData.soudeurs_certifies || clientData.a_soudage_declare === 'o');
+    const isFabricant = (clientData.type_pcq || 'installateur').toLowerCase() === 'fabricant';
+
+    const visibleDocs = (cfg.documents || []).filter(d => {
+      const cond = d.condition || 'always';
+      if (cond === 'always')       return true;
+      if (cond === 'soudage')      return hasSoudage;
+      if (cond === 'installateur') return !isFabricant;
+      if (cond === 'fabricant')    return isFabricant;
+      return true;
+    });
+    const mainDocs  = visibleDocs.filter(d => d.code === 'PCQ');
+    const formDocs  = visibleDocs.filter(d => d.code !== 'PCQ' && !d.is_annex);
+    const annexDocs = visibleDocs.filter(d => d.is_annex);
+
+    const dynamicACompleter = [
+      { section: 'Page couverture',           description: 'Signatures du responsable qualit\u00E9 et du dirigeant avant soumission \u00E0 la RBQ.' },
+      { section: 'Liste de distribution',     description: 'Compl\u00E9ter les num\u00E9ros de copie, les d\u00E9tenteurs et les dates de remise.' },
+      { section: 'Annexe O \u2014 Organigramme',   description: 'V\u00E9rifier que tous les titulaires sont exacts. Faire signer par le dirigeant.' },
+      { section: 'Annexe E \u2014 \u00C9talonnage',     description: 'Lister vos instruments avec identification, organisme accr\u00E9dit\u00E9 et prochaine \u00E9ch\u00E9ance.' },
+      ...(hasSoudage ? [{ section: 'Annexe S \u2014 Soudeurs / WPS', description: 'Inscrire les noms, num\u00E9ros de certification, proc\u00E9d\u00E9s et WPS applicables.' }] : []),
+      { section: 'R\u00E9vision op\u00E9rationnelle',   description: 'Lire le PCQ au complet et adapter les formulations g\u00E9n\u00E9riques \u00E0 votre r\u00E9alit\u00E9 terrain.' },
+    ];
 
     const NAVY='0F1F38', GOLD='C8A84B', GOLD_LIGHT='E2C97E', WHITE='F8F7F4';
     const GRAY='E4E2DC', GRAY_DARK='5A5854', TEXT='1A1916', AMBER='8B6914';
@@ -751,9 +786,11 @@
           body('Votre package contient les documents suivants, pr\u00E9par\u00E9s conform\u00E9ment au R\u00E8glement sur les installations sous pression (B-1.1, r.6.1).'),
           sp(80),
           subTitle('Document principal'),
-          ...cfg.documents.slice(0,1).flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
-          subTitle('Registres et formulaires d\u2019utilisation courante'),
-          ...cfg.documents.slice(1).flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
+          ...mainDocs.flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
+          subTitle('Formulaires et registres d\u2019utilisation courante'),
+          ...formDocs.flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
+          ...(annexDocs.length?[subTitle('Registres annexes (pr\u00EAts \u00E0 compl\u00E9ter)')]:[]),
+          ...annexDocs.flatMap(d=>docCard(d.code,d.nom,d.description,d.a_completer)),
           sp(80),
           secTitle('3.  Ce que vous devez compl\u00E9ter avant soumission'),
           body('Votre PCQ est r\u00E9dig\u00E9 sur mesure. Certains \u00E9l\u00E9ments n\u00E9cessitent votre attention avant la soumission \u00E0 la RBQ :'),
@@ -764,7 +801,7 @@
               new D.TableCell({width:{size:2200,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'Section',font:'Calibri',size:18,bold:true,color:WHITE})]})]}),
               new D.TableCell({width:{size:6680,type:D.WidthType.DXA},borders:nb(),shading:{fill:NAVY,type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:'\u00C0 compl\u00E9ter',font:'Calibri',size:18,bold:true,color:WHITE})]})]}),
             ]}),
-            ...cfg.a_completer.map((item,i)=>new D.TableRow({children:[
+            ...dynamicACompleter.map((item,i)=>new D.TableRow({children:[
               new D.TableCell({width:{size:480,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:String(i+1),font:'Calibri',size:20,bold:true,color:GOLD})]})]}),
               new D.TableCell({width:{size:2200,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:item.section,font:'Calibri',size:20,bold:true,color:NAVY})]})]}),
               new D.TableCell({width:{size:6680,type:D.WidthType.DXA},borders:{...nb(),bottom:{style:BS.SINGLE,size:4,color:GRAY}},shading:{fill:i%2===0?'F8F7F4':'FFFFFF',type:D.ShadingType.CLEAR},margins:{top:80,bottom:80,left:120,right:60},children:[new D.Paragraph({children:[new D.TextRun({text:item.description,font:'Calibri',size:20,color:GRAY_DARK})]})]}),
@@ -800,6 +837,107 @@
       }],
     });
     return await D.Packer.toBuffer(doc);
+  }
+
+
+  /* ══════════════════════════════════════════════════════
+     GUIDE — HTML (pour génération PDF)
+  ══════════════════════════════════════════════════════ */
+  function buildGuideHTML(clientData, cfg) {
+    const hasSoudage  = !!(clientData.soudeurs_certifies || clientData.a_soudage_declare === 'o');
+    const isFabricant = (clientData.type_pcq || 'installateur').toLowerCase() === 'fabricant';
+    const nomClient   = clientData.nom_entreprise || 'Votre entreprise';
+    const dateGen     = clientData.date_generation || new Date().toLocaleDateString('fr-CA');
+    const mandats     = Array.isArray(clientData.type_mandat) ? clientData.type_mandat : [];
+
+    const vis = (cfg.documents||[]).filter(d=>{
+      const c=d.condition||'always';
+      return c==='always'||(c==='soudage'&&hasSoudage)||(c==='installateur'&&!isFabricant)||(c==='fabricant'&&isFabricant);
+    });
+    const mainDocs  = vis.filter(d=>d.code==='PCQ');
+    const formDocs  = vis.filter(d=>d.code!=='PCQ'&&!d.is_annex);
+    const annexDocs = vis.filter(d=>d.is_annex);
+
+    const aCompleter = [
+      {section:'Page couverture',description:'Signatures du responsable qualit\u00E9 et du dirigeant avant soumission \u00E0 la RBQ.'},
+      {section:'Liste de distribution',description:'Compl\u00E9ter les num\u00E9ros de copie, les d\u00E9tenteurs et les dates de remise.'},
+      {section:'Annexe O \u2014 Organigramme',description:'V\u00E9rifier que tous les titulaires sont exacts. Faire signer par le dirigeant.'},
+      {section:'Annexe E \u2014 \u00C9talonnage',description:'Lister vos instruments avec identification, organisme accr\u00E9dit\u00E9 et prochaine \u00E9ch\u00E9ance.'},
+      ...(hasSoudage?[{section:'Annexe S \u2014 Soudeurs / WPS',description:'Inscrire les noms, num\u00E9ros de certification, proc\u00E9d\u00E9s et WPS applicables.'}]:[]),
+      {section:'R\u00E9vision op\u00E9rationnelle',description:'Lire le PCQ au complet et adapter les formulations g\u00E9n\u00E9riques \u00E0 votre r\u00E9alit\u00E9 terrain.'},
+    ];
+
+    const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const card = d => `<div style="border-left:4px solid #C8A84B;background:#F8F7F4;padding:10px 14px;margin-bottom:8px;"><div style="color:#C8A84B;font-size:8.5pt;font-weight:bold;">${esc(d.code)}</div><div style="color:#0F1F38;font-size:11pt;font-weight:bold;margin-top:2px;">${esc(d.nom)}</div><div style="color:#5A5854;font-size:9pt;margin-top:4px;">${esc(d.description)}</div>${d.a_completer?`<div style="color:#8B6914;font-size:9pt;margin-top:5px;">\u270E\u00A0\u00C0 compl\u00E9ter\u00A0: ${esc(d.a_completer)}</div>`:''}</div>`;
+    const secT = t => `<div style="font-size:9.5pt;font-weight:bold;color:#0F1F38;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid #C8A84B;padding-bottom:5px;margin:22px 0 10px 0;">${esc(t)}</div>`;
+    const subT = t => `<div style="font-size:11pt;font-weight:bold;color:#0F1F38;margin:12px 0 6px 0;">${esc(t)}</div>`;
+    const normT = docs => `<table style="width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:10px;"><tr><th style="background:#0F1F38;color:#fff;padding:5px 7px;text-align:left;width:23%;">Document</th><th style="background:#0F1F38;color:#fff;padding:5px 7px;text-align:left;width:49%;">Description</th><th style="background:#0F1F38;color:#fff;padding:5px 7px;text-align:center;width:14%;">Prix (USD)</th><th style="background:#0F1F38;color:#fff;padding:5px 7px;width:14%;">Source</th></tr>${docs.map((d,i)=>`<tr><td style="padding:4px 7px;font-weight:bold;color:#0F1F38;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(d.doc)}</td><td style="padding:4px 7px;color:#5A5854;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(d.description)}</td><td style="padding:4px 7px;text-align:center;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(d.prix)}</td><td style="padding:4px 7px;color:#1B6EBF;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(d.source)}</td></tr>`).join('')}</table>`;
+
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{box-sizing:border-box;}body{font-family:Arial,sans-serif;font-size:10.5pt;color:#1A1916;margin:0;padding:0;background:#fff;}p{margin:0 0 7px 0;line-height:1.5;font-size:10pt;}</style></head><body style="padding:20px 24px;">
+<div style="background:#0F1F38;color:#fff;padding:36px 40px;margin:-20px -24px 26px -24px;">
+  <div style="color:#C8A84B;font-size:8pt;font-weight:bold;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;">PROGRAMME DE CONTR\u00D4LE QUALIT\u00C9 \u2014 RBQ</div>
+  <div style="color:#fff;font-size:24pt;line-height:1.2;margin-bottom:10px;">${cfg.titre.replace(/\n/g,'<br>')}</div>
+  <div style="color:#A0A8B8;font-size:10.5pt;">${esc(cfg.sous_titre)}</div>
+  <div style="color:#A0A8B8;font-size:9pt;margin-top:10px;">${esc(nomClient)}\u00A0\u00B7\u00A0${esc(dateGen)}</div>
+</div>
+${secT('1.  Mot d\u2019introduction')}${cfg.introduction.map(t=>`<p>${esc(t)}</p>`).join('')}
+${secT('2.  Documents inclus dans ce package')}<p>Votre package contient les documents suivants, pr\u00E9par\u00E9s conform\u00E9ment au R\u00E8glement sur les installations sous pression (B-1.1, r.6.1).</p>
+${subT('Document principal')}${mainDocs.map(card).join('')}
+${formDocs.length?subT('Formulaires et registres d\u2019utilisation courante'):''}${formDocs.map(card).join('')}
+${annexDocs.length?subT('Registres annexes (pr\u00EAts \u00E0 compl\u00E9ter)'):''}${annexDocs.map(card).join('')}
+${secT('3.  Ce que vous devez compl\u00E9ter avant soumission')}<p>Votre PCQ est r\u00E9dig\u00E9 sur mesure. Certains \u00E9l\u00E9ments n\u00E9cessitent votre attention :</p>
+<table style="width:100%;border-collapse:collapse;font-size:9.5pt;margin-top:8px;">
+<tr><th style="background:#0F1F38;color:#fff;padding:5px 8px;text-align:left;width:4%;">#</th><th style="background:#0F1F38;color:#fff;padding:5px 8px;text-align:left;width:30%;">Section</th><th style="background:#0F1F38;color:#fff;padding:5px 8px;text-align:left;">\u00C0 compl\u00E9ter</th></tr>
+${aCompleter.map((item,i)=>`<tr><td style="padding:5px 8px;font-weight:bold;color:#C8A84B;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${i+1}</td><td style="padding:5px 8px;font-weight:bold;color:#0F1F38;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(item.section)}</td><td style="padding:5px 8px;color:#5A5854;background:${i%2===0?'#F8F7F4':'#fff'};border-bottom:1px solid #E4E2DC;">${esc(item.description)}</td></tr>`).join('')}
+</table>
+${secT('4.  Prochaines \u00E9tapes \u2014 Soumission \u00E0 la RBQ')}<p>Une fois votre PCQ compl\u00E9t\u00E9, voici le processus :</p>
+${cfg.etapes.map((e,i)=>`<table style="width:100%;border-collapse:collapse;margin-bottom:5px;"><tr><td style="width:30px;background:#0F1F38;color:#C8A84B;font-weight:bold;font-size:13pt;text-align:center;vertical-align:middle;padding:5px 3px;">${i+1}</td><td style="padding:6px 10px;border-bottom:1px solid #E4E2DC;vertical-align:top;"><div style="font-weight:bold;color:#0F1F38;font-size:10pt;">${esc(e.titre)}</div><div style="color:#5A5854;font-size:9pt;margin-top:2px;">${esc(e.description)}</div></td></tr></table>`).join('')}
+<div style="page-break-before:always;"></div>
+${secT('5.  Normes et codes applicables \u00E0 vos activit\u00E9s')}<p>En tant que d\u00E9tenteur d\u2019un PCQ, vous devez poss\u00E9der les \u00E9ditions en vigueur des normes applicables.</p>
+${mandats.length===0?'<p style="color:#5A5854;font-style:italic;">Aucun type de mandat sp\u00E9cifi\u00E9 \u2014 contactez votre consultant pour la liste compl\u00E8te.</p>':mandats.map(m=>{const s=cfg.normes[m];if(!s)return'';return subT(s.label)+normT(s.docs);}).join('')}
+<p style="color:#5A5854;font-style:italic;font-size:8.5pt;">${esc(cfg.normes_note)}</p>
+${secT('6.  Informations importantes \u00E0 retenir')}${cfg.infos_importantes.map(item=>`<div style="border:1px solid #C8A84B;background:#FBF7EC;padding:10px 14px;margin-bottom:8px;"><div style="font-weight:bold;color:#0F1F38;font-size:10.5pt;margin-bottom:3px;">${esc(item.titre)}</div><div style="font-size:9.5pt;">${esc(item.texte)}</div></div>`).join('')}
+${secT('7.  Ressources utiles')}${cfg.ressources.map(r=>`<p style="font-size:9.5pt;">\u2022\u00A0<strong>${esc(r.label)}</strong>\u00A0\u2014\u00A0${esc(r.url)}</p>`).join('')}
+${secT('8.  Votre consultant')}
+<div style="background:#0F1F38;color:#fff;padding:18px 22px;margin-top:8px;">
+  <div style="margin-bottom:5px;"><span style="color:#A0A8B8;font-size:9pt;">Consultant\u00A0: </span><span style="font-size:10.5pt;">${esc(cfg.consultant.nom)}</span></div>
+  <div style="margin-bottom:5px;"><span style="color:#A0A8B8;font-size:9pt;">Entreprise\u00A0: </span><span style="font-size:10.5pt;">${esc(cfg.consultant.entreprise)}</span></div>
+  <div style="margin-bottom:5px;"><span style="color:#A0A8B8;font-size:9pt;">Courriel\u00A0: </span><span style="font-size:10.5pt;">${esc(cfg.consultant.courriel)}</span></div>
+  <div style="margin-bottom:12px;"><span style="color:#A0A8B8;font-size:9pt;">Site web\u00A0: </span><span style="font-size:10.5pt;">${esc(cfg.consultant.site)}</span></div>
+  <div style="color:#A0A8B8;font-size:9pt;font-style:italic;">${esc(cfg.consultant.mot_fin)}</div>
+</div>
+</body></html>`;
+  }
+
+  /* ══════════════════════════════════════════════════════
+     GUIDE — PDF via html2pdf.js
+  ══════════════════════════════════════════════════════ */
+  async function generateGuidePDF(htmlContent) {
+    if (!window.html2pdf) {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('html2pdf.js indisponible'));
+        document.head.appendChild(s);
+      });
+    }
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;left:-99999px;top:0;width:794px;background:white;';
+    el.innerHTML = htmlContent;
+    document.body.appendChild(el);
+    try {
+      const blob = await window.html2pdf().set({
+        margin: 0,
+        filename: 'guide_remise.pdf',
+        image: { type: 'jpeg', quality: 0.92 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'letter', orientation: 'portrait' }
+      }).from(el).outputPdf('blob');
+      return await blob.arrayBuffer();
+    } finally {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }
   }
 
   /* ── Init ── */
