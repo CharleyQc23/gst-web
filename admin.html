@@ -489,6 +489,10 @@
     ann14:            { label:'Fiche de vérification',       file:'template_ann14_fiche_verification_v1.docx' },
     ann15:            { label:'Mention de conformité',       file:'template_ann15_mention_conformite_v1.docx' },
     ncr:              { label:'Rapport de non-conformité',   file:'template_ncr_installateur_v1.docx' },
+    annex_etalonnage: { label:'Annexe E — Registre étalonnage',     file:'annex_etalonnage_v1.docx' },
+    annex_soudeurs:   { label:'Annexe S — Liste soudeurs / WPS',   file:'annex_soudeurs_v1.docx' },
+    annex_ncr:        { label:'Annexe N — Registre NCR',           file:'annex_ncr_v1.docx' },
+    annex_organigramme: { label:'Annexe O — Organigramme qualité', file:'annex_organigramme_v1.docx' },
     guide:            { label:'Guide de remise client',            file:'guide_config.json' },
   };
 
@@ -498,13 +502,13 @@
     const docs     = [];
     if (type === 'fabricant') {
       docs.push('pcq_fabricant', 'ann09');
-      if (aSoudage) docs.push('ann11');
-      docs.push('ncr', 'guide');
+      if (aSoudage) docs.push('ann11', 'annex_soudeurs');
+      docs.push('ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
     } else {
       docs.push(type === 'generique' ? 'pcq_generique' : 'pcq_installateur');
       docs.push('ann09', 'ann10');
-      if (aSoudage) docs.push('ann11');
-      docs.push('ann14', 'ann15', 'ncr', 'guide');
+      if (aSoudage) docs.push('ann11', 'annex_soudeurs');
+      docs.push('ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
     }
     return docs;
   }
