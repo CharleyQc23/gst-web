@@ -11,7 +11,7 @@
 <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
 <script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
 <script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@9.0.2/dist/index.iife.js"></script>
+<!-- docx.js chargé dynamiquement dans generateGuide() via import ESM -->
 <style>
   :root {
     --navy:       #0f1f38;
@@ -568,7 +568,14 @@
           const ImageModule   = window.ImageModule   || window.docxtemplaterImageModuleFree;
           const imageModule   = ImageModule ? new ImageModule({
             centered: false,
-            getImage(v) { if (!v) return null; const b64 = v.includes(',') ? v.split(',')[1] : v; return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); },
+            getImage(v) {
+              if (\!v) {
+                // PNG 1x1 transparent - evite le Multi error du module image sans logo
+                return Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQAABjE+ibYAAAAASUVORK5CYII='), c => c.charCodeAt(0));
+              }
+              const b64 = v.includes(',') ? v.split(',')[1] : v;
+              return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+            },
             getSize()   { return [150, 60]; },
           }) : null;
           const customParser = tag => { const t = tag.trim(); return { get: s => { if (s==null) return ''; const v = s[t]; return (v!==undefined && v!==null) ? v : ''; } }; };
@@ -578,7 +585,17 @@
           doc.render(ctx);
           zip.file(`${nomClient}_${id}.docx`, doc.getZip().generate({ type:'arraybuffer' }));
         }
-      } catch (err) { console.error(err); errors.push(`${tpl.label} : ${err.message}`); }
+      } catch (err) {
+        console.error(err);
+        let msg = err.message || String(err);
+        if (err.properties && Array.isArray(err.properties.errors) && err.properties.errors.length > 0) {
+          const subs = err.properties.errors.slice(0, 3).map(e =>
+            (e.properties && (e.properties.explanation || e.properties.id)) || e.message || String(e)
+          );
+          msg = subs.join(' ; ');
+        }
+        errors.push(`${tpl.label} : ${msg}`);
+      }
     }
 
     btn.textContent = 'Compression…';
@@ -609,8 +626,17 @@
      GÉNÉRATION GUIDE CLIENT — docx.js
   ══════════════════════════════════════════════════════ */
   async function generateGuide(clientData, cfg) {
-    const D = window.docx;
-    if (!D || !D.Document) throw new Error('Librairie docx non chargée — vérifiez la connexion CDN');
+    let D = window.docx;
+    if (\!D || \!D.Document) {
+      try {
+        const mod = await import('https://cdn.jsdelivr.net/npm/docx@9.0.2/+esm');
+        window.docx = mod;
+        D = mod;
+      } catch (e) {
+        throw new Error('Librairie docx non chargée — vérifiez la connexion CDN');
+      }
+    }
+    if (\!D || \!D.Document) throw new Error('Librairie docx non chargée — vérifiez la connexion CDN');
 
     const NAVY='0F1F38', GOLD='C8A84B', GOLD_LIGHT='E2C97E', WHITE='F8F7F4';
     const GRAY='E4E2DC', GRAY_DARK='5A5854', TEXT='1A1916', AMBER='8B6914';
