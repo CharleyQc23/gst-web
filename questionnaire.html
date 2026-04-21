@@ -693,6 +693,72 @@
             <div class="field-error">Ce champ est requis.</div>
           </div>
         </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Responsable des achats</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_achats_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_achats_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_achats_box" style="display:none;">
+              <input type="text" id="responsable_achats" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Responsable des dessins / plans</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_dessins_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_dessins_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_dessins_box" style="display:none;">
+              <input type="text" id="responsable_dessins" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Responsable de l’étalonnage</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_etalonnage_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_etalonnage_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_etalonnage_box" style="display:none;">
+              <input type="text" id="responsable_etalonnage" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Responsable des non-conformités (NCR)</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_ncr_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_ncr_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_ncr_box" style="display:none;">
+              <input type="text" id="responsable_ncr" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Responsable des essais de pression</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_essai_pression_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_essai_pression_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_essai_pression_box" style="display:none;">
+              <input type="text" id="responsable_essai_pression" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Responsable de la formation</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_formation_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_formation_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_formation_box" style="display:none;">
+              <input type="text" id="responsable_formation" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -913,7 +979,13 @@
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="registre_calibration" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="registre_calibration" value="n"><span class="dot"></span>Non</label>
-          </div>
+    <div class="divider"></div>
+        <div class="field-group">
+          <label>Fréquence d’étalonnage</label>
+          <input type="text" id="frequence_etalonnage" placeholder="Ex. : Annuelle, selon utilisation">
+          <p class="hint">Fréquence typique d’étalonnage de vos équipements de mesure.</p>
+        </div>
+            </div>
         </div>
       </div>
     </div>
@@ -964,7 +1036,13 @@
           <div class="bool-group">
             <label class="bool-label"><input type="radio" name="archivage_documents" value="o" required><span class="dot"></span>Oui</label>
             <label class="bool-label"><input type="radio" name="archivage_documents" value="n"><span class="dot"></span>Non</label>
-          </div>
+    <div class="divider"></div>
+        <div class="field-group">
+          <label>Durée de conservation des dossiers qualité</label>
+          <input type="text" id="duree_conservation" placeholder="Ex. : 10 ans après fin de projet">
+          <p class="hint">Durée minimale recommandée par la RBQ : durée de vie de l’installation.</p>
+        </div>
+            </div>
         </div>
       </div>
     </div>
@@ -1109,6 +1187,21 @@
     logoInput.value = '';
     logoThumb.src = '';
     logoPreview.style.display = 'none';
+  });
+
+
+  // ── Toggles responsables délégués (Section 4) ──
+  const DELEGATE_FIELDS = [
+    'responsable_achats', 'responsable_dessins', 'responsable_etalonnage',
+    'responsable_ncr', 'responsable_essai_pression', 'responsable_formation'
+  ];
+  DELEGATE_FIELDS.forEach(function(field) {
+    document.querySelectorAll('input[name="' + field + '_type"]').forEach(function(r) {
+      r.addEventListener('change', function() {
+        const box = document.getElementById(field + '_box');
+        if (box) box.style.display = (this.value === 'autre') ? 'block' : 'none';
+      });
+    });
   });
 
   // ── Logique conditionnelle : Sous-section Soudage ──
@@ -1351,6 +1444,20 @@
       dirigeant_entreprise: document.getElementById('dirigeant_entreprise').value.trim(),
       titre_dirigeant: document.getElementById('titre_dirigeant').value.trim(),
 
+      // Responsables délégués (Section 4) — vide = même que responsable_qualite
+      responsable_achats: document.querySelector('input[name="responsable_achats_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_achats')?.value.trim() || '') : '',
+      responsable_dessins: document.querySelector('input[name="responsable_dessins_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_dessins')?.value.trim() || '') : '',
+      responsable_etalonnage: document.querySelector('input[name="responsable_etalonnage_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_etalonnage')?.value.trim() || '') : '',
+      responsable_ncr: document.querySelector('input[name="responsable_ncr_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_ncr')?.value.trim() || '') : '',
+      responsable_essai_pression: document.querySelector('input[name="responsable_essai_pression_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_essai_pression')?.value.trim() || '') : '',
+      responsable_formation: document.querySelector('input[name="responsable_formation_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_formation')?.value.trim() || '') : '',
+
       // Section 5
       employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
       soudeurs_certifies: document.querySelector('input[name="soudeurs_certifies"]:checked')?.value === 'o',
@@ -1391,6 +1498,7 @@
       // Section 10
       equipements_calibres: document.querySelector('input[name="equipements_calibres"]:checked')?.value === 'o',
       registre_calibration: document.querySelector('input[name="registre_calibration"]:checked')?.value === 'o',
+      frequence_etalonnage: document.getElementById('frequence_etalonnage')?.value.trim() || '',
 
       // Section 11
       gestion_ncr: (() => {
@@ -1404,6 +1512,7 @@
       // Section 12
       controle_documents: document.querySelector('input[name="controle_documents"]:checked')?.value === 'o',
       archivage_documents: document.querySelector('input[name="archivage_documents"]:checked')?.value === 'o',
+      duree_conservation: document.getElementById('duree_conservation')?.value.trim() || '',
 
       // Section 13
       audit_interne: document.querySelector('input[name="audit_interne"]:checked')?.value === 'o',

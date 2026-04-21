@@ -437,6 +437,15 @@
     ctx.dirigeant_entreprise             = ctx.dirigeant_entreprise || ctx.contact || '';
     ctx.titre_dirigeant                  = ctx.titre_dirigeant || ctx.fonction_responsable || '';
     ctx.responsable_formation            = ctx.responsable_formation || ctx.responsable_qualite || '';
+    ctx.responsable_achats               = ctx.responsable_achats || ctx.responsable_qualite || '';
+    ctx.responsable_dessins              = ctx.responsable_dessins || ctx.responsable_qualite || '';
+    ctx.responsable_etalonnage           = ctx.responsable_etalonnage || ctx.responsable_qualite || '';
+    ctx.responsable_ncr                  = ctx.responsable_ncr || ctx.responsable_qualite || '';
+    ctx.responsable_essai_pression       = ctx.responsable_essai_pression || ctx.responsable_qualite || '';
+    ctx.methodes_end                     = ctx.methodes_end || ctx.inspections_soudure_liste || 'VT';
+    ctx.responsable_end                  = ctx.responsable_end || 'Les END sont réalisés par un sous-traitant accrédité.';
+    ctx.nom_superviseur_soudage          = ctx.nom_superviseur_soudage || ctx.superviseur_soudage || '';
+    ctx.has_soudage                      = ctx.has_soudage ?? !!(ctx.a_soudage_declare === 'o' || ctx.soudeurs_certifies);
     ctx.approbateur_bons_achat           = ctx.approbateur_bons_achat || ctx.approbateur_bons_commande || '';
     ctx.methode_identification_materiaux = ctx.methode_identification_materiaux || ctx.methode_identification || '';
     ctx.champ_vapeur_air    = ctx.champ_vapeur_air    ?? false;
@@ -444,7 +453,7 @@
     ctx.champ_gaz_medicaux  = ctx.champ_gaz_medicaux  ?? ctx.gaz_medicaux ?? false;
 
     const fab = ['responsable_calculs','approbateur_calculs','dessinateur','approbateur_dessins',
-      'distribution_dessins','responsable_achats','responsable_reception','responsable_essai_pression',
+      'distribution_dessins','responsable_reception','responsable_essai_pression',
       'responsable_verification_finale','superviseur_soudage','responsable_chantier','inspecteur_qualite',
       'ingenieur_conception','nb_superviseurs_soudage','nb_soudeurs','nb_inspecteurs',
       'liste_instruments_etalonnage','sous_traitant_ht'];
@@ -471,8 +480,8 @@
      GÉNÉRATION ZIP
   ══════════════════════════════════════════════════════ */
   const TEMPLATES_DISPONIBLES = {
-    pcq_installateur: { label:'PCQ Installateur',            file:'template_pcq_installateur_v1.docx' },
-    pcq_fabricant:    { label:'PCQ Fabricant',               file:'template_pcq_fabricant_v1.docx' },
+    pcq_installateur: { label:'PCQ Installateur',            file:'template_pcq_installateur_v2.docx' },
+    pcq_fabricant:    { label:'PCQ Fabricant',               file:'template_pcq_fabricant_v2.docx' },
     pcq_generique:    { label:'PCQ Générique',               file:'template_pcq_rbq_v2.docx' },
     ann09:            { label:"Rapport d'essai de pression", file:'template_ann09_rapport_essai_pression_v1.docx' },
     ann10:            { label:"Rapport d'installation",      file:'template_ann10_rapport_installation_v1.docx' },
