@@ -10,6 +10,12 @@
 <meta property="og:image:height" content="630">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="icon" type="image/svg+xml" href="assets/logo-guernon-icon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="mask-icon" href="assets/logo-guernon-icon.svg" color="#c8a84b">
+  <meta name="theme-color" content="#0f1f38">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
@@ -421,6 +427,10 @@
     0%,100% { transform: rotate(2deg) translateY(0); }
     50%      { transform: rotate(2deg) translateY(-10px); }
   }
+  @keyframes floatCardMobile {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
   .pcq-card-header {
     background: rgba(200,168,75,0.12);
     border-bottom: 1px solid rgba(200,168,75,0.25);
@@ -553,9 +563,11 @@
     .nav-links { display: none; }
     .nav-hamburger { display: flex; }
     .hero-stats { display: none; }
-    .hero-visual { display: none; }
     .hero-container { flex-direction: column; padding: 0 20px; }
     .hero-inner { max-width: 100%; }
+    .hero-visual { width: 220px; margin: 32px auto 0; }
+    .pcq-card { transform: none; animation: floatCardMobile 5s ease-in-out infinite; }
+    .section-title { font-size: 22px; }
     .process-steps { grid-template-columns: 1fr 1fr; }
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
     .deliverables { grid-template-columns: 1fr; }
@@ -677,7 +689,7 @@
         <span class="section-label-line"></span>
         <span class="section-label-text">Service principal</span>
       </div>
-      <h2 class="section-title">Programme de contrôle qualité<br>cl&eacute; en main.</h2>
+      <h2 class="section-title">Programme de contrôle qualité cl&eacute; en main.</h2>
       <p class="section-intro">R&eacute;dig&eacute; selon vos activit&eacute;s r&eacute;elles et votre licence RBQ. Pas un mod&egrave;le g&eacute;n&eacute;rique &mdash; un document qui refl&egrave;te votre organisation telle qu&rsquo;elle est.</p>
     </div>
     <div class="service-card reveal">
