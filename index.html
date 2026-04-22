@@ -429,7 +429,7 @@
   }
   @keyframes floatCardMobile {
     0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+    50%      { transform: translateY(-10px); }
   }
   .pcq-card-header {
     background: rgba(200,168,75,0.12);
@@ -563,9 +563,10 @@
     .nav-links { display: none; }
     .nav-hamburger { display: flex; }
     .hero-stats { display: none; }
-    .hero-container { flex-direction: column; padding: 0 20px; }
+    .hero-container { flex-direction: column; padding: 0 20px 0; gap: 24px; }
     .hero-inner { max-width: 100%; }
-    .hero-visual { width: 220px; margin: 32px auto 0; }
+    .hero { padding-bottom: 56px; }
+    .hero-visual { width: 200px; margin: 0 auto; }
     .pcq-card { transform: none; animation: floatCardMobile 5s ease-in-out infinite; }
     .section-title { font-size: 22px; }
     .process-steps { grid-template-columns: 1fr 1fr; }
