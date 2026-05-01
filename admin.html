@@ -174,6 +174,9 @@
     </div>
     <div class="dash-controls">
       <input type="text" class="search-box" id="searchBox" placeholder="Rechercher…">
+      <select id="filterMois" style="padding:9px 12px;border:1px solid var(--gray);border-radius:var(--radius);font-size:13px;font-family:var(--sans);background:#fff;color:var(--text);outline:none;cursor:pointer;">
+        <option value="">Tous les mois</option>
+      </select>
       <button class="btn-refresh" id="btnRefresh">↻ Actualiser</button>
     </div>
   </div>
@@ -341,18 +344,45 @@
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     }).length;
     document.getElementById('statDerniere').textContent = list[0]?.soumis_le ? fmtDateShort(list[0].soumis_le) : '—';
+
+    // Peupler le filtre par mois à partir des soumissions disponibles
+    const seen    = new Set();
+    const options = [{ value: '', label: 'Tous les mois' }];
+    for (const s of list) {
+      if (!s.soumis_le) continue;
+      const d   = new Date(s.soumis_le);
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        const label = d.toLocaleDateString('fr-CA', { month: 'long', year: 'numeric' });
+        options.push({ value: key, label: label.charAt(0).toUpperCase() + label.slice(1) });
+      }
+    }
+    const sel = document.getElementById('filterMois');
+    const cur = sel.value;
+    sel.innerHTML = options.map(o => `<option value="${o.value}"${o.value===cur?' selected':''}>${o.label}</option>`).join('');
   }
 
-  /* ── Recherche ── */
-  document.getElementById('searchBox').addEventListener('input', function() {
-    const q = this.value.toLowerCase().trim();
-    renderTable(q ? allSoumissions.filter(s =>
+  /* ── Recherche & filtres ── */
+  function applyFilters() {
+    const q    = document.getElementById('searchBox').value.toLowerCase().trim();
+    const mois = document.getElementById('filterMois').value;
+    let list   = allSoumissions;
+    if (q) list = list.filter(s =>
       (s.nom_entreprise||'').toLowerCase().includes(q) ||
       (s.contact||'').toLowerCase().includes(q) ||
       (s.courriel||'').toLowerCase().includes(q) ||
       (s.type_activite||'').toLowerCase().includes(q)
-    ) : allSoumissions);
-  });
+    );
+    if (mois) list = list.filter(s => {
+      if (!s.soumis_le) return false;
+      const d = new Date(s.soumis_le);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === mois;
+    });
+    renderTable(list);
+  }
+  document.getElementById('searchBox').addEventListener('input', applyFilters);
+  document.getElementById('filterMois').addEventListener('change', applyFilters);
 
   /* ── Modal détail ── */
   function openModal(s) {
