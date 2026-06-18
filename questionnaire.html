@@ -765,6 +765,12 @@
               <input type="text" id="responsable_formation" placeholder="Prénom Nom ou Titre">
             </div>
           </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Numéro de contrôle du manuel <span class="opt">(optionnel)</span></label>
+            <input type="text" id="numero_controle_manuel" placeholder="Ex. : 001, A-01, CTRL-2026-01">
+            <p class="hint">Si votre PCQ doit être émis en copies numérotées et contrôlées, indiquez ici le numéro attribué à la présente copie.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -905,6 +911,16 @@
             <label class="bool-label"><input type="radio" name="controle_production" value="n"><span class="dot"></span>Non</label>
           </div>
         </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Comment identifiez-vous et marquez-vous vos tuyauteries sur chantier? <span class="opt">(optionnel)</span></label>
+          <input type="text" id="methode_identification_tuyauteries" placeholder="Ex. : Marquage à la peinture ou étiquette selon code applicable">
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Responsable de la conception et de l'installation des supports et ancrages <span class="opt">(optionnel)</span></label>
+          <input type="text" id="responsable_supports_ancrages" placeholder="Ex. : Responsable qualité, ingénieur de chantier…">
+        </div>
       </div>
     </div>
 
@@ -961,6 +977,16 @@
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="o"><span class="dot"></span>Oui</label>
               <label class="bool-label"><input type="radio" name="inspecteurs_qualifies" value="n"><span class="dot"></span>Non</label>
             </div>
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Responsable de la détermination des END requis <span class="opt">(optionnel)</span></label>
+            <input type="text" id="responsable_determination_end" placeholder="Ex. : Responsable qualité, ingénieur de projet…">
+          </div>
+          <div class="divider"></div>
+          <div class="field-group">
+            <label>Sous-traitant en traitement thermique <span class="opt">(optionnel)</span></label>
+            <input type="text" id="sous_traitant_traitement_thermique" placeholder="Ex. : À déterminer selon chantier, Nom de la firme">
           </div>
         </div>
       </div>
@@ -1019,6 +1045,16 @@
           <div class="divider" style="margin-top:16px;"></div>
           <label style="margin-top:4px;">Précisions supplémentaires <span class="opt">(responsables, délais de correction, archivage…)</span></label>
           <textarea id="gestion_ncr_details" placeholder="Ex. : Le responsable qualité ouvre un NCR dans les 24h, le chef de chantier propose une correction, fermeture après vérification…"></textarea>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Responsable de la tenue du registre journalier de chantier <span class="opt">(optionnel)</span></label>
+          <input type="text" id="responsable_registre_journalier" placeholder="Ex. : Responsable qualité, contremaître de chantier…">
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Responsable de la déclaration d'installation auprès de la RBQ <span class="opt">(optionnel)</span></label>
+          <input type="text" id="responsable_declaration_installation" placeholder="Ex. : Responsable qualité, dirigeant d'entreprise…">
         </div>
       </div>
     </div>
@@ -1083,6 +1119,11 @@
           <div id="frequenceAutreBox" style="display:none;margin-top:10px;">
             <input type="text" id="frequence_audit_autre" placeholder="Précisez la fréquence…">
           </div>
+        </div>
+        <div class="divider"></div>
+        <div class="field-group">
+          <label>Méthode de formation des employés sur les exigences qualité <span class="opt">(optionnel)</span></label>
+          <input type="text" id="methode_formation" placeholder="Ex. : Formation sur le terrain supervisée par le responsable qualité, complétée par les codes applicables">
         </div>
       </div>
     </div>
@@ -1464,6 +1505,7 @@
         ? (document.getElementById('responsable_essai_pression')?.value.trim() || '') : '',
       responsable_formation: document.querySelector('input[name="responsable_formation_type"]:checked')?.value === 'autre'
         ? (document.getElementById('responsable_formation')?.value.trim() || '') : '',
+      numero_controle_manuel: document.getElementById('numero_controle_manuel').value.trim(),
 
       // Section 5
       employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
@@ -1488,6 +1530,8 @@
       // Section 8
       procedures_travail: document.querySelector('input[name="procedures_travail"]:checked')?.value === 'o',
       controle_production: document.querySelector('input[name="controle_production"]:checked')?.value === 'o',
+      methode_identification_tuyauteries: document.getElementById('methode_identification_tuyauteries').value.trim(),
+      responsable_supports_ancrages: document.getElementById('responsable_supports_ancrages').value.trim(),
 
       // Section 9
       sous_traitant_end: document.getElementById('sous_traitant_end')?.value.trim() || '',
@@ -1501,6 +1545,8 @@
       inspecteurs_qualifies: inspectionInterne
         ? document.querySelector('input[name="inspecteurs_qualifies"]:checked')?.value === 'o'
         : false,
+      responsable_determination_end: document.getElementById('responsable_determination_end').value.trim(),
+      sous_traitant_traitement_thermique: document.getElementById('sous_traitant_traitement_thermique').value.trim(),
 
       // Section 10
       equipements_calibres: document.querySelector('input[name="equipements_calibres"]:checked')?.value === 'o',
@@ -1515,6 +1561,8 @@
         if (details) result += (result ? ' — ' : '') + details;
         return result || 'Formulaire de non-conformité interne';
       })(),
+      responsable_registre_journalier: document.getElementById('responsable_registre_journalier').value.trim(),
+      responsable_declaration_installation: document.getElementById('responsable_declaration_installation').value.trim(),
 
       // Section 12
       controle_documents: document.querySelector('input[name="controle_documents"]:checked')?.value === 'o',
@@ -1528,6 +1576,7 @@
         if (choix === 'autre_frequence') return document.getElementById('frequence_audit_autre')?.value.trim() || 'Annuelle';
         return choix || 'Annuelle';
       })(),
+      methode_formation: document.getElementById('methode_formation').value.trim(),
 
       // Section 14
       experience_rbq: (() => {
