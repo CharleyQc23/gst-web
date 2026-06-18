@@ -569,13 +569,13 @@
     const docs     = [];
     if (type === 'fabricant') {
       docs.push('pcq_fabricant', 'ann09');
-      if (aSoudage) docs.push('ann11', 'annex_soudeurs');
+      if (aSoudage) docs.push('ann11');
       docs.push('ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
     } else {
       docs.push(type === 'generique' ? 'pcq_generique' : 'pcq_installateur');
-      docs.push('ann09', 'ann10');
-      if (aSoudage) docs.push('ann11', 'annex_soudeurs');
-      docs.push('ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
+      docs.push('ann07', 'ann08', 'ann09', 'ann10');
+      if (aSoudage) docs.push('ann11');
+      docs.push('ann13', 'ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
     }
     return docs;
   }
