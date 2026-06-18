@@ -454,6 +454,15 @@
       source_specs_materiaux:"Plans d'ingénierie approuvés",
       methode_identification:'Transfert numéro de chaleur + étiquette',
       titre_responsable_pcq:'Responsable qualité', types_equipements:'',
+      // Nouveaux champs (§4, §8, §9, §11, §13)
+      numero_controle_manuel:'',
+      methode_identification_tuyauteries:'Marquage à la peinture ou étiquette selon code applicable',
+      responsable_supports_ancrages:'',
+      responsable_determination_end:'',
+      sous_traitant_traitement_thermique:'À déterminer selon chantier',
+      responsable_registre_journalier:'',
+      responsable_declaration_installation:'',
+      methode_formation:'Formation sur le terrain supervisée par le responsable qualité, complétée par les codes applicables',
     };
     for (const [k,v] of Object.entries(defaults)) { if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v; }
 
@@ -479,6 +488,10 @@
     ctx.responsable_etalonnage           = ctx.responsable_etalonnage || ctx.responsable_qualite || '';
     ctx.responsable_ncr                  = ctx.responsable_ncr || ctx.responsable_qualite || '';
     ctx.responsable_essai_pression       = ctx.responsable_essai_pression || ctx.responsable_qualite || '';
+    ctx.responsable_supports_ancrages    = ctx.responsable_supports_ancrages || ctx.responsable_qualite || '';
+    ctx.responsable_determination_end    = ctx.responsable_determination_end || ctx.responsable_qualite || '';
+    ctx.responsable_registre_journalier  = ctx.responsable_registre_journalier || ctx.responsable_qualite || '';
+    ctx.responsable_declaration_installation = ctx.responsable_declaration_installation || ctx.responsable_qualite || '';
     ctx.methodes_end                     = ctx.methodes_end || ctx.inspections_soudure_liste || 'VT';
     ctx.responsable_end                  = ctx.responsable_end || 'Les END sont réalisés par un sous-traitant accrédité.';
     ctx.nom_superviseur_soudage          = ctx.nom_superviseur_soudage || ctx.superviseur_soudage || '';
@@ -520,14 +533,16 @@
     pcq_installateur: { label:'PCQ Installateur (avec annexes)', file:'template_pcq_installateur_complet_v2.docx' },
     pcq_fabricant:    { label:'PCQ Fabricant (avec annexes)',    file:'template_pcq_fabricant_complet_v2.docx' },
     pcq_generique:    { label:'PCQ Générique',               file:'template_pcq_rbq_v2.docx' },
+    ann07:            { label:'Feuille de route chantier',   file:'template_ann07_feuille_de_route_v1.docx' },
+    ann08:            { label:'Liste des abréviations',      file:'template_ann08_abreviations_v1.docx' },
     ann09:            { label:"Rapport d'essai de pression", file:'template_ann09_rapport_essai_pression_v1.docx' },
     ann10:            { label:"Rapport d'installation",      file:'template_ann10_rapport_installation_v1.docx' },
     ann11:            { label:'Registre des soudeurs',       file:'template_ann11_registre_soudeurs_v1.docx' },
+    ann13:            { label:'Liste de distribution',       file:'template_ann13_liste_distribution_v1.docx' },
     ann14:            { label:'Fiche de vérification',       file:'template_ann14_fiche_verification_v1.docx' },
     ann15:            { label:'Mention de conformité',       file:'template_ann15_mention_conformite_v1.docx' },
     ncr:              { label:'Rapport de non-conformité',   file:'template_ncr_installateur_v1.docx' },
     annex_etalonnage: { label:'Annexe E — Registre étalonnage',     file:'annex_etalonnage_v1.docx' },
-    annex_soudeurs:   { label:'Annexe S — Liste soudeurs / WPS',   file:'annex_soudeurs_v1.docx' },
     annex_ncr:        { label:'Annexe N — Registre NCR',           file:'annex_ncr_v1.docx' },
     annex_organigramme: { label:'Annexe O — Organigramme qualité', file:'annex_organigramme_v1.docx' },
     guide:            { label:'Guide de remise client',            file:'guide_config.json' },
