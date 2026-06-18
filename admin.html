@@ -88,6 +88,9 @@
   .td-date { color: var(--gray-dark); font-size: 12px; white-space: nowrap; }
   .td-entreprise { font-weight: 600; color: var(--navy); }
   .badge-activite { display: inline-block; background: rgba(15,31,56,0.06); color: var(--navy-light); font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+  .badge-lu  { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; white-space: nowrap; font-weight: 600; letter-spacing: 0.04em; }
+  .badge-lu.ouvert  { background: #e8f5e9; color: #2e7d32; }
+  .badge-lu.non-lu  { background: rgba(15,31,56,0.06); color: #9a9890; }
   .btn-dl { padding: 5px 12px; background: transparent; border: 1px solid var(--gray); border-radius: var(--radius); font-size: 11px; font-family: var(--sans); color: var(--gray-dark); cursor: pointer; transition: all var(--transition); white-space: nowrap; }
   .btn-dl:hover { border-color: var(--gold); color: var(--navy); background: rgba(200,168,75,0.06); }
   .empty-state { padding: 60px 20px; text-align: center; color: var(--gray-mid); font-size: 14px; }
@@ -200,7 +203,7 @@
     <table id="tableData" style="display:none;">
       <thead>
         <tr>
-          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th></th>
+          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th>Lu</th><th></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -343,6 +346,9 @@
         <td>${esc(s.contact || '—')}</td>
         <td>${s.courriel ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>` : '—'}</td>
         <td><span class="badge-activite" title="${esc(s.type_activite||'')}">${esc(s.type_activite||'—')}</span></td>
+        <td>${s.opened_at
+          ? `<span class="badge-lu ouvert" title="Ouvert le ${fmtDateShort(s.opened_at)}">✓ Lu</span>`
+          : `<span class="badge-lu non-lu">${s.courriel ? '—' : 'N/A'}</span>`}</td>
         <td style="white-space:nowrap;display:flex;gap:6px;">
           <button class="btn-dl" onclick="event.stopPropagation();downloadJSON(allSoumissions[${i}])">↓ JSON</button>
           <button class="btn-gen" onclick="event.stopPropagation();openGenModal(${i})">⚙ Générer</button>
