@@ -478,6 +478,7 @@
       responsable_registre_journalier:'',
       responsable_declaration_installation:'',
       methode_formation:'Formation sur le terrain supervisée par le responsable qualité, complétée par les codes applicables',
+      duree_conservation:'selon les exigences applicables',
     };
     for (const [k,v] of Object.entries(defaults)) { if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v; }
 
@@ -496,6 +497,7 @@
 
     ctx.methode_ncr                      = ctx.methode_ncr || ctx.gestion_ncr;
     ctx.dirigeant_entreprise             = ctx.dirigeant_entreprise || ctx.contact || '';
+    ctx.nom_dirigeant                    = ctx.nom_dirigeant || ctx.dirigeant_entreprise || '';
     ctx.titre_dirigeant                  = ctx.titre_dirigeant || ctx.fonction_responsable || '';
     ctx.responsable_formation            = ctx.responsable_formation || ctx.responsable_qualite || '';
     ctx.responsable_achats               = ctx.responsable_achats || ctx.responsable_qualite || '';
@@ -513,8 +515,9 @@
     ctx.has_soudage                      = ctx.has_soudage ?? !!(ctx.a_soudage_declare === 'o' || ctx.soudeurs_certifies);
     ctx.approbateur_bons_achat           = ctx.approbateur_bons_achat || ctx.approbateur_bons_commande || '';
     ctx.methode_identification_materiaux = ctx.methode_identification_materiaux || ctx.methode_identification || '';
-    ctx.champ_vapeur_air    = ctx.champ_vapeur_air    ?? false;
-    ctx.champ_refrigeration = ctx.champ_refrigeration ?? false;
+    ctx.champ_vapeur_air      = ctx.champ_vapeur_air      ?? false;
+    ctx.champ_refrigeration   = ctx.champ_refrigeration   ?? false;
+    ctx.assemblage_chantier   = ctx.assemblage_chantier   ?? false;
     ctx.champ_gaz_medicaux  = ctx.champ_gaz_medicaux  ?? ctx.gaz_medicaux ?? false;
 
     const fab = ['responsable_calculs','approbateur_calculs','dessinateur','approbateur_dessins',
