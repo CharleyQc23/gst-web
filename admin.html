@@ -136,6 +136,8 @@
   .gen-status { font-size: 12px; color: var(--gray-dark); margin-top: 12px; min-height: 18px; text-align: center; }
   .gen-status.error { color: #c0392b; }
   .gen-status.success { color: #1a6b1a; }
+  .gen-status ul { text-align: left; margin: 6px 0 0; padding-left: 18px; }
+  .gen-status li { margin: 2px 0; }
   @media (max-width: 680px) {
     main { padding: 72px 16px 40px; }
     nav { padding: 0 16px; }
@@ -593,7 +595,7 @@
 
     document.getElementById('genModalTitle').textContent = genSoumission.nom_entreprise || 'Générer les documents';
     document.getElementById('genModalSub').textContent   = `${docIds.length} document${docIds.length > 1 ? 's' : ''} — téléchargement en ZIP`;
-    document.getElementById('genStatus').textContent     = '';
+    document.getElementById('genStatus').innerHTML       = '';
     document.getElementById('genStatus').className       = 'gen-status';
     document.getElementById('btnGenerate').disabled      = false;
     document.getElementById('btnGenerate').textContent   = '↓ Générer le ZIP';
@@ -640,7 +642,8 @@
         if (id === 'guide') {
           // Guide généré dynamiquement via docx.js + guide_config.json
           const cfgResp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
-          if (!cfgResp.ok) { const e = await cfgResp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${cfgResp.status}`); }
+          if (cfgResp.status === 404) throw new Error(`Fichier introuvable sur R2 : ${tpl.file} — vérifier le sync GitHub Actions`);
+          if (!cfgResp.ok) { const e = await cfgResp.json().catch(()=>({})); throw new Error(e.erreur || `Erreur serveur HTTP ${cfgResp.status}`); }
           const cfg = await cfgResp.json();
           const guideBuffer = await generateGuide(data, cfg);
           zip.file(`${nomClient}_guide_remise.docx`, guideBuffer);
@@ -656,7 +659,8 @@
           }
         } else {
           const resp = await fetch(`${WORKER_URL}/template/${encodeURIComponent(tpl.file)}`, { headers: { Authorization:`Bearer ${getToken()}` } });
-          if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `HTTP ${resp.status}`); }
+          if (resp.status === 404) throw new Error(`Fichier introuvable sur R2 : ${tpl.file} — vérifier le sync GitHub Actions`);
+          if (!resp.ok) { const e = await resp.json().catch(()=>({})); throw new Error(e.erreur || `Erreur serveur HTTP ${resp.status}`); }
           const rawBuffer   = await resp.arrayBuffer();
           const brandColor  = document.getElementById('brandColorHex').value.trim();
           const arrayBuffer = await applyBrandColors(rawBuffer, brandColor);
@@ -706,8 +710,10 @@
         status.textContent = `✓ ${docIds.length} document${docIds.length>1?'s':''} téléchargés avec succès.`;
         status.className   = 'gen-status success';
       } else {
-        status.textContent = `Partiel — ${errors.length} erreur(s) : ${errors.join(' | ')}`;
-        status.className   = 'gen-status error';
+        const ok = docIds.length - errors.length;
+        status.innerHTML = `<strong>${ok} doc${ok>1?'s':''} téléchargé${ok>1?'s':''}, ${errors.length} erreur${errors.length>1?'s':''} :</strong>`
+          + `<ul>${errors.map(e => `<li>${e}</li>`).join('')}</ul>`;
+        status.className = 'gen-status error';
       }
     } catch (err) { status.textContent = `Erreur ZIP : ${err.message}`; status.className = 'gen-status error'; }
 
