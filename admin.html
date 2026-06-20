@@ -14,11 +14,10 @@
   <meta name="theme-color" content="#0f1f38">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js"></script>
-<script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js"></script>
-<script src="https://unpkg.com/docxtemplater-image-module-free/build/docxtemplater-image-module-free.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+<script src="https://unpkg.com/jszip@3.10.1/dist/jszip.min.js" integrity="sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.js" integrity="sha384-+EDnrJqIbjVkNlpo7L07HPGP1Scel838JEnWJDqaW3LSNrN/hKEkKLRxkDqBQZ6U" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/docxtemplater@3.44.0/build/docxtemplater.js" integrity="sha384-BRmMkOM+LABWRkMjfP3iaT36CeSciaq6b62uM5Q0VqgsqTjLZWrrWvBH302sCjDt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js" integrity="sha384-rcZhI8LZdCSRdkfVGupT1OsW8LzGEGKoSOA1Nv6HyYKQjs6/jvzt3ITEgipptCFj" crossorigin="anonymous"></script>
 <!-- docx.js chargé dynamiquement dans generateGuide() via import ESM -->
 <style>
   :root {
@@ -91,6 +90,7 @@
   .badge-lu  { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; white-space: nowrap; font-weight: 600; letter-spacing: 0.04em; }
   .badge-lu.ouvert  { background: #e8f5e9; color: #2e7d32; }
   .badge-lu.non-lu  { background: rgba(15,31,56,0.06); color: #9a9890; }
+  .statut-select { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; border: none; cursor: pointer; outline: none; font-family: var(--sans); letter-spacing: 0.04em; }
   .btn-dl { padding: 5px 12px; background: transparent; border: 1px solid var(--gray); border-radius: var(--radius); font-size: 11px; font-family: var(--sans); color: var(--gray-dark); cursor: pointer; transition: all var(--transition); white-space: nowrap; }
   .btn-dl:hover { border-color: var(--gold); color: var(--navy); background: rgba(200,168,75,0.06); }
   .empty-state { padding: 60px 20px; text-align: center; color: var(--gray-mid); font-size: 14px; }
@@ -189,6 +189,13 @@
       <select id="filterMois" style="padding:9px 12px;border:1px solid var(--gray);border-radius:var(--radius);font-size:13px;font-family:var(--sans);background:#fff;color:var(--text);outline:none;cursor:pointer;">
         <option value="">Tous les mois</option>
       </select>
+      <select id="filterStatut" style="padding:9px 12px;border:1px solid var(--gray);border-radius:var(--radius);font-size:13px;font-family:var(--sans);background:#fff;color:var(--text);outline:none;cursor:pointer;">
+        <option value="">Tous les statuts</option>
+        <option value="nouveau">Nouveau</option>
+        <option value="en_cours">En cours</option>
+        <option value="livré">Livré</option>
+        <option value="certifié">Certifié</option>
+      </select>
       <button class="btn-refresh" id="btnRefresh">↻ Actualiser</button>
     </div>
   </div>
@@ -196,6 +203,7 @@
     <div class="stat-card"><div class="stat-label">Total soumissions</div><div class="stat-value" id="statTotal">—</div></div>
     <div class="stat-card"><div class="stat-label">Ce mois-ci</div><div class="stat-value gold" id="statMois">—</div></div>
     <div class="stat-card"><div class="stat-label">Dernière réception</div><div class="stat-value" id="statDerniere" style="font-size:16px;padding-top:6px;">—</div></div>
+    <div class="stat-card"><div class="stat-label">À traiter</div><div class="stat-value" id="statEnAttente">—</div></div>
   </div>
   <div class="table-wrap">
     <div class="loading-state" id="loadingState">Chargement…</div>
@@ -203,7 +211,7 @@
     <table id="tableData" style="display:none;">
       <thead>
         <tr>
-          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th>Lu</th><th></th>
+          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th>Statut</th><th>Lu</th><th></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -342,10 +350,11 @@
     tbody.innerHTML = list.map((s, i) => `
       <tr data-idx="${i}">
         <td class="td-date">${fmtDateShort(s.soumis_le)}</td>
-        <td class="td-entreprise">${esc(s.nom_entreprise || '—')}</td>
+        <td class="td-entreprise">${esc(s.nom_entreprise || '—')}${s.email_sent === 0 ? ' <span title="Courriel de notification non envoyé" style="color:#c0392b;font-size:10px;font-weight:700;cursor:help;">⚠</span>' : ''}</td>
         <td>${esc(s.contact || '—')}</td>
         <td>${s.courriel ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>` : '—'}</td>
         <td><span class="badge-activite" title="${esc(s.type_activite||'')}">${esc(s.type_activite||'—')}</span></td>
+        <td onclick="event.stopPropagation()">${statutSelect(s, i)}</td>
         <td>${s.opened_at
           ? `<span class="badge-lu ouvert" title="Ouvert le ${fmtDateShort(s.opened_at)}">✓ Lu</span>`
           : `<span class="badge-lu non-lu">${s.courriel ? '—' : 'N/A'}</span>`}</td>
@@ -367,6 +376,7 @@
       return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
     }).length;
     document.getElementById('statDerniere').textContent = list[0]?.soumis_le ? fmtDateShort(list[0].soumis_le) : '—';
+    document.getElementById('statEnAttente').textContent = list.filter(s => !s.statut || s.statut === 'nouveau' || s.statut === 'en_cours').length;
 
     // Peupler le filtre par mois à partir des soumissions disponibles
     const seen    = new Set();
@@ -388,9 +398,10 @@
 
   /* ── Recherche & filtres ── */
   function applyFilters() {
-    const q    = document.getElementById('searchBox').value.toLowerCase().trim();
-    const mois = document.getElementById('filterMois').value;
-    let list   = allSoumissions;
+    const q      = document.getElementById('searchBox').value.toLowerCase().trim();
+    const mois   = document.getElementById('filterMois').value;
+    const statut = document.getElementById('filterStatut').value;
+    let list     = allSoumissions;
     if (q) list = list.filter(s =>
       (s.nom_entreprise||'').toLowerCase().includes(q) ||
       (s.contact||'').toLowerCase().includes(q) ||
@@ -402,10 +413,12 @@
       const d = new Date(s.soumis_le);
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` === mois;
     });
+    if (statut) list = list.filter(s => (s.statut || 'nouveau') === statut);
     renderTable(list);
   }
   document.getElementById('searchBox').addEventListener('input', applyFilters);
   document.getElementById('filterMois').addEventListener('change', applyFilters);
+  document.getElementById('filterStatut').addEventListener('change', applyFilters);
 
   /* ── Modal détail ── */
   function openModal(s) {
@@ -416,6 +429,9 @@
       ['Entreprise', s.nom_entreprise], ['Contact', s.contact],
       ['Courriel',   s.courriel],       ['Téléphone', s.telephone],
       ['Activités',  s.type_activite],  ['Reçu le', fmtDate(s.soumis_le)],
+      ['Statut',     STATUTS_CONFIG[s.statut || 'nouveau']?.label || 'Nouveau'],
+      ['Généré le',  s.genere_le ? fmtDate(s.genere_le) : '—'],
+      ['Courriel envoyé', s.email_sent === 0 ? '⚠ Non envoyé (visible dans admin)' : '✓ Envoyé'],
     ].map(([l,v]) => `<div class="detail-row"><div class="detail-label">${esc(l)}</div><div class="detail-value">${esc(v||'—')}</div></div>`).join('');
     let parsed; try { parsed = JSON.parse(s.donnees_json); } catch { parsed = s.donnees_json; }
     document.getElementById('modalJson').textContent = JSON.stringify(parsed, null, 2);
@@ -451,6 +467,43 @@
   document.getElementById('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnLogin').click(); });
   document.getElementById('btnLogout').addEventListener('click', showLogin);
   document.getElementById('btnRefresh').addEventListener('click', loadSoumissions);
+
+  /* ── Statut de livraison ───────────────────────────────────────────────── */
+  const STATUTS_CONFIG = {
+    'nouveau':  { label: 'Nouveau',   bg: '#e8f0fe', fg: '#1a56db' },
+    'en_cours': { label: 'En cours',  bg: '#fef3c7', fg: '#92400e' },
+    'livré':    { label: 'Livré',     bg: '#d1fae5', fg: '#065f46' },
+    'certifié': { label: 'Certifié',  bg: '#f3e8ff', fg: '#6b21a8' },
+  };
+  function statutSelect(s, i) {
+    const val = s.statut || 'nouveau';
+    const cfg = STATUTS_CONFIG[val] || STATUTS_CONFIG['nouveau'];
+    const opts = Object.entries(STATUTS_CONFIG)
+      .map(([k,v]) => `<option value="${k}"${k===val?' selected':''}>${v.label}</option>`)
+      .join('');
+    return `<select class="statut-select" style="background:${cfg.bg};color:${cfg.fg};" onclick="event.stopPropagation()" onchange="onStatutChange(this,${i})">${opts}</select>`;
+  }
+  async function onStatutChange(sel, idx) {
+    const s   = allSoumissions[idx];
+    const val = sel.value;
+    const cfg = STATUTS_CONFIG[val] || STATUTS_CONFIG['nouveau'];
+    sel.style.background = cfg.bg;
+    sel.style.color      = cfg.fg;
+    s.statut = val;
+    await updateField(s.id, { statut: val });
+  }
+  async function updateField(id, fields) {
+    try {
+      const resp = await fetch(`${WORKER_URL}/submissions/${id}`, {
+        method:  'PATCH',
+        headers: { Authorization: `Bearer ${getToken()}`, 'Content-Type': 'application/json' },
+        body:    JSON.stringify(fields),
+      });
+      if (!resp.ok) console.error('Erreur PATCH /submissions/:id :', await resp.text());
+    } catch (err) {
+      console.error('updateField :', err);
+    }
+  }
 
   /* ══════════════════════════════════════════════════════
      buildContext
@@ -715,6 +768,12 @@
       if (errors.length === 0) {
         status.textContent = `✓ ${docIds.length} document${docIds.length>1?'s':''} téléchargés avec succès.`;
         status.className   = 'gen-status success';
+        if (genSoumission?.id) {
+          const genLe = new Date().toISOString();
+          await updateField(genSoumission.id, { genere_le: genLe });
+          const sIdx = allSoumissions.findIndex(s => s.id === genSoumission.id);
+          if (sIdx !== -1) allSoumissions[sIdx].genere_le = genLe;
+        }
       } else {
         const ok = docIds.length - errors.length;
         status.innerHTML = `<strong>${ok} doc${ok>1?'s':''} téléchargé${ok>1?'s':''}, ${errors.length} erreur${errors.length>1?'s':''} :</strong>`
