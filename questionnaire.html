@@ -473,15 +473,21 @@
         </div>
         <div class="field-row">
           <div class="field-group">
-            <label>Numéro RBQ <span class="opt">(si existant)</span></label>
+            <label>Numéro de licence RBQ <span class="opt">(si déjà attribué)</span></label>
             <input type="text" id="rbq_numero" placeholder="Ex. : 1234-5678-01">
+            <p class="hint">Visible sur votre licence RBQ ou sur le site rbq.gouv.qc.ca.</p>
           </div>
           <div class="field-group">
-            <label>Personne contact responsable du dossier qualité <span class="req">*</span></label>
-            <input type="text" id="contact" placeholder="Prénom Nom" required>
-            <div class="field-error">Ce champ est requis.</div>
-            <p class="hint">La personne qui sera l'interlocuteur principal avec le consultant pour la rédaction du PCQ.</p>
+            <label>Sous-catégorie(s) de licence <span class="opt">(si connue)</span></label>
+            <input type="text" id="rbq_categorie" placeholder="Ex. : 15.1, 15.3">
+            <p class="hint">Sous-section « Installations sous pression » de votre licence (catégories 15.1 à 15.7).</p>
           </div>
+        </div>
+        <div class="field-group">
+          <label>Personne contact responsable du dossier qualité <span class="req">*</span></label>
+          <input type="text" id="contact" placeholder="Prénom Nom" required>
+          <div class="field-error">Ce champ est requis.</div>
+          <p class="hint">La personne qui sera l'interlocuteur principal avec le consultant pour la rédaction du PCQ.</p>
         </div>
         <div class="field-row">
           <div class="field-group">
@@ -1438,6 +1444,7 @@
       nom_entreprise: document.getElementById('nom_entreprise').value.trim(),
       adresse: document.getElementById('adresse').value.trim(),
       rbq_numero: document.getElementById('rbq_numero').value.trim(),
+      rbq_categorie: document.getElementById('rbq_categorie').value.trim(),
       contact: document.getElementById('contact').value.trim(),
       telephone: document.getElementById('telephone').value.trim(),
       courriel: document.getElementById('courriel').value.trim(),
