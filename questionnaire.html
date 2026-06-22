@@ -13,6 +13,7 @@
   <meta name="theme-color" content="#0f1f38">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1191,6 +1192,7 @@
     <div class="submit-zone">
       <h3>Prêt à soumettre?</h3>
       <p>Vos réponses sont transmises directement. Vous recevrez une confirmation à l'écran.</p>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAADpRpTAoF0fZHWY2" data-theme="dark" style="margin-bottom:12px;"></div>
       <button type="submit" class="btn-primary" id="submitBtn">Envoyer le questionnaire →</button>
     </div>
 
@@ -1614,10 +1616,20 @@
     submitBtn.textContent = 'Envoi en cours…';
     errorBanner.style.display = 'none';
 
+    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
+    if (!turnstileToken) {
+      errorMsg.textContent = 'Veuillez compléter la vérification de sécurité avant d\'envoyer.';
+      errorBanner.style.display = 'block';
+      errorBanner.scrollIntoView({ behavior: 'smooth' });
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Envoyer le questionnaire →';
+      return;
+    }
+
     fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, 'cf-turnstile-response': turnstileToken }),
     })
       .then(async res => {
         if (res.ok) {
