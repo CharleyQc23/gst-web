@@ -472,6 +472,11 @@
           <input type="text" id="adresse" placeholder="123, rue Principale, Montréal (QC) H1A 1A1" required>
           <div class="field-error">Ce champ est requis.</div>
         </div>
+        <div class="field-group">
+          <label>Adresses des ateliers, usines ou autres établissements <span class="opt">(si différents de l'adresse ci-dessus)</span></label>
+          <textarea id="adresses_ateliers" placeholder="Ex. : Atelier de fabrication — 45, rue de l'Industrie, Laval (QC) H7L 2B3"></textarea>
+          <p class="hint">Exigé dans la demande de permis : adresse de tout atelier, usine ou autre établissement où se déroulent vos activités (RISP, art. 19).</p>
+        </div>
         <div class="field-row">
           <div class="field-group">
             <label>Numéro de licence RBQ <span class="opt">(si déjà attribué)</span></label>
@@ -1090,6 +1095,7 @@
         <div class="field-group">
           <label>Durée de conservation des dossiers qualité</label>
           <input type="text" id="duree_conservation" placeholder="Ex. : 10 ans après fin de projet">
+          <p class="hint">Minimum réglementaire : 5 ans suivant la date de fin des travaux (RISP, art. 31). Laissez vide pour appliquer ce minimum.</p>
           <p class="hint">Durée minimale recommandée par la RBQ : durée de vie de l’installation.</p>
         </div>
             </div>
@@ -1445,6 +1451,7 @@
       // Section 1
       nom_entreprise: document.getElementById('nom_entreprise').value.trim(),
       adresse: document.getElementById('adresse').value.trim(),
+      adresses_ateliers: document.getElementById('adresses_ateliers')?.value.trim() || '',
       rbq_numero: document.getElementById('rbq_numero').value.trim(),
       rbq_categorie: document.getElementById('rbq_categorie').value.trim(),
       contact: document.getElementById('contact').value.trim(),

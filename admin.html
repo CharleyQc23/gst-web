@@ -530,13 +530,13 @@
     ctx.revision = ctx.revision || '00';
 
     const defaults = {
-      nom_entreprise:'', adresse:'', rbq_numero:"En cours d'obtention", rbq_categorie:'',
+      nom_entreprise:'', adresse:'', adresses_ateliers:'', rbq_numero:"En cours d'obtention", rbq_categorie:'',
       contact:'', telephone:'', courriel:'', responsable_qualite:'',
       fonction_responsable:'', experience_responsable:'', nb_employes:'',
       types_projets:'', types_clients:'', domaine_application:'',
       gestion_ncr:'Formulaire de non-conformité interne',
       frequence_audit:'Annuelle', experience_rbq:'',
-      codes_applicables:'BNQ 3650-900, CSA B51, ASME B31.x, ASME Section IX',
+      codes_applicables:'BNQ 3650-900, CSA B51:19, ASME B31.x, ASME Section IX',
       exploitant_utilisateur:'', duree_maintien_pression:'30 minutes',
       sous_traitant_end:'À déterminer selon chantier',
       frequence_etalonnage:'Annuelle', gamme_manometres:'0–2× MAWP',
@@ -553,7 +553,7 @@
       responsable_registre_journalier:'',
       responsable_declaration_installation:'',
       methode_formation:'Formation sur le terrain supervisée par le responsable qualité, complétée par les codes applicables',
-      duree_conservation:'selon les exigences applicables',
+      duree_conservation:'', // vide = minimum réglementaire de 5 ans (RISP art. 31) inscrit dans le template
     };
     for (const [k,v] of Object.entries(defaults)) { if (ctx[k] === undefined || ctx[k] === null) ctx[k] = v; }
 
