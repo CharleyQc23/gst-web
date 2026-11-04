@@ -522,7 +522,7 @@
   function buildContext(data) {
     const ctx = { ...data };
     const now = new Date();
-    ctx.date_generation = ctx.date_generation || now.toLocaleDateString('fr-CA', { day:'2-digit', month:'long', year:'numeric' });
+    ctx.date_generation = ctx.date_generation || now.toLocaleDateString('fr-CA'); // AAAA-MM-JJ, format des formulaires RBQ
     ctx.version  = ctx.version  || '1.0';
     ctx.revision = ctx.revision || '00';
 
@@ -851,7 +851,7 @@
   /* ── Couleur de marque — extraction + patching ─────────────────────────── */
   async function setupColorPicker(data) {
     const type = (data.type_pcq || 'installateur').toLowerCase();
-    const defaultColor = type === 'fabricant' ? '#1e4d8c' : '#1b8a5a';
+    const defaultColor = '#1e4d8c';
     const picker = document.getElementById('brandColorPicker');
     const hexIn  = document.getElementById('brandColorHex');
     const label  = document.getElementById('colorSectionLabel');
@@ -904,8 +904,12 @@
 
   async function applyBrandColors(arrayBuffer, primaryHex) {
     if (!primaryHex || !/^#[0-9A-Fa-f]{6}$/.test(primaryHex)) return arrayBuffer;
-    const primary = primaryHex.replace('#','').toUpperCase();
-    const dark    = darkenHex(primaryHex).replace('#','').toUpperCase();
+    // Couleur trop pâle (ex. jaune) : on l'assombrit pour garder le texte blanc lisible sur les en-têtes de tableaux
+    const lum = h => { const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)); return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2]; };
+    let safe = primaryHex;
+    for (let i = 0; i < 12 && (1.05/(lum(safe)+0.05)) < 4.5; i++) safe = darkenHex(safe, 0.85);
+    const primary = safe.replace('#','').toUpperCase();
+    const dark    = darkenHex(safe).replace('#','').toUpperCase();
     // Paires [couleur originale → nouvelle couleur] pour installateur + fabricant + annexes
     const pairs = [
       ['1B8A5A', primary], ['145A34', dark],   // vert installateur
@@ -918,7 +922,7 @@
     }
     const zip = await JSZip.loadAsync(arrayBuffer);
     const targets = Object.keys(zip.files).filter(n =>
-      /^word\/(document|styles|header\d*|footer\d*)\.xml$/.test(n)
+      /^word\/(document|styles|header[\w]*|footer[\w]*)\.xml$/.test(n)
     );
     for (const path of targets) {
       let xml = await zip.file(path).async('string');
