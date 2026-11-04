@@ -657,6 +657,8 @@
     annex_ncr:        { label:'Annexe N — Registre NCR',           file:'annex_ncr_v1.docx' },
     annex_organigramme: { label:'Annexe O — Organigramme qualité', file:'annex_organigramme_v1.docx' },
     guide:            { label:'Guide de remise client',            file:'guide_config.json' },
+    trousse:          { label:'Trousse de soumission RBQ (client)', file:'template_trousse_soumission_v1.docx' },
+    references:       { label:'Références au manuel (à joindre à la RBQ)', file:'template_references_guide_rbq_v1.docx' },
   };
 
   function getDocumentIds(data) {
@@ -667,16 +669,16 @@
       // Fabrication + installation : les deux manuels et toutes les annexes
       docs.push('pcq_installateur', 'pcq_fabricant', 'ann07', 'ann08', 'ann09', 'ann10');
       if (aSoudage) docs.push('ann11');
-      docs.push('ann13', 'ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
+      docs.push('ann13', 'ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide', 'trousse', 'references');
     } else if (type === 'fabricant') {
       docs.push('pcq_fabricant', 'ann09');
       if (aSoudage) docs.push('ann11');
-      docs.push('ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
+      docs.push('ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide', 'trousse', 'references');
     } else {
       docs.push(type === 'generique' ? 'pcq_generique' : 'pcq_installateur');
       docs.push('ann07', 'ann08', 'ann09', 'ann10');
       if (aSoudage) docs.push('ann11');
-      docs.push('ann13', 'ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide');
+      docs.push('ann13', 'ann14', 'ann15', 'ncr', 'annex_etalonnage', 'annex_ncr', 'annex_organigramme', 'guide', 'trousse', 'references');
     }
     return docs;
   }
@@ -716,6 +718,46 @@
     genSoumission = null;
   }
 
+  /* Trousse de soumission RBQ : valeurs pour le formulaire, le courriel et le tableau des références au guide */
+  function buildKitContext(data, ctx, corr) {
+    const type     = (data.type_pcq || 'installateur').toLowerCase();
+    const mandats  = Array.isArray(data.type_mandat) ? data.type_mandat : [];
+    const fab      = type === 'fabricant' || type === 'mixte';
+    const inst     = type !== 'fabricant';
+    const k = {};
+    k.courriel_consultant = 'contact@guernonservicestechniques.ca';
+    k.nom_fichier = (ctx.nom_entreprise || 'entreprise').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'');
+    k.categorie_formulaire = ctx.pour_soi_meme && !fab ? 'exploitant-utilisateur' : (fab && inst ? 'fabricant et installateur' : (fab ? 'fabricant' : 'installateur'));
+    const lic = String(data.rbq_numero || '').trim();
+    k.licence_formulaire = lic && !/cours/i.test(lic) ? `Cocher « Oui » et inscrire le numéro de licence : ${lic}.` : 'Cocher « Non ».';
+    k.usine_formulaire = String(data.adresses_ateliers || '').trim()
+      ? `Inscrire l’adresse de l’usine ou de l’atelier : ${data.adresses_ateliers}.`
+      : 'Cocher « Mêmes coordonnées qu’à la section 3.2 » (travaux au siège social ou en chantier).';
+    const champs = [];
+    if (inst && !ctx.pour_soi_meme) {
+      const act = [];
+      if (ctx.champ_vapeur_air) act.push('« BNQ 3650-900 (ASME B31.1 et B31.3) »');
+      if (ctx.champ_refrigeration) act.push('« CSA B52 (ASME B31.5) »');
+      if (ctx.champ_gaz_medicaux) act.push('« CSA-Z7396.1 »');
+      champs.push(`Cocher « Installateur ». Types d’activité : ${act.join(', ') || 'selon les codes de la section 2 du manuel'}. Types d’équipement : cocher Appareil, Chaudière et/ou Tuyauterie/Accessoire selon les équipements installés${ctx.types_equipements ? ' (' + ctx.types_equipements + ')' : ''}.`);
+    }
+    if (ctx.pour_soi_meme && !fab) champs.push('Cocher « Exploitant-utilisateur » et les travaux d’installation visés (appareil, chaudière, tuyauterie ou accessoire). Ne pas cocher « Installateur ».');
+    if (fab) {
+      const eq = [];
+      if (mandats.some(m => m.startsWith('fabrication_chaudiere'))) eq.push('Chaudière');
+      if (mandats.includes('fabrication_appareil_sp')) eq.push('Appareil');
+      champs.push(`Cocher « Fabricant ». Types d’activité : « CSA B51 » et « ASME ». Types d’équipement : ${eq.join(', ') || 'selon les équipements fabriqués'}.`);
+    }
+    k.champs_formulaire = champs.join(' ');
+    k.audit_formulaire = fab && !inst ? 'par des points d’arrêt sur une première fabrication' : (fab ? 'par des points d’arrêt pour la fabrication et après votre première déclaration de travaux pour l’installation' : 'après votre première déclaration de travaux');
+    k.tables_ref = [];
+    if (corr) {
+      if (inst) k.tables_ref.push({ titre_guide: corr.guide_installateur, lignes: corr.installateur.map(r => ({ guide: r.guide, exigence: r.exigence, manuel: (r.gm && !ctx.champ_gaz_medicaux) ? 'S.O. (aucun gaz médical)' : r.manuel })) });
+      if (fab)  k.tables_ref.push({ titre_guide: corr.guide_fabricant + (inst ? ' (manuel du fabricant)' : ''), lignes: corr.fabricant.map(r => ({ guide: r.guide, exigence: r.exigence, manuel: r.manuel })) });
+    }
+    return k;
+  }
+
   async function generateDocx() {
     if (!genSoumission) return;
     const data = genSoumission._fullData || {};
@@ -723,6 +765,15 @@
     const ctx       = buildContext(data);
     // Type mixte : le manuel fabricant reçoit son propre contexte (codes, no de contrôle PCQ-FAB)
     const ctxFab    = (data.type_pcq || '').toLowerCase() === 'mixte' ? buildContext({ ...data, type_pcq:'fabricant' }) : ctx;
+    // Données de correspondance avec les guides RBQ (trousse de soumission)
+    let corr = null;
+    if (docIds.includes('references')) {
+      try {
+        const r = await fetch(`${WORKER_URL}/template/correspondance_guide.json`, { headers: { Authorization:`Bearer ${getToken()}` } });
+        if (r.ok) corr = await r.json();
+      } catch (e) { console.warn('correspondance_guide.json :', e.message); }
+    }
+    Object.assign(ctx, buildKitContext(data, ctx, corr));
     const nomClient = (genSoumission.nom_entreprise || 'client').replace(/\s+/g, '_');
     const btn       = document.getElementById('btnGenerate');
     const status    = document.getElementById('genStatus');
