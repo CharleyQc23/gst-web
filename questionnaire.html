@@ -1198,6 +1198,11 @@
     <div class="submit-zone">
       <h3>Prêt à soumettre?</h3>
       <p>Vos réponses sont transmises directement. Vous recevrez une confirmation à l'écran.</p>
+      <div class="consent-box" style="text-align:left;font-size:13px;line-height:1.55;background:rgba(255,255,255,0.06);border:1px solid rgba(200,168,75,0.35);border-radius:6px;padding:14px 16px;margin:0 0 14px;">
+        <p style="margin:0 0 8px;"><strong>Protection de vos renseignements (Loi 25)</strong></p>
+        <p style="margin:0 0 8px;">Guernon Services Techniques recueille ces renseignements, y compris les noms, fonctions et qualifications des personnes de votre entreprise, uniquement pour préparer votre programme de contrôle de la qualité et communiquer avec vous à ce sujet. Seul Charles Guernon, responsable de la protection des renseignements personnels, y a accès. Ils sont traités par nos fournisseurs techniques (Cloudflare, Resend, Google, Microsoft, Notion, Anthropic), possiblement à l'extérieur du Québec, et conservés jusqu'à 3 ans après la fin du mandat. Vous pouvez demander l'accès, la correction ou la suppression de vos renseignements à contact@guernonservicestechniques.ca. Détails : <a href="politique-confidentialite.html" target="_blank" style="color:#c8a84b;">politique de confidentialité</a>.</p>
+        <label class="check-item" style="margin:0;color:#f8f7f4;background:transparent;"><input type="checkbox" id="consentement_loi25"><span class="check-box"></span>J'ai lu cet avis et je consens à ce que mes renseignements, et ceux des personnes nommées dans ce questionnaire avec leur accord, soient utilisés à ces fins. <span class="req">*</span></label>
+      </div>
       <div class="cf-turnstile" data-sitekey="0x4AAAAAADpRpTAoF0fZHWY2" data-theme="dark" style="margin-bottom:12px;"></div>
       <button type="submit" class="btn-primary" id="submitBtn">Envoyer le questionnaire →</button>
     </div>
@@ -1622,6 +1627,16 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Envoi en cours…';
     errorBanner.style.display = 'none';
+
+    if (!document.getElementById('consentement_loi25')?.checked) {
+      errorMsg.textContent = 'Veuillez cocher la case de consentement (Loi 25) avant d\'envoyer.';
+      errorBanner.style.display = 'block';
+      errorBanner.scrollIntoView({ behavior: 'smooth' });
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Envoyer le questionnaire →';
+      return;
+    }
+    data.consentement_loi25 = { accepte: true, date: new Date().toISOString(), politique: '1.1' };
 
     const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value || '';
     if (!turnstileToken) {

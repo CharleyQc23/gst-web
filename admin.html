@@ -211,7 +211,7 @@
     <table id="tableData" style="display:none;">
       <thead>
         <tr>
-          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th>Statut</th><th>Lu</th><th></th>
+          <th>Date</th><th>Entreprise</th><th>Contact</th><th>Courriel</th><th>Activités</th><th>Statut</th><th></th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -368,9 +368,6 @@
         <td>${s.courriel ? `<a href="mailto:${esc(s.courriel)}" style="color:var(--navy-light);text-decoration:none;" onclick="event.stopPropagation()">${esc(s.courriel)}</a>` : '—'}</td>
         <td><span class="badge-activite" title="${esc(s.type_activite||'')}">${esc(s.type_activite||'—')}</span></td>
         <td onclick="event.stopPropagation()">${statutSelect(s, i)}</td>
-        <td>${s.opened_at
-          ? `<span class="badge-lu ouvert" title="Ouvert le ${fmtDateShort(s.opened_at)}">✓ Lu</span>`
-          : `<span class="badge-lu non-lu">${s.courriel ? '—' : 'N/A'}</span>`}</td>
         <td style="white-space:nowrap;display:flex;gap:6px;">
           <button class="btn-dl" onclick="event.stopPropagation();downloadJSON(allSoumissions[${i}])">↓ JSON</button>
           <button class="btn-gen" onclick="event.stopPropagation();openGenModal(${i})">⚙ Générer</button>

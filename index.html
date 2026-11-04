@@ -617,6 +617,7 @@
     .service-card-footer { flex-direction: column; align-items: flex-start; }
   }
 </style>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
@@ -941,10 +942,12 @@
           <label>Message</label>
           <textarea name="message" placeholder="D&eacute;crivez bri&egrave;vement votre situation (type de licence RBQ, d&eacute;lai souhait&eacute;, questions...)"></textarea>
         </div>
+        <input type="text" name="site_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAADpRpTAoF0fZHWY2" style="margin-bottom:12px;"></div>
         <button type="submit" class="btn-submit" id="submit-btn">Envoyer la demande</button>
         <div id="form-notice" class="form-notice"></div>
         <p class="form-privacy-notice">
-          Les informations transmises sont utilis&eacute;es uniquement pour r&eacute;pondre &agrave; votre demande et ne sont pas partag&eacute;es avec des tiers.
+          Vos renseignements servent uniquement &agrave; r&eacute;pondre &agrave; votre demande. Ils sont trait&eacute;s par nos fournisseurs techniques (Cloudflare, Resend, Microsoft), possiblement &agrave; l&rsquo;ext&eacute;rieur du Qu&eacute;bec, et conserv&eacute;s 12 mois.
           <a href="politique-confidentialite.html">Politique de confidentialit&eacute;</a> (Loi 25).
         </p>
       </form>
@@ -1001,7 +1004,7 @@
     if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
   });
 
-  // Formulaire contact via Formspree
+  // Formulaire contact via le Worker GST (remplace Formspree)
   document.getElementById('contact-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn    = document.getElementById('submit-btn');
@@ -1012,16 +1015,18 @@
     notice.className     = 'form-notice';
 
     try {
-      const res = await fetch('https://formspree.io/f/mjgjpeep', {
+      const payload = Object.fromEntries(new FormData(this).entries());
+      const res = await fetch('https://pcq-submit.c-guernon.workers.dev/contact', {
         method:  'POST',
-        body:    new FormData(this),
-        headers: { 'Accept': 'application/json' }
+        body:    JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
       });
       if (res.ok) {
         notice.textContent   = 'Message envoyé. Vous recevrez une réponse dans les 24 heures.';
         notice.className     = 'form-notice success';
         notice.style.display = 'block';
         this.reset();
+        if (window.turnstile) window.turnstile.reset();
       } else {
         throw new Error('server');
       }
