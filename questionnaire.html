@@ -546,21 +546,13 @@
           <div style="margin-bottom:16px;">
             <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Fabrication en atelier</p>
             <div class="check-grid">
-              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_tuyauterie"><span class="check-box"></span>Fabriquer de la tuyauterie sous pression</label>
               <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_chaudiere_hp"><span class="check-box"></span>Fabriquer une chaudière haute pression (vapeur &gt; 103 kPa)</label>
               <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_chaudiere_bp"><span class="check-box"></span>Fabriquer une chaudière basse pression (chauffage, vapeur ≤ 103 kPa)</label>
               <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_appareil_sp"><span class="check-box"></span>Fabriquer un appareil sous pression (réservoirs, échangeurs, colonnes)</label>
-              <label class="check-item"><input type="checkbox" name="type_mandat" value="fabrication_nucleaire"><span class="check-box"></span>Fabriquer des articles pour centrale nucléaire</label>
             </div>
           </div>
 
-          <div style="margin-bottom:16px;">
-            <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Réparation</p>
-            <div class="check-grid">
-              <label class="check-item"><input type="checkbox" name="type_mandat" value="reparation_equipement"><span class="check-box"></span>Réparer un équipement sous pression (chaudières, appareils et tuyauteries)</label>
-              <label class="check-item"><input type="checkbox" name="type_mandat" value="reparation_soupapes"><span class="check-box"></span>Réparer des soupapes de sûreté</label>
-            </div>
-          </div>
+          <p class="hint" style="margin-bottom:12px;">La fabrication de tuyauterie en atelier, la réparation d’équipements ou de soupapes et le nucléaire ne sont pas offerts pour le moment. Écrivez-nous à contact@guernonservicestechniques.ca si votre entreprise a besoin de ces activités.</p>
 
           <div class="field-error" id="mandatError">Veuillez sélectionner au moins un type de mandat.</div>
         </div>
@@ -783,6 +775,132 @@
             <input type="text" id="numero_controle_manuel" placeholder="Ex. : 001, A-01, CTRL-2026-01">
             <p class="hint">Si votre PCQ doit être émis en copies numérotées et contrôlées, indiquez ici le numéro attribué à la présente copie.</p>
           </div>
+        </div>
+        <div id="fabricantBlock" style="display:none;">
+        <div class="divider"></div>
+        <p style="font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gray-dark);margin-bottom:8px;">Fabrication en atelier</p>
+        <p class="hint" style="margin-bottom:12px;">Ces responsabilités figurent dans le manuel du fabricant. Laissez « Même que le responsable qualité » si cette personne s’en charge.</p>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Responsable des calculs de conception</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_calculs_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_calculs_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_calculs_box" style="display:none;">
+              <input type="text" id="responsable_calculs" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Approbation des calculs</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="approbateur_calculs_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="approbateur_calculs_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="approbateur_calculs_box" style="display:none;">
+              <input type="text" id="approbateur_calculs" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Préparation des dessins de fabrication</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="dessinateur_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="dessinateur_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="dessinateur_box" style="display:none;">
+              <input type="text" id="dessinateur" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Approbation des dessins</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="approbateur_dessins_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="approbateur_dessins_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="approbateur_dessins_box" style="display:none;">
+              <input type="text" id="approbateur_dessins" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Approbation des bons d’achat</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="approbateur_bons_achat_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="approbateur_bons_achat_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="approbateur_bons_achat_box" style="display:none;">
+              <input type="text" id="approbateur_bons_achat" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Réception et inspection des matériaux</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_reception_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_reception_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_reception_box" style="display:none;">
+              <input type="text" id="responsable_reception" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Inspecteur-qualité (inspections en cours de fabrication)</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="inspecteur_qualite_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="inspecteur_qualite_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="inspecteur_qualite_box" style="display:none;">
+              <input type="text" id="inspecteur_qualite" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Vérification finale avant l’inspecteur de la RBQ</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="responsable_verification_finale_type" value="same" checked><span class="dot"></span>Même que le responsable qualité</label>
+              <label class="bool-label"><input type="radio" name="responsable_verification_finale_type" value="autre"><span class="dot"></span>Autre</label>
+            </div>
+            <div class="delegate-box" id="responsable_verification_finale_box" style="display:none;">
+              <input type="text" id="responsable_verification_finale" placeholder="Prénom Nom ou Titre">
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Ingénieur responsable de la conception <span class="opt">(optionnel)</span></label>
+            <input type="text" id="ingenieur_conception" placeholder="Prénom Nom, ing. ou firme d’ingénierie">
+          </div>
+          <div class="field-group">
+            <label>Nombre d’inspecteurs-qualité <span class="opt">(optionnel)</span></label>
+            <input type="text" id="nb_inspecteurs" inputmode="numeric" placeholder="Ex. : 1">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Instruments de mesure et d’essai étalonnés <span class="opt">(optionnel)</span></label>
+          <input type="text" id="liste_instruments_etalonnage" placeholder="Ex. : manomètres, pieds à coulisse, rubans, thermomètres">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Vos fabrications exigent-elles des traitements thermiques ?</label>
+            <div class="bool-group">
+              <label class="bool-label"><input type="radio" name="traitement_thermique_fab" value="o" checked><span class="dot"></span>Oui ou possiblement</label>
+              <label class="bool-label"><input type="radio" name="traitement_thermique_fab" value="n"><span class="dot"></span>Non</label>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Faites-vous de l’assemblage en chantier ?</label>
+            <div class="bool-group" style="margin-bottom:8px;">
+              <label class="bool-label"><input type="radio" name="assemblage_chantier_fab" value="n" checked><span class="dot"></span>Non</label>
+              <label class="bool-label"><input type="radio" name="assemblage_chantier_fab" value="o"><span class="dot"></span>Oui</label>
+            </div>
+            <div class="delegate-box" id="responsable_chantier_box" style="display:none;">
+              <input type="text" id="responsable_chantier" placeholder="Responsable en chantier (Prénom Nom ou Titre)">
+            </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -1260,8 +1378,19 @@
   // ── Toggles responsables délégués (Section 4) ──
   const DELEGATE_FIELDS = [
     'responsable_achats', 'responsable_dessins', 'responsable_etalonnage',
-    'responsable_ncr', 'responsable_essai_pression', 'responsable_formation'
+    'responsable_ncr', 'responsable_essai_pression', 'responsable_formation',
+    'responsable_calculs', 'approbateur_calculs', 'dessinateur', 'approbateur_dessins',
+    'approbateur_bons_achat', 'responsable_reception', 'inspecteur_qualite', 'responsable_verification_finale'
   ];
+  // ── Bloc fabricant : visible si un mandat de fabrication est coché ──
+  function majFabricantBlock() {
+    const fab = [...document.querySelectorAll('input[name="type_mandat"]:checked')].some(c => c.value.startsWith('fabrication'));
+    const b = document.getElementById('fabricantBlock'); if (b) b.style.display = fab ? 'block' : 'none';
+  }
+  document.querySelectorAll('input[name="type_mandat"]').forEach(c => c.addEventListener('change', majFabricantBlock));
+  document.querySelectorAll('input[name="assemblage_chantier_fab"]').forEach(r => r.addEventListener('change', function() {
+    document.getElementById('responsable_chantier_box').style.display = this.value === 'o' ? 'block' : 'none';
+  }));
   DELEGATE_FIELDS.forEach(function(field) {
     document.querySelectorAll('input[name="' + field + '_type"]').forEach(function(r) {
       r.addEventListener('change', function() {
@@ -1467,7 +1596,7 @@
       type_mandat: [...document.querySelectorAll('input[name="type_mandat"]:checked')].map(c => c.value),
       type_pcq: (() => {
         const mandats = [...document.querySelectorAll('input[name="type_mandat"]:checked')].map(c => c.value);
-        const isFab = mandats.some(m => m.startsWith('fabrication') || m.startsWith('reparation'));
+        const isFab = mandats.some(m => m.startsWith('fabrication'));
         const isInst = mandats.some(m => m.startsWith('installation'));
         if (isFab && isInst) return 'mixte';
         if (isFab) return 'fabricant';
@@ -1527,6 +1656,30 @@
       responsable_formation: document.querySelector('input[name="responsable_formation_type"]:checked')?.value === 'autre'
         ? (document.getElementById('responsable_formation')?.value.trim() || '') : '',
       numero_controle_manuel: document.getElementById('numero_controle_manuel').value.trim(),
+
+      // Fabricant (vide = même que responsable_qualite)
+      responsable_calculs: document.querySelector('input[name="responsable_calculs_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_calculs')?.value.trim() || '') : '',
+      approbateur_calculs: document.querySelector('input[name="approbateur_calculs_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('approbateur_calculs')?.value.trim() || '') : '',
+      dessinateur: document.querySelector('input[name="dessinateur_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('dessinateur')?.value.trim() || '') : '',
+      approbateur_dessins: document.querySelector('input[name="approbateur_dessins_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('approbateur_dessins')?.value.trim() || '') : '',
+      approbateur_bons_achat: document.querySelector('input[name="approbateur_bons_achat_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('approbateur_bons_achat')?.value.trim() || '') : '',
+      responsable_reception: document.querySelector('input[name="responsable_reception_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_reception')?.value.trim() || '') : '',
+      inspecteur_qualite: document.querySelector('input[name="inspecteur_qualite_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('inspecteur_qualite')?.value.trim() || '') : '',
+      responsable_verification_finale: document.querySelector('input[name="responsable_verification_finale_type"]:checked')?.value === 'autre'
+        ? (document.getElementById('responsable_verification_finale')?.value.trim() || '') : '',
+      ingenieur_conception: document.getElementById('ingenieur_conception')?.value.trim() || '',
+      nb_inspecteurs: document.getElementById('nb_inspecteurs')?.value.trim() || '',
+      liste_instruments_etalonnage: document.getElementById('liste_instruments_etalonnage')?.value.trim() || '',
+      pas_de_traitement_thermique: document.querySelector('input[name="traitement_thermique_fab"]:checked')?.value === 'n',
+      assemblage_chantier: document.querySelector('input[name="assemblage_chantier_fab"]:checked')?.value === 'o',
+      responsable_chantier: document.getElementById('responsable_chantier')?.value.trim() || '',
 
       // Section 5
       employes_qualifies: document.querySelector('input[name="employes_qualifies"]:checked')?.value === 'o',
