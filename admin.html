@@ -611,7 +611,7 @@
     fab.forEach(k => { ctx[k] = ctx[k] || ''; });
     // Fabricant : responsabilités non fournies par le questionnaire → responsable qualité par défaut.
     ['responsable_calculs','approbateur_calculs','dessinateur','approbateur_dessins','responsable_reception',
-     'responsable_verification_finale','inspecteur_qualite','approbateur_bons_achat','responsable_chantier']
+     'responsable_verification_finale','inspecteur_qualite','approbateur_bons_achat','responsable_chantier','superviseur_soudage']
       .forEach(k => { if (estVide(ctx[k])) ctx[k] = ctx.responsable_qualite || ''; });
     if (estVide(ctx.distribution_dessins)) ctx.distribution_dessins = "l'atelier de production et le responsable du contrôle de la qualité";
     if (estVide(ctx.liste_instruments_etalonnage)) ctx.liste_instruments_etalonnage = "manomètres d'essai de pression, instruments de mesure dimensionnelle et thermomètres ou indicateurs de température";
@@ -630,6 +630,9 @@
     ctx.txt_procedures_travail   = ouiNon(ctx.procedures_travail);
     ctx.txt_gaz_medicaux         = ouiNon(ctx.gaz_medicaux);
     ctx.txt_assemblage_chantier  = ouiNon(ctx.assemblage_chantier);
+    // Exploitant-utilisateur qui installe seulement pour lui-même (fiche FE du guide RBQ)
+    const mandatsCtx = Array.isArray(ctx.type_mandat) ? ctx.type_mandat : [];
+    ctx.pour_soi_meme = mandatsCtx.includes('installation_soi_meme') && !mandatsCtx.includes('installation_chantier');
     ctx.has_logo = !!(ctx.logo_base64);
     return ctx;
   }
