@@ -646,7 +646,8 @@
   .price-list li { font-size:14px; color:var(--gray-dark); display:flex; gap:10px; }
   .price-list li::before { content:'✓'; color:var(--gold); font-weight:600; }
   .price-note { margin-top:28px; font-size:13px; color:var(--gray-mid); text-align:center; }
-  @media (max-width: 900px) { .why-grid, .pricing-grid { grid-template-columns:1fr; } }
+  .roles-grid { grid-template-columns:1fr 1fr; }
+  @media (max-width: 900px) { .why-grid, .pricing-grid, .roles-grid { grid-template-columns:1fr; } }
 </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
@@ -832,13 +833,13 @@
     <div class="pricing-grid reveal">
       <div class="price-card featured">
         <span class="price-tag-launch">Prix de lancement</span>
-        <div class="price-name">Manuel PCQ installateur</div>
-        <div class="price-for">Installation, modification et r&eacute;paration d&rsquo;installations sous pression</div>
-        <div class="price-amount">1&nbsp;450&nbsp;$ <small>prix fixe</small></div>
-        <div class="price-regular">R&eacute;gulier &agrave; partir de <s>1&nbsp;950&nbsp;$</s></div>
+        <div class="price-name">Manuel installateur</div>
+        <div class="price-for"><strong>Pour vous si vous installez, modifiez ou r&eacute;parez</strong> des chaudi&egrave;res, appareils ou tuyauteries sous pression (chantier, entretien).</div>
+        <div class="price-amount">1&nbsp;950&nbsp;$ <small>prix fixe</small></div>
+        <div class="price-regular">R&eacute;gulier <s>2&nbsp;450&nbsp;$</s></div>
         <ul class="price-list">
           <li>Questionnaire en ligne de 20&nbsp;minutes</li>
-          <li>Manuel complet, Word + PDF</li>
+          <li>Manuel complet, Word + PDF (soudage inclus si applicable)</li>
           <li>Formulaires et registres pr&ecirc;ts &agrave; utiliser</li>
           <li>Trousse de soumission &agrave; la RBQ</li>
           <li>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</li>
@@ -848,22 +849,22 @@
       </div>
       <div class="price-card featured">
         <span class="price-tag-launch">Prix de lancement</span>
-        <div class="price-name">PCQ fabricant / complet</div>
-        <div class="price-for">Fabrication d&rsquo;&eacute;quipements sous pression, soudage, activit&eacute;s multiples</div>
-        <div class="price-amount">2&nbsp;750&nbsp;$ <small>prix fixe</small></div>
-        <div class="price-regular">R&eacute;gulier &agrave; partir de <s>3&nbsp;450&nbsp;$</s></div>
+        <div class="price-name">Manuel fabricant</div>
+        <div class="price-for"><strong>Pour vous si vous fabriquez</strong> des appareils, tuyauteries ou composants sous pression en atelier.</div>
+        <div class="price-amount">3&nbsp;250&nbsp;$ <small>prix fixe</small></div>
+        <div class="price-regular">R&eacute;gulier <s>3&nbsp;950&nbsp;$</s></div>
         <ul class="price-list">
           <li>Tout ce qui est inclus pour l&rsquo;installateur</li>
-          <li>Section fabrication (dessins, calculs, inspection)</li>
-          <li>Section soudage, END, essais de pression et traitement thermique</li>
-          <li>Annexes fabricant du guide RBQ</li>
+          <li>Conception, dessins et calculs</li>
+          <li>Inspection en atelier, END, essais et traitement thermique</li>
+          <li>Fiches fabricant du guide RBQ</li>
           <li>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</li>
         </ul>
         <a href="#contact" class="btn-primary" style="text-align:center;">Demander un devis</a>
       </div>
       <div class="price-card">
         <div class="price-name">Mise &agrave; jour du manuel</div>
-        <div class="price-for">Manuel existant &agrave; adapter au RISP 2026 ou &agrave; un changement d&rsquo;activit&eacute;s</div>
+        <div class="price-for"><strong>Pour vous si vous avez d&eacute;j&agrave; un manuel</strong> &agrave; adapter au RISP 2026 ou &agrave; un changement d&rsquo;activit&eacute;s.</div>
         <div class="price-amount">950&nbsp;$ <small>&agrave; partir de</small></div>
         <div class="price-regular">&nbsp;</div>
         <ul class="price-list">
@@ -875,7 +876,28 @@
         <a href="#contact" class="btn-primary" style="text-align:center;">Demander un devis</a>
       </div>
     </div>
-    <p class="price-note">Prix de lancement r&eacute;serv&eacute; aux trois premiers clients. Les frais de la RBQ (permis et v&eacute;rification du programme) sont factur&eacute;s directement par la RBQ.</p>
+    <p class="price-note">Vous installez <em>et</em> fabriquez&nbsp;? Les deux manuels sont r&eacute;dig&eacute;s &agrave; partir du m&ecirc;me questionnaire&nbsp;: prix combin&eacute; sur devis.<br>Prix de lancement r&eacute;serv&eacute; aux trois premiers clients. Les frais de la RBQ (permis et v&eacute;rification du programme) sont factur&eacute;s directement par la RBQ.</p>
+
+    <div class="why-grid roles-grid reveal">
+      <div class="why-item">
+        <div class="why-title">Ce que vous avez &agrave; faire</div>
+        <ul class="price-list" style="margin:12px 0 0;">
+          <li>Remplir le questionnaire en ligne (20&nbsp;min)</li>
+          <li>Relire et signer votre manuel</li>
+          <li>Envoyer la demande &agrave; la RBQ avec la trousse fournie (GST en copie) et payer les frais de la RBQ</li>
+          <li>Nous transf&eacute;rer tout courriel de la RBQ et &ecirc;tre pr&eacute;sent &agrave; la v&eacute;rification d&rsquo;implantation</li>
+        </ul>
+      </div>
+      <div class="why-item" style="border-color:var(--gold);">
+        <div class="why-title">Ce dont on s&rsquo;occupe</div>
+        <ul class="price-list" style="margin:12px 0 0;">
+          <li>R&eacute;daction compl&egrave;te du manuel, formulaires et registres</li>
+          <li>Trousse de soumission pr&ecirc;te &agrave; envoyer, avec le formulaire expliqu&eacute; ligne par ligne</li>
+          <li>Suivi du dossier, r&eacute;daction des r&eacute;ponses aux corrections et des relances</li>
+          <li>Pr&eacute;paration de la v&eacute;rification d&rsquo;implantation et rappel avant le renouvellement</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1024,7 +1046,17 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Prix fixe&nbsp;: 1&nbsp;950&nbsp;$ pour un manuel installateur et 3&nbsp;450&nbsp;$ pour un PCQ fabricant ou complet (prix de lancement de 1&nbsp;450&nbsp;$ et 2&nbsp;750&nbsp;$ pour les trois premiers clients). Taxes non applicables. Les frais de la RBQ sont factur&eacute;s s&eacute;par&eacute;ment par la RBQ.</div>
+          <div class="faq-answer-inner">Prix fixe&nbsp;: 2&nbsp;450&nbsp;$ pour un manuel installateur et 3&nbsp;950&nbsp;$ pour un manuel fabricant (prix de lancement de 1&nbsp;950&nbsp;$ et 3&nbsp;250&nbsp;$ pour les trois premiers clients). Mise &agrave; jour d&rsquo;un manuel existant &agrave; partir de 950&nbsp;$. Taxes non applicables. Les frais de la RBQ sont factur&eacute;s s&eacute;par&eacute;ment par la RBQ.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Qui envoie la demande &agrave; la RBQ&nbsp;?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Vous, puisque le permis est &agrave; votre nom&nbsp;: la demande se fait par courriel avec la trousse que nous pr&eacute;parons, GST en copie. Ensuite, on suit le dossier, on r&eacute;dige les r&eacute;ponses aux corrections et les relances, et on vous pr&eacute;pare &agrave; la v&eacute;rification d&rsquo;implantation.</div>
         </div>
       </div>
 
