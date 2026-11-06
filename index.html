@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rédaction PCQ RBQ Québec | Guernon Services Techniques</title>
-<meta name="description" content="PCQ conforme RBQ rédigé selon vos activités et votre licence. Pour entrepreneurs en construction et fabricants d’installations sous pression au Québec. Livraison en 7 à 10 jours ouvrables. Devis gratuit.">
-<meta name="keywords" content="PCQ RBQ, programme contrôle qualité RBQ, rédaction PCQ Québec, conformité RBQ entrepreneur, installations sous pression, B-1.1 r.6.1, Guernon Services Techniques">
+<meta name="description" content="Manuel PCQ pour permis d’installations sous pression, à prix fixe : questionnaire de 20 minutes, livraison en 7 à 10 jours ouvrables, corrections RBQ incluses jusqu’à l’acceptation. À jour RISP 2026. Partout au Québec.">
+<meta name="keywords" content="PCQ RBQ, programme contrôle qualité RBQ, rédaction PCQ Québec, conformité RBQ entrepreneur, installations sous pression, permis ISP, RISP 2026, Guernon Services Techniques">
 <link rel="canonical" href="https://guernonservicestechniques.ca/">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -13,14 +13,14 @@
 <meta property="og:site_name" content="Guernon Services Techniques">
 <meta property="og:url" content="https://guernonservicestechniques.ca/">
 <meta property="og:title" content="Rédaction PCQ RBQ Québec | Guernon Services Techniques">
-<meta property="og:description" content="PCQ conforme RBQ rédigé selon vos activités et votre licence. Pour entrepreneurs et fabricants d’installations sous pression au Québec.">
+<meta property="og:description" content="Manuel PCQ à prix fixe pour installateurs et fabricants d’installations sous pression. Accompagnement jusqu’au permis, partout au Québec.">
 <meta property="og:image" content="https://guernonservicestechniques.ca/assets/og-image-linkedin.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Rédaction PCQ RBQ Québec | Guernon Services Techniques">
-<meta name="twitter:description" content="PCQ conforme RBQ rédigé selon vos activités et votre licence. Pour entrepreneurs et fabricants au Québec.">
+<meta name="twitter:description" content="Manuel PCQ à prix fixe, accompagnement jusqu’au permis RBQ.">
 <meta name="twitter:image" content="https://guernonservicestechniques.ca/assets/og-image-linkedin.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="icon" type="image/svg+xml" href="assets/logo-guernon-icon.svg">
@@ -41,7 +41,7 @@
   "logo": "https://guernonservicestechniques.ca/assets/logo-guernon-light.svg",
   "image": "https://guernonservicestechniques.ca/assets/og-image-linkedin.png",
   "telephone": "+15147069379",
-  "email": "c.guernon@hotmail.ca",
+  "email": "contact@guernonservicestechniques.ca",
   "inLanguage": "fr-CA",
   "areaServed": {
     "@type": "AdministrativeArea",
@@ -51,7 +51,7 @@
     "Programme de contrôle qualité RBQ",
     "Rédaction PCQ Québec",
     "Conformité RBQ",
-    "Installations sous pression B-1.1 r.6.1"
+    "Permis d’installations sous pression (RISP 2026)"
   ],
   "priceRange": "$$",
   "sameAs": [
@@ -616,6 +616,37 @@
     footer { flex-direction: column; text-align: center; }
     .service-card-footer { flex-direction: column; align-items: flex-start; }
   }
+
+  /* ── Pourquoi GST / comparatif / tarifs ── */
+  .why-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:48px; }
+  .why-item { background:#fff; border:1px solid var(--gray); border-radius:var(--radius); padding:28px 26px; }
+  .why-num { font-family:var(--serif); font-size:28px; color:var(--gold); line-height:1; margin-bottom:12px; }
+  .why-title { font-weight:600; color:var(--navy); font-size:16px; margin-bottom:6px; }
+  .why-desc { font-size:14px; color:var(--gray-dark); line-height:1.6; }
+  .compare-wrap { margin-top:56px; overflow-x:auto; }
+  .compare { width:100%; border-collapse:collapse; font-size:14px; background:#fff; border:1px solid var(--gray); }
+  .compare th, .compare td { padding:14px 18px; text-align:left; border-bottom:1px solid var(--gray); vertical-align:top; }
+  .compare thead th { font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gray-mid); font-weight:600; background:#faf9f6; }
+  .compare thead th.gst { color:var(--navy); background:#f3ecd8; }
+  .compare td:first-child { font-weight:600; color:var(--navy); width:22%; }
+  .compare td.trad { color:var(--gray-mid); width:30%; }
+  .compare td.gst { color:var(--text); background:#fbf7ec; }
+  .compare tr:last-child td { border-bottom:none; }
+  .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:48px; align-items:stretch; }
+  .price-card { background:#fff; border:1px solid var(--gray); border-radius:var(--radius); padding:32px 28px; display:flex; flex-direction:column; position:relative; }
+  .price-card.featured { border-color:var(--gold); box-shadow:0 8px 30px rgba(15,31,56,.08); }
+  .price-tag-launch { position:absolute; top:-12px; left:28px; background:var(--gold); color:var(--navy); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:4px 10px; border-radius:2px; }
+  .price-name { font-family:var(--serif); font-size:21px; color:var(--navy); margin-bottom:4px; }
+  .price-for { font-size:13px; color:var(--gray-mid); margin-bottom:20px; }
+  .price-amount { font-family:var(--serif); font-size:40px; color:var(--navy); line-height:1; }
+  .price-amount small { font-family:var(--sans); font-size:13px; color:var(--gray-mid); }
+  .price-regular { font-size:13px; color:var(--gray-mid); margin-top:6px; }
+  .price-regular s { color:var(--gray-mid); }
+  .price-list { list-style:none; margin:22px 0 26px; display:flex; flex-direction:column; gap:8px; flex:1; }
+  .price-list li { font-size:14px; color:var(--gray-dark); display:flex; gap:10px; }
+  .price-list li::before { content:'✓'; color:var(--gold); font-weight:600; }
+  .price-note { margin-top:28px; font-size:13px; color:var(--gray-mid); text-align:center; }
+  @media (max-width: 900px) { .why-grid, .pricing-grid { grid-template-columns:1fr; } }
 </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
@@ -629,6 +660,7 @@
   </div>
   <ul class="nav-links">
     <li><a href="#offre">Services</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
     <li><a href="#processus">Processus</a></li>
     <li><a href="#apropos">&Agrave; propos</a></li>
     <li><a href="#faq">FAQ</a></li>
@@ -642,6 +674,7 @@
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobile-menu" role="navigation">
   <a href="#offre"     onclick="closeMenu()">Services</a>
+  <a href="#tarifs"    onclick="closeMenu()">Tarifs</a>
   <a href="#processus" onclick="closeMenu()">Processus</a>
   <a href="#apropos"   onclick="closeMenu()">&Agrave; propos</a>
   <a href="#faq"       onclick="closeMenu()">FAQ</a>
@@ -654,13 +687,13 @@
     <div class="hero-inner">
       <div class="hero-eyebrow">
         <span class="hero-eyebrow-line"></span>
-        <span class="hero-eyebrow-text">Programme de contr&ocirc;le qualit&eacute; &middot; RBQ</span>
+        <span class="hero-eyebrow-text">PCQ &middot; Permis d&rsquo;installations sous pression &middot; RISP 2026</span>
       </div>
       <h1>Votre conformit&eacute; RBQ,<br><em>prise en charge</em> de A &agrave; Z.</h1>
-      <p class="hero-desc">PCQ conforme aux exigences de la RBQ, personnalis&eacute; pour vos activit&eacute;s, livr&eacute; en 7 &agrave; 10 jours ouvrables &mdash; pr&ecirc;t &agrave; soumettre.</p>
+      <p class="hero-desc">Un questionnaire de 20&nbsp;minutes, un prix fixe connu d&rsquo;avance, un manuel livr&eacute; en 7 &agrave; 10 jours ouvrables &mdash; et un accompagnement jusqu&rsquo;&agrave; la d&eacute;livrance de votre permis.</p>
       <div class="hero-actions">
         <a href="#contact" class="btn-primary">Demander un devis gratuit</a>
-        <a href="#offre" class="btn-ghost">Voir le service</a>
+        <a href="#tarifs" class="btn-ghost">Voir les tarifs</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -671,7 +704,7 @@
         </div>
         <div class="pcq-card-body">
           <div class="pcq-card-title">Programme de contr&ocirc;le qualit&eacute;</div>
-          <div class="pcq-card-sub">Installations sous pression &middot; B-1.1, r.6.1</div>
+          <div class="pcq-card-sub">Installations sous pression &middot; RISP 2026</div>
           <div class="pcq-divider"></div>
           <div class="pcq-section">
             <div class="pcq-section-label">01 &middot; Port&eacute;e et r&eacute;f&eacute;rences</div>
@@ -701,23 +734,29 @@
       <div class="hero-stat-label">Jours ouvrables de livraison</div>
     </div>
     <div class="hero-stat">
-      <div class="hero-stat-num" data-counter="30" data-suffix="j">0j</div>
-      <div class="hero-stat-label">R&eacute;visions incluses</div>
+      <div class="hero-stat-num">20&nbsp;min</div>
+      <div class="hero-stat-label">Questionnaire en ligne</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">Prix fixe</div>
+      <div class="hero-stat-label">Corrections RBQ incluses</div>
     </div>
   </div>
 <!-- Ticker -->
 <div class="ticker-wrap" aria-hidden="true">
   <div class="ticker-track">
-    <span>PCQ personnalis&eacute;</span>
+    <span>Prix fixe affich&eacute;</span>
+    <span>Questionnaire de 20&nbsp;minutes</span>
     <span>Livraison 7&ndash;10 jours ouvrables</span>
-    <span>R&eacute;visions incluses jusqu&rsquo;&agrave; l&rsquo;approbation</span>
-    <span>Conforme RBQ</span>
-    <span>Installateur &amp; fabricant</span>
-    <span>PCQ personnalis&eacute;</span>
+    <span>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</span>
+    <span>&Agrave; jour RISP 2026</span>
+    <span>Partout au Qu&eacute;bec</span>
+    <span>Prix fixe affich&eacute;</span>
+    <span>Questionnaire de 20&nbsp;minutes</span>
     <span>Livraison 7&ndash;10 jours ouvrables</span>
-    <span>R&eacute;visions incluses jusqu&rsquo;&agrave; l&rsquo;approbation</span>
-    <span>Conforme RBQ</span>
-    <span>Installateur &amp; fabricant</span>
+    <span>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</span>
+    <span>&Agrave; jour RISP 2026</span>
+    <span>Partout au Qu&eacute;bec</span>
   </div>
 </div>
 
@@ -732,11 +771,11 @@
         <span class="section-label-text">Service principal</span>
       </div>
       <h2 class="section-title">Programme de contrôle qualité cl&eacute; en main.</h2>
-      <p class="section-intro">Vous remplissez un questionnaire de 20&nbsp;minutes. On r&eacute;dige un PCQ complet bas&eacute; sur vos r&eacute;ponses &mdash; vos activit&eacute;s, votre licence, votre organisation. Pas un mod&egrave;le g&eacute;n&eacute;rique &agrave; adapter vous-m&ecirc;me.</p>
+      <p class="section-intro">Vous remplissez un questionnaire de 20&nbsp;minutes. On r&eacute;dige un manuel PCQ complet bas&eacute; sur vos r&eacute;ponses &mdash; vos activit&eacute;s, vos &eacute;quipements, votre organisation. Pas un mod&egrave;le g&eacute;n&eacute;rique &agrave; adapter vous-m&ecirc;me, pas de rencontres interminables.</p>
     </div>
     <div class="service-card reveal">
       <h3>Ce qui est inclus</h3>
-      <p>Manuel structur&eacute; selon les 14 sections exig&eacute;es par la RBQ, registres d&rsquo;utilisation courants pr&ecirc;ts &agrave; compl&eacute;ter, et guide de remise pour la soumission. Livr&eacute; en format Word &eacute;ditable.</p>
+      <p>Manuel structur&eacute; selon le guide de pr&eacute;paration de la RBQ, formulaires et registres pr&ecirc;ts &agrave; utiliser, tableau de correspondance avec chaque exigence du guide, et trousse de soumission pr&ecirc;te &agrave; envoyer. Livr&eacute; en Word &eacute;ditable et en PDF.</p>
       <ul class="deliverables">
         <li>Port&eacute;e et r&eacute;f&eacute;rences normatives</li>
         <li>Organisation et responsabilit&eacute;s</li>
@@ -748,10 +787,95 @@
         <li>Annexes et registres op&eacute;rationnels</li>
       </ul>
       <div class="service-card-footer">
-        <p>R&eacute;ponses aux commentaires de la RBQ incluses <strong>jusqu&rsquo;&agrave; l&rsquo;approbation</strong> de votre PCQ.</p>
+        <p>Corrections demand&eacute;es par la RBQ incluses <strong>jusqu&rsquo;&agrave; l&rsquo;acceptation</strong> de votre manuel.</p>
         <a href="#contact" class="btn-primary" style="font-size:13px; padding:10px 22px;">Obtenir un devis</a>
       </div>
     </div>
+
+    <div class="why-grid reveal">
+      <div class="why-item"><div class="why-num">01</div><div class="why-title">Un questionnaire, pas des r&eacute;unions</div><div class="why-desc">20&nbsp;minutes en ligne, &agrave; votre rythme. Vous n&rsquo;&eacute;crivez rien&nbsp;: on r&eacute;dige &agrave; partir de vos r&eacute;ponses.</div></div>
+      <div class="why-item"><div class="why-num">02</div><div class="why-title">Prix fixe, connu d&rsquo;avance</div><div class="why-desc">Pas de taux horaire ni de facture surprise. Le prix affich&eacute; est le prix final, corrections RBQ incluses.</div></div>
+      <div class="why-item"><div class="why-num">03</div><div class="why-title">Accompagnement jusqu&rsquo;au permis</div><div class="why-desc">Trousse de soumission, suivi des &eacute;changes avec la RBQ, corrections, pr&eacute;paration de la v&eacute;rification d&rsquo;implantation et rappel avant le renouvellement.</div></div>
+      <div class="why-item"><div class="why-num">04</div><div class="why-title">&Agrave; jour RISP 2026</div><div class="why-desc">Nos manuels int&egrave;grent le r&egrave;glement modifi&eacute; par le d&eacute;cret 1056-2026 et chaque exigence du guide RBQ est reli&eacute;e &agrave; la section qui y r&eacute;pond.</div></div>
+      <div class="why-item"><div class="why-num">05</div><div class="why-title">Livr&eacute; en 7 &agrave; 10 jours ouvrables</div><div class="why-desc">D&egrave;s la r&eacute;ception du questionnaire. D&eacute;lai acc&eacute;l&eacute;r&eacute; possible selon disponibilit&eacute;.</div></div>
+      <div class="why-item"><div class="why-num">06</div><div class="why-title">Disponible quand vous l&rsquo;&ecirc;tes</div><div class="why-desc">Bas&eacute; &agrave; Montr&eacute;al, service &agrave; distance partout au Qu&eacute;bec. Appels le soir et la fin de semaine sur demande.</div></div>
+    </div>
+
+    <div class="compare-wrap reveal">
+      <table class="compare">
+        <thead><tr><th></th><th>Approche traditionnelle</th><th class="gst">Avec GST</th></tr></thead>
+        <tbody>
+          <tr><td>Prix</td><td class="trad">Sur demande, souvent au taux horaire</td><td class="gst"><strong>Prix fixe affich&eacute;</strong></td></tr>
+          <tr><td>D&eacute;lai</td><td class="trad">Variable</td><td class="gst"><strong>7 &agrave; 10 jours ouvrables</strong></td></tr>
+          <tr><td>Votre temps</td><td class="trad">Collecte d&rsquo;information, rencontres</td><td class="gst"><strong>Questionnaire en ligne de 20&nbsp;min</strong></td></tr>
+          <tr><td>Corrections RBQ</td><td class="trad">Souvent factur&eacute;es en sus</td><td class="gst"><strong>Incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</strong></td></tr>
+          <tr><td>Apr&egrave;s la livraison</td><td class="trad">Variable</td><td class="gst"><strong>Trousse de soumission, suivi RBQ, pr&eacute;paration de la v&eacute;rification, rappel de renouvellement</strong></td></tr>
+          <tr><td>R&eacute;glementation</td><td class="trad">Mod&egrave;le g&eacute;n&eacute;rique</td><td class="gst"><strong>&Agrave; jour RISP 2026, tableau de correspondance avec le guide RBQ</strong></td></tr>
+          <tr><td>Disponibilit&eacute;</td><td class="trad">Heures de bureau</td><td class="gst"><strong>Soirs et fins de semaine sur demande</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Tarifs -->
+<section class="section section-alt" id="tarifs">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="section-label-line"></span>
+        <span class="section-label-text">Tarifs</span>
+      </div>
+      <h2 class="section-title">Un prix fixe.<br>Aucune surprise.</h2>
+      <p class="section-intro">Taxes non applicables &mdash; le prix affich&eacute; est le prix final. 50&nbsp;% &agrave; la commande, solde &agrave; la livraison.</p>
+    </div>
+    <div class="pricing-grid reveal">
+      <div class="price-card featured">
+        <span class="price-tag-launch">Prix de lancement</span>
+        <div class="price-name">Manuel PCQ installateur</div>
+        <div class="price-for">Installation, modification et r&eacute;paration d&rsquo;installations sous pression</div>
+        <div class="price-amount">1&nbsp;450&nbsp;$ <small>prix fixe</small></div>
+        <div class="price-regular">R&eacute;gulier &agrave; partir de <s>1&nbsp;950&nbsp;$</s></div>
+        <ul class="price-list">
+          <li>Questionnaire en ligne de 20&nbsp;minutes</li>
+          <li>Manuel complet, Word + PDF</li>
+          <li>Formulaires et registres pr&ecirc;ts &agrave; utiliser</li>
+          <li>Trousse de soumission &agrave; la RBQ</li>
+          <li>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</li>
+          <li>Pr&eacute;paration de la v&eacute;rification d&rsquo;implantation</li>
+        </ul>
+        <a href="#contact" class="btn-primary" style="text-align:center;">Demander un devis</a>
+      </div>
+      <div class="price-card featured">
+        <span class="price-tag-launch">Prix de lancement</span>
+        <div class="price-name">PCQ fabricant / complet</div>
+        <div class="price-for">Fabrication d&rsquo;&eacute;quipements sous pression, soudage, activit&eacute;s multiples</div>
+        <div class="price-amount">2&nbsp;750&nbsp;$ <small>prix fixe</small></div>
+        <div class="price-regular">R&eacute;gulier &agrave; partir de <s>3&nbsp;450&nbsp;$</s></div>
+        <ul class="price-list">
+          <li>Tout ce qui est inclus pour l&rsquo;installateur</li>
+          <li>Section fabrication (dessins, calculs, inspection)</li>
+          <li>Section soudage, END, essais de pression et traitement thermique</li>
+          <li>Annexes fabricant du guide RBQ</li>
+          <li>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</li>
+        </ul>
+        <a href="#contact" class="btn-primary" style="text-align:center;">Demander un devis</a>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Mise &agrave; jour du manuel</div>
+        <div class="price-for">Manuel existant &agrave; adapter au RISP 2026 ou &agrave; un changement d&rsquo;activit&eacute;s</div>
+        <div class="price-amount">950&nbsp;$ <small>&agrave; partir de</small></div>
+        <div class="price-regular">&nbsp;</div>
+        <ul class="price-list">
+          <li>Revue de votre manuel actuel</li>
+          <li>Mise &agrave; niveau RISP 2026</li>
+          <li>Tableau de correspondance avec le guide RBQ</li>
+          <li>Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation</li>
+        </ul>
+        <a href="#contact" class="btn-primary" style="text-align:center;">Demander un devis</a>
+      </div>
+    </div>
+    <p class="price-note">Prix de lancement r&eacute;serv&eacute; aux trois premiers clients. Les frais de la RBQ (permis et v&eacute;rification du programme) sont factur&eacute;s directement par la RBQ.</p>
   </div>
 </section>
 
@@ -763,7 +887,7 @@
         <span class="section-label-line"></span>
         <span class="section-label-text">Notre approche</span>
       </div>
-      <h2 class="section-title">Quatre &eacute;tapes.<br>Z&eacute;ro complication.</h2>
+      <h2 class="section-title">Quatre &eacute;tapes.<br>Jusqu&rsquo;au permis.</h2>
     </div>
     <div class="process-steps reveal">
       <div class="process-step">
@@ -773,18 +897,18 @@
       </div>
       <div class="process-step">
         <div class="process-num">02</div>
-        <div class="process-title">Analyse</div>
-        <div class="process-desc">Identification des exigences RBQ applicables &agrave; votre licence et vos cat&eacute;gories de travaux.</div>
+        <div class="process-title">R&eacute;daction</div>
+        <div class="process-desc">Manuel personnalis&eacute; selon le guide de la RBQ et le RISP 2026, relu par Charles. Livraison en 7 &agrave; 10 jours ouvrables.</div>
       </div>
       <div class="process-step">
         <div class="process-num">03</div>
-        <div class="process-title">R&eacute;daction</div>
-        <div class="process-desc">Manuel PCQ personnalis&eacute;, structur&eacute; selon les 14 sections r&eacute;glementaires. Livraison en 7 &agrave; 10 jours ouvrables.</div>
+        <div class="process-title">Soumission</div>
+        <div class="process-desc">Word + PDF, guide de remise et trousse de soumission&nbsp;: vous signez et envoyez &agrave; la RBQ, GST en copie.</div>
       </div>
       <div class="process-step">
         <div class="process-num">04</div>
-        <div class="process-title">Livraison</div>
-        <div class="process-desc">Fichier Word &eacute;ditable + guide de remise. R&eacute;visions incluses jusqu&rsquo;&agrave; l&rsquo;approbation de la RBQ.</div>
+        <div class="process-title">Jusqu&rsquo;au permis</div>
+        <div class="process-desc">Corrections RBQ incluses jusqu&rsquo;&agrave; l&rsquo;acceptation, pr&eacute;paration de la v&eacute;rification d&rsquo;implantation, rappel avant le renouvellement.</div>
       </div>
     </div>
   </div>
@@ -800,11 +924,12 @@
           <span class="section-label-text">&Agrave; propos</span>
         </div>
         <h2 class="section-title">Expertise terrain,<br>accompagnement jusqu&rsquo;&agrave; l&rsquo;approbation.</h2>
-        <p>Beaucoup d&rsquo;entrepreneurs perdent des semaines &agrave; tenter de r&eacute;diger leur PCQ eux-m&ecirc;mes &mdash; ou re&ccedil;oivent un document g&eacute;n&eacute;rique qui ne passe pas l&rsquo;inspection de la RBQ. Notre approche&nbsp;: <strong>un document r&eacute;dig&eacute; &agrave; partir de vos op&eacute;rations r&eacute;elles</strong>, par quelqu&rsquo;un qui conna&icirc;t les normes et le terrain.</p>
+        <p>Beaucoup d&rsquo;entrepreneurs perdent des semaines &agrave; tenter de r&eacute;diger leur PCQ eux-m&ecirc;mes &mdash; ou re&ccedil;oivent un document g&eacute;n&eacute;rique qui ne passe pas l&rsquo;examen de la RBQ. Notre approche&nbsp;: <strong>un document r&eacute;dig&eacute; &agrave; partir de vos op&eacute;rations r&eacute;elles</strong>, par quelqu&rsquo;un qui conna&icirc;t les normes et le terrain.</p>
         <ul class="credentials">
           <li><span class="cred-dot"></span>Exp&eacute;rience en contr&ocirc;le qualit&eacute;, tuyauterie industrielle sous pression</li>
           <li><span class="cred-dot"></span>Ma&icirc;trise des normes ASME B31.1/B31.3, CSA B51 et exigences RBQ</li>
-          <li><span class="cred-dot"></span>Candidat &agrave; la profession d&rsquo;ing&eacute;nieur (OIQ)</li>
+          <li><span class="cred-dot"></span>Candidat &agrave; la profession d&rsquo;ing&eacute;nieur (OIQ), superviseur en soudage CWB</li>
+          <li><span class="cred-dot"></span>Bas&eacute; &agrave; Montr&eacute;al &middot; service &agrave; distance partout au Qu&eacute;bec</li>
         </ul>
       </div>
       <div class="reveal">
@@ -839,7 +964,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Un Programme de contr&ocirc;le qualit&eacute; (PCQ) d&eacute;crit comment votre entreprise s&rsquo;assure que ses travaux respectent les normes applicables. La RBQ l&rsquo;exige pour les licences en tuyauterie, soudage et fabrication d&rsquo;&eacute;quipements sous pression. Sans PCQ conforme, l&rsquo;obtention ou le renouvellement de la licence peut &ecirc;tre refus&eacute;.</div>
+          <div class="faq-answer-inner">Un Programme de contr&ocirc;le qualit&eacute; (PCQ) d&eacute;crit comment votre entreprise s&rsquo;assure que ses travaux respectent les normes applicables. La RBQ exige un PCQ accept&eacute; pour d&eacute;livrer le permis qui autorise l&rsquo;installation, la r&eacute;paration, la modification ou la fabrication d&rsquo;&eacute;quipements et d&rsquo;installations sous pression. Sans PCQ conforme, le permis ne peut &ecirc;tre obtenu ni renouvel&eacute;.</div>
         </div>
       </div>
 
@@ -849,7 +974,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Si votre licence RBQ couvre la tuyauterie sous pression, le soudage ou la fabrication d&rsquo;&eacute;quipements sous pression, oui. Contactez-nous pour une &eacute;valuation rapide de votre situation &mdash; c&rsquo;est gratuit.</div>
+          <div class="faq-answer-inner">Si vous installez, modifiez, r&eacute;parez ou fabriquez des chaudi&egrave;res, appareils sous pression ou tuyauteries sous pression, vous avez besoin d&rsquo;un permis de la RBQ et donc d&rsquo;un PCQ &mdash; m&ecirc;me pour vos propres &eacute;quipements dans certains cas. Contactez-nous pour une &eacute;valuation rapide de votre situation &mdash; c&rsquo;est gratuit.</div>
         </div>
       </div>
 
@@ -859,7 +984,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Une fois le questionnaire compl&eacute;t&eacute;, le PCQ est livr&eacute; en 7 &agrave; 10 jours ouvrables. Pour les situations urgentes (inspection imminente), contactez-nous directement.</div>
+          <div class="faq-answer-inner">Une fois le questionnaire compl&eacute;t&eacute;, le PCQ est livr&eacute; en 7 &agrave; 10 jours ouvrables. Pour les situations urgentes (permis qui arrive &agrave; &eacute;ch&eacute;ance, chantier imminent), un d&eacute;lai acc&eacute;l&eacute;r&eacute; est possible selon disponibilit&eacute;.</div>
         </div>
       </div>
 
@@ -869,7 +994,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Enti&egrave;rement personnalis&eacute;. Chaque manuel est r&eacute;dig&eacute; selon vos activit&eacute;s, votre organisation et votre licence RBQ. Un document g&eacute;n&eacute;rique ne refl&egrave;te pas vos op&eacute;rations r&eacute;elles et peut soulever des questions lors d&rsquo;une v&eacute;rification.</div>
+          <div class="faq-answer-inner">Enti&egrave;rement personnalis&eacute;. Chaque manuel est r&eacute;dig&eacute; selon vos activit&eacute;s, votre organisation et vos &eacute;quipements. Un document g&eacute;n&eacute;rique ne refl&egrave;te pas vos op&eacute;rations r&eacute;elles et peut soulever des questions lors d&rsquo;une v&eacute;rification.</div>
         </div>
       </div>
 
@@ -879,7 +1004,7 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">En format Word (.docx), ce qui vous permet de le modifier, de l&rsquo;imprimer ou de le soumettre &eacute;lectroniquement &agrave; la RBQ. Un PDF est &eacute;galement fourni sur demande.</div>
+          <div class="faq-answer-inner">En Word (.docx) &eacute;ditable et en PDF, avec une trousse de soumission qui indique quoi envoyer &agrave; la RBQ et comment remplir le formulaire.</div>
         </div>
       </div>
 
@@ -889,7 +1014,27 @@
           <span class="faq-icon">+</span>
         </button>
         <div class="faq-answer">
-          <div class="faq-answer-inner">Les r&eacute;ponses aux commentaires de la RBQ sont incluses jusqu&rsquo;&agrave; l&rsquo;approbation de votre PCQ. Pour des mises &agrave; jour ult&eacute;rieures li&eacute;es &agrave; des changements d&rsquo;activit&eacute;s ou de r&eacute;glementation, un service de mise &agrave; jour est offert.</div>
+          <div class="faq-answer-inner">Les corrections demand&eacute;es par la RBQ sont incluses, sans limite de cycles, jusqu&rsquo;&agrave; l&rsquo;acceptation de votre manuel. Pour des mises &agrave; jour ult&eacute;rieures li&eacute;es &agrave; des changements d&rsquo;activit&eacute;s ou de r&eacute;glementation, un service de mise &agrave; jour est offert.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Combien &ccedil;a co&ucirc;te&nbsp;?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Prix fixe&nbsp;: 1&nbsp;950&nbsp;$ pour un manuel installateur et 3&nbsp;450&nbsp;$ pour un PCQ fabricant ou complet (prix de lancement de 1&nbsp;450&nbsp;$ et 2&nbsp;750&nbsp;$ pour les trois premiers clients). Taxes non applicables. Les frais de la RBQ sont factur&eacute;s s&eacute;par&eacute;ment par la RBQ.</div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Faut-il se rencontrer en personne&nbsp;?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Non. Tout se fait &agrave; distance&nbsp;: questionnaire en ligne, &eacute;changes par courriel et appels ou visioconf&eacute;rence au besoin, y compris le soir et la fin de semaine sur demande. Nous servons des entreprises partout au Qu&eacute;bec.</div>
         </div>
       </div>
 
@@ -907,7 +1052,7 @@
           <span class="section-label-text">Contact</span>
         </div>
         <h3>Devis gratuit.<br>R&eacute;ponse en 24&nbsp;h.</h3>
-        <p>D&eacute;crivez votre situation &mdash; type de licence, activit&eacute;s, d&eacute;lai souhait&eacute;. On vous r&eacute;pond rapidement avec une &eacute;valuation claire.</p>
+        <p>D&eacute;crivez votre situation &mdash; installateur ou fabricant, &eacute;quipements, d&eacute;lai souhait&eacute;. On vous r&eacute;pond rapidement avec une &eacute;valuation claire.</p>
         <a href="mailto:contact@guernonservicestechniques.ca" class="contact-email">contact@guernonservicestechniques.ca</a>
       </div>
 
@@ -940,7 +1085,7 @@
         </div>
         <div class="form-field">
           <label>Message</label>
-          <textarea name="message" placeholder="D&eacute;crivez bri&egrave;vement votre situation (type de licence RBQ, d&eacute;lai souhait&eacute;, questions...)"></textarea>
+          <textarea name="message" placeholder="D&eacute;crivez bri&egrave;vement votre situation (installateur ou fabricant, &eacute;quipements, permis &agrave; obtenir ou &agrave; renouveler, d&eacute;lai...)"></textarea>
         </div>
         <input type="text" name="site_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAADpRpTAoF0fZHWY2" style="margin-bottom:12px;"></div>
